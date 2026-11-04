@@ -17,7 +17,7 @@ import { useReveal } from "../hooks/useReveal";
 const mapRoutes = [
   {
     id: 1,
-    name: "Tuyến giao thông 01",
+    name: "CT01 - CAO TỐC LONG THÀNH - DẦU GIÂY",
     description:
       "Cập nhật tên cao tốc hoặc quốc lộ tương ứng với tuyến đường này.",
     color: "#e984b5",
@@ -28,7 +28,7 @@ const mapRoutes = [
   },
   {
     id: 2,
-    name: "Tuyến giao thông 02",
+    name: "CT29 - CAO TỐC BIÊN HÒA VŨNG TÀU",
     description:
       "Cập nhật tên cao tốc hoặc quốc lộ tương ứng với tuyến đường này.",
     color: "#e52894",
@@ -39,7 +39,7 @@ const mapRoutes = [
   },
   {
     id: 3,
-    name: "Tuyến giao thông 03",
+    name: "QL51 - QUỐC LỘ 51",
     description:
       "Cập nhật tên cao tốc hoặc quốc lộ tương ứng với tuyến đường này.",
     color: "#16b3c1",
@@ -53,7 +53,7 @@ const mapRoutes = [
 const mapAdditionalLines = [
   {
     id: "green",
-    name: "Tuyến giao thông 04",
+    name: "CAO TỐC BẾN LỨC - LONG THÀNH",
     description: "Tuyến màu xanh lá trên bản đồ.",
     color: "#2cec13",
     points:
@@ -61,7 +61,7 @@ const mapAdditionalLines = [
   },
   {
     id: "red",
-    name: "Tuyến giao thông 05",
+    name: "CAO TỐC HỒ TRÀM LONG THÀNH",
     description: "Tuyến màu đỏ trên bản đồ.",
     color: "#f51919",
     points:
@@ -125,6 +125,13 @@ function MapPinIcon() {
 function LocationMap() {
   const [active, setActive] = useState(null);
   const [activeRoute, setActiveRoute] = useState(null);
+  const toggleRoute = (id) => setActiveRoute((current) => current === id ? null : id);
+  const onRouteKeyDown = (event, id) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      toggleRoute(id);
+    }
+  };
 
   return (
     <div className="flex h-full w-full flex-col justify-center gap-3">
@@ -146,7 +153,6 @@ function LocationMap() {
 
         .qtopia-additional-line {
           fill: none;
-          stroke-width: 6;
           stroke-linecap: round;
           stroke-linejoin: round;
           stroke-dasharray: 24 9 0 9;
@@ -206,7 +212,8 @@ function LocationMap() {
         <svg
           viewBox="0 0 1456 683"
           preserveAspectRatio="none"
-          aria-hidden="true"
+          role="group"
+          aria-label="Chọn tuyến giao thông trên bản đồ"
           className="pointer-events-none absolute inset-0 h-full w-full"
         >
           {mapRoutes.map((route) => (
@@ -220,7 +227,8 @@ function LocationMap() {
               <polyline
                 points={route.points}
                 stroke={route.color}
-                strokeWidth={route.width}
+                strokeWidth={activeRoute === route.id ? route.width + 3 : route.width}
+                pointerEvents="none"
                 className="qtopia-route"
                 style={{
                   "--route-speed": route.speed,
@@ -230,21 +238,59 @@ function LocationMap() {
               {/* WHITE CENTER LINE */}
               <polyline
                 points={route.points}
+                pointerEvents="none"
                 className="qtopia-route-center"
                 style={{
                   "--route-speed": route.speed,
                 }}
               />
+              <polyline
+                points={route.points}
+                fill="none"
+                stroke="transparent"
+                strokeWidth="26"
+                vectorEffect="non-scaling-stroke"
+                pointerEvents="stroke"
+                role="button"
+                tabIndex={0}
+                aria-label={`Chọn ${route.name}`}
+                aria-pressed={activeRoute === route.id}
+                onClick={() => toggleRoute(route.id)}
+                onKeyDown={(event) => onRouteKeyDown(event, route.id)}
+                className="cursor-pointer"
+              />
             </g>
           ))}
           {mapAdditionalLines.map((line) => (
-            <polyline
+            <g
               key={line.id}
-              points={line.points}
-              stroke={line.color}
-              opacity={activeRoute === null || activeRoute === line.id ? 1 : 0.25}
-              className="qtopia-additional-line"
-            />
+              opacity={
+                activeRoute === null || activeRoute === line.id ? 1 : 0.25
+              }
+            >
+              <polyline
+                points={line.points}
+                stroke={line.color}
+                strokeWidth={activeRoute === line.id ? 9 : 6}
+                pointerEvents="none"
+                className="qtopia-additional-line"
+              />
+              <polyline
+                points={line.points}
+                fill="none"
+                stroke="transparent"
+                strokeWidth="26"
+                vectorEffect="non-scaling-stroke"
+                pointerEvents="stroke"
+                role="button"
+                tabIndex={0}
+                aria-label={`Chọn ${line.name}`}
+                aria-pressed={activeRoute === line.id}
+                onClick={() => toggleRoute(line.id)}
+                onKeyDown={(event) => onRouteKeyDown(event, line.id)}
+                className="cursor-pointer"
+              />
+            </g>
           ))}
         </svg>
 
@@ -294,44 +340,52 @@ function LocationMap() {
         </p>
 
         <div className="grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-3">
-            {legendRoutes.map((route) => (
-              <button
-                key={route.id}
-                type="button"
-                onClick={() =>
-                  setActiveRoute(activeRoute === route.id ? null : route.id)
-                }
-                aria-pressed={activeRoute === route.id}
-                className="flex min-w-0 items-start gap-2 rounded-md p-1 text-left hover:bg-white/10"
-              >
-                <span className="mt-1 flex shrink-0 items-center gap-0.5">
-                  <span
-                    className="h-[3px] w-3 rounded-full"
-                    style={{ backgroundColor: route.color }}
-                  />
-                  <span className="h-[3px] w-2 rounded-full" style={{ backgroundColor: typeof route.id === 'number' ? '#fff' : route.color }} />
-                  <span
-                    className="h-[3px] w-3 rounded-full"
-                    style={{ backgroundColor: route.color }}
-                  />
-                </span>
+          {legendRoutes.map((route) => (
+            <button
+              key={route.id}
+              type="button"
+              onClick={() => toggleRoute(route.id)}
+              aria-pressed={activeRoute === route.id}
+              className={`flex min-w-0 items-start gap-2 rounded-md border-l-[3px] p-1 pl-2 text-left transition-colors ${activeRoute === route.id ? "font-bold" : "hover:bg-white/10"}`}
+              style={{
+                borderColor: activeRoute === route.id ? route.color : "transparent",
+                backgroundColor: activeRoute === route.id ? `${route.color}26` : undefined,
+              }}
+            >
+              <span className="mt-1 flex shrink-0 items-center gap-0.5">
+                <span
+                  className="h-[3px] w-3 rounded-full"
+                  style={{ backgroundColor: route.color }}
+                />
+                <span
+                  className="h-[3px] w-2 rounded-full"
+                  style={{
+                    backgroundColor:
+                      typeof route.id === "number" ? "#fff" : route.color,
+                  }}
+                />
+                <span
+                  className="h-[3px] w-3 rounded-full"
+                  style={{ backgroundColor: route.color }}
+                />
+              </span>
 
-                <span className="min-w-0">
-                  <span
-                    className={`block text-[9px] font-semibold sm:text-[10px] lg:text-xs ${
-                      activeRoute === route.id ? "text-q-lime" : "text-white"
-                    }`}
-                  >
-                    {route.name}
-                  </span>
-                  {activeRoute === route.id && (
-                    <span className="mt-1 block text-[8px] leading-relaxed text-white/75 sm:text-[9px] lg:text-[11px]">
-                      {route.description}
-                    </span>
-                  )}
+              <span className="min-w-0">
+                <span
+                  className={`block text-[9px] font-semibold sm:text-[10px] lg:text-xs ${
+                    activeRoute === route.id ? "text-q-lime" : "text-white"
+                  }`}
+                >
+                  {route.name}
                 </span>
-              </button>
-            ))}
+                {activeRoute === route.id && (
+                  <span className="mt-1 block text-[8px] leading-relaxed text-white/75 sm:text-[9px] lg:text-[11px]">
+                    {route.description}
+                  </span>
+                )}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
     </div>

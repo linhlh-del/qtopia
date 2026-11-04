@@ -9,19 +9,34 @@ import { isFilled } from '../lib/filled'
 const fab =
   'grid size-12 cursor-pointer place-items-center rounded-full border-0 text-white shadow-[0_10px_24px_-8px_rgba(5,10,46,0.5)] transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:scale-[1.07] hover:shadow-[0_14px_30px_-8px_rgba(5,10,46,0.6)] active:scale-95'
 
+function FabRings() {
+  return (
+    <>
+      <span className="fab-cta-ring fab-cta-ring-1" aria-hidden="true" />
+      <span className="fab-cta-ring fab-cta-ring-2" aria-hidden="true" />
+    </>
+  )
+}
+
 // Hotline / Zalo chưa có dữ liệu thật từ CĐT: nút vẫn hiển thị nhưng mở form để lại số,
 // thay vì trỏ tới link giả. Khi siteMeta.hotlineHref / siteMeta.zalo được điền, nút tự chuyển sang link thật.
 function CallButton({ popup, where }) {
   const ready = isFilled(siteMeta.hotline) && siteMeta.hotlineHref
   const label = ready ? `Gọi hotline ${siteMeta.hotline}` : 'Để lại số, tư vấn viên gọi lại'
-  const className = `${fab} fab-pulse bg-[var(--cta-from)]`
+  const className = `${fab} relative isolate fab-cta-pulse fab-call-pulse bg-[var(--cta-from)]`
+  const content = (
+    <>
+      <FabRings />
+      <Icon name="phone" size={22} className="fab-cta-icon" />
+    </>
+  )
   return ready ? (
     <a href={siteMeta.hotlineHref} aria-label={label} title={label} data-cta-name="floating_call" data-cta-location={where} className={className}>
-      <Icon name="phone" size={22} />
+      {content}
     </a>
   ) : (
     <button type="button" onClick={() => popup.open(where + '_call')} aria-label={label} title={label} data-cta-name="floating_call" data-cta-location={where} className={className}>
-      <Icon name="phone" size={22} />
+      {content}
     </button>
   )
 }
@@ -29,8 +44,13 @@ function CallButton({ popup, where }) {
 function ZaloButton({ popup, where }) {
   const ready = isFilled(siteMeta.zalo)
   const label = ready ? 'Chat Zalo với tư vấn viên' : 'Nhận tư vấn qua Zalo'
-  const className = `${fab} bg-[#0068ff] font-display text-[0.72rem] font-bold tracking-tight`
-  const content = <span aria-hidden="true">Zalo</span>
+  const className = `${fab} relative isolate fab-cta-pulse fab-zalo-pulse bg-[#0068ff] font-display text-[0.72rem] font-bold tracking-tight`
+  const content = (
+    <>
+      <FabRings />
+      <span className="fab-cta-icon" aria-hidden="true">Zalo</span>
+    </>
+  )
   return ready ? (
     <a href={siteMeta.zalo} target="_blank" rel="noopener" aria-label={label} title={label} data-cta-name="floating_zalo" data-cta-location={where} className={className}>
       {content}
@@ -92,9 +112,10 @@ export default function FloatingButtons() {
           title="Nhận thông tin dự án"
           data-cta-name="floating_price"
           data-cta-location="floating"
-          className={`${fab} bg-q-navy`}
+          className={`${fab} relative isolate fab-cta-pulse fab-offer-pulse bg-q-blue`}
         >
-          <Icon name="doc" size={22} />
+          <FabRings />
+          <Icon name="doc" size={22} className="fab-cta-icon" />
         </button>
       </div>
 

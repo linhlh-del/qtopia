@@ -24,6 +24,8 @@ export const SITE = {
   ogImageType: 'image/jpeg',
   ogImageWidth: 1200,
   ogImageHeight: 630,
+  twitterImage: '/images/thumb-twitter-image.jpg',
+  twitterImageAlt: 'Phối cảnh tòa căn hộ QTOPIA bên biển về đêm, Thành phố cuối tuần',
   logo: '/images/brand/logo-horizontal-white.png',
 }
 
@@ -43,8 +45,8 @@ export const pages = {
     breadcrumb: 'Trang chủ',
     changefreq: 'weekly',
     priority: 1.0,
-    ogImage: '/images/og-qtopia-trang-chu.jpg',
-    ogImageAlt: 'Phối cảnh tổng thể dự án QTOPIA bên bờ biển, phía sau là núi xanh',
+    ogImage: '/images/thumbnail-opengraph-image.jpg',
+    ogImageAlt: 'Phối cảnh tòa căn hộ QTOPIA bên biển về đêm, Thành phố cuối tuần',
     menu: 'Tổng quan dự án căn hộ QTOPIA',
   },
   '/vi-tri': {

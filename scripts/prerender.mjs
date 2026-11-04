@@ -42,7 +42,7 @@ const page = (path) => {
   const head = headTags(path)
   return template
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${head.title.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</title>`)
-    .replace(/\s*<meta name="description"[^>]*>/, '')
+    .replace(/\s*<(?:meta|link)\b[^>]*data-seo="fallback"[^>]*\/?>(?:\r?\n)?/g, '')
     .replace('</head>', `    ${gtmPreconnect}${tagsToHtml(head.tags)}\n  </head>`)
     .replace('<div id="root"></div>', `<div id="root">${render(path === '/404' ? '/__404__' : path)}</div>`)
 }

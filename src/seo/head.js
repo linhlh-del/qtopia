@@ -9,6 +9,7 @@ export function headTags(path) {
   const hidden = Boolean(hiddenPages[path])
   const url = absUrl(path)
   const image = absAsset(m.ogImage || '/images/og-qtopia-trang-chu.jpg')
+  const twitterImage = absAsset(m.twitterImage || SITE.twitterImage)
   const tags = [
     { tag: 'meta', key: 'name:description', attrs: { name: 'description', content: m.description } },
     { tag: 'meta', key: 'name:robots', attrs: { name: 'robots', content: hidden ? 'noindex, follow' : 'index, follow' } },
@@ -27,7 +28,11 @@ export function headTags(path) {
     { tag: 'meta', key: 'name:twitter:card', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
     { tag: 'meta', key: 'name:twitter:title', attrs: { name: 'twitter:title', content: m.ogTitle || m.title } },
     { tag: 'meta', key: 'name:twitter:description', attrs: { name: 'twitter:description', content: m.ogDescription || m.description } },
-    { tag: 'meta', key: 'name:twitter:image', attrs: { name: 'twitter:image', content: image } },
+    { tag: 'meta', key: 'name:twitter:image', attrs: { name: 'twitter:image', content: twitterImage } },
+    { tag: 'meta', key: 'name:twitter:image:type', attrs: { name: 'twitter:image:type', content: SITE.ogImageType } },
+    { tag: 'meta', key: 'name:twitter:image:width', attrs: { name: 'twitter:image:width', content: String(SITE.ogImageWidth) } },
+    { tag: 'meta', key: 'name:twitter:image:height', attrs: { name: 'twitter:image:height', content: String(SITE.ogImageHeight) } },
+    { tag: 'meta', key: 'name:twitter:image:alt', attrs: { name: 'twitter:image:alt', content: m.twitterImageAlt || SITE.twitterImageAlt } },
   ]
   if (!hidden) {
     tags.push({ tag: 'script', key: 'jsonld', attrs: { type: 'application/ld+json' }, json: structuredData(path) })
@@ -57,8 +62,8 @@ export function tagsToHtml(tags) {
 export function applyHead(path) {
   const { title, tags } = headTags(path)
   document.title = title
-  // bỏ cả thẻ description mặc định trong index.html (chỉ tồn tại khi chạy dev, bản prerender đã loại sẵn)
-  document.querySelectorAll('[data-seo], meta[name="description"]:not([data-seo])').forEach((el) => el.remove())
+  // Bỏ bộ metadata mặc định trong index.html rồi ghi metadata đúng route hiện tại.
+  document.querySelectorAll('[data-seo]').forEach((el) => el.remove())
   const frag = document.createDocumentFragment()
   tags.forEach((t) => {
     const el = document.createElement(t.tag)

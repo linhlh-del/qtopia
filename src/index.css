@@ -436,23 +436,94 @@ html.js-ready img[data-img-fade][data-loaded] {
   }
 }
 
-/* Nút nổi: nhịp pulse chậm (4s) cho nút gọi — tắt khi reduced-motion */
-@keyframes callPulse {
+/* Floating CTA motion follows the Palm River ring, glow, and wobble treatment. */
+@keyframes fabOfferWobble {
   0%,
-  72%,
+  60%,
   100% {
-    box-shadow: 0 10px 24px -8px rgba(5, 10, 46, 0.5), 0 0 0 0 rgba(200, 16, 79, 0.5);
+    transform: rotate(0deg) scale(1);
   }
-  86% {
-    box-shadow: 0 10px 24px -8px rgba(5, 10, 46, 0.5), 0 0 0 14px rgba(200, 16, 79, 0);
+  10% {
+    transform: rotate(-15deg) scale(1.05);
+  }
+  20% {
+    transform: rotate(12deg) scale(1.05);
+  }
+  30% {
+    transform: rotate(-10deg) scale(1.02);
+  }
+  40% {
+    transform: rotate(8deg) scale(1.02);
+  }
+  50% {
+    transform: rotate(-4deg) scale(1);
   }
 }
-.fab-pulse:hover,
-.fab-pulse:focus-visible {
-  animation: callPulse 4s ease-out infinite;
+@keyframes fabOfferGlow {
+  0%,
+  100% {
+    box-shadow: 0 4px 20px rgba(var(--fab-glow-rgb), 0.5), 0 0 0 0 rgba(var(--fab-glow-rgb), 0.5);
+  }
+  50% {
+    box-shadow: 0 4px 28px rgba(var(--fab-glow-rgb), 0.7), 0 0 0 12px rgba(var(--fab-glow-rgb), 0);
+  }
+}
+@keyframes fabOfferRing {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+.fab-cta-pulse {
+  animation: fabOfferGlow 2.4s ease-in-out infinite;
+}
+.fab-call-pulse {
+  --fab-glow-rgb: 200, 16, 79;
+}
+.fab-zalo-pulse {
+  --fab-glow-rgb: 0, 104, 255;
+}
+.fab-offer-pulse {
+  --fab-glow-rgb: 6, 42, 163;
+}
+.fab-cta-icon {
+  position: relative;
+  z-index: 2;
+  animation: fabOfferWobble 2.4s ease-in-out infinite;
+}
+.fab-cta-ring {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border: 2px solid rgba(var(--fab-glow-rgb), 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: fabOfferRing 2.4s ease-out infinite;
+}
+.fab-cta-ring-2 {
+  border-color: rgba(var(--fab-glow-rgb), 0.3);
+  animation-delay: 0.8s;
+}
+.fab-cta-pulse:hover,
+.fab-cta-pulse:focus-visible {
+  animation-play-state: paused;
+}
+.fab-cta-pulse:hover .fab-cta-icon,
+.fab-cta-pulse:focus-visible .fab-cta-icon {
+  animation-play-state: paused;
+}
+.fab-cta-pulse:hover .fab-cta-ring,
+.fab-cta-pulse:focus-visible .fab-cta-ring {
+  animation-play-state: paused;
 }
 @media (prefers-reduced-motion: reduce) {
-  .fab-pulse {
+  .fab-cta-pulse,
+  .fab-cta-icon,
+  .fab-cta-ring {
     animation: none;
   }
 }

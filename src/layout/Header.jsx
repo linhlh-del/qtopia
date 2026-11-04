@@ -5,7 +5,7 @@ import Icon from '../components/ui/Icons'
 import { useContactPopup } from '../components/ContactPopup'
 import { mainNav } from '../seo/site-meta'
 
-const navCls = 'font-display text-[0.95rem] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime'
+const navCls = 'font-display text-[1.045rem] leading-[1.1] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime'
 
 // Header dính đầu trang (sticky, cao cố định --header-h). Nút "Tư vấn" luôn thấy cả trên điện thoại.
 export default function Header() {
@@ -36,9 +36,9 @@ export default function Header() {
             onClick={() => popup.open('header')}
             data-cta-name="header_consult"
             data-cta-location="header"
-            className="btn-base btn-primary !px-5"
+            className="btn-base btn-primary w-20 shrink-0 !px-5 text-[1.045rem] leading-[1.1] sm:w-28 lg:w-40"
           >
-            Tư vấn
+            TU VẤN
           </button>
           <button
             type="button"
@@ -62,7 +62,7 @@ export default function Header() {
           <ul className="container-page m-0 flex list-none flex-col py-3">
             {mainNav.map((item) => (
               <li key={item.to}>
-                <Link to={item.to} title={item.title} className="flex min-h-12 items-center border-b border-white/10 font-display text-base font-medium text-white no-underline">
+                <Link to={item.to} title={item.title} className="flex min-h-12 items-center border-b border-white/10 font-display text-[1.1rem] leading-[1.1] font-medium text-white no-underline">
                   {item.label}
                 </Link>
               </li>

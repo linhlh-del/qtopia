@@ -13,7 +13,7 @@ npm run serve      # phục vụ dist/ giống hosting thật (thư mục tĩnh 
 
 | Mục | Ở đâu | Ghi chú |
 |---|---|---|
-| Tên miền | `.env.production` → `VITE_SITE_URL` | Đang dùng `qtopia.example.com`; build lại sau khi đổi, rồi kiểm tra canonical/sitemap |
+| Tên miền | `.env.production` → `VITE_SITE_URL` | `https://qtopia-tau.vercel.app` |
 | Hotline, Zalo, địa chỉ, email | `src/data/project.js` → `siteMeta` | Giá trị placeholder tự bị loại khỏi JSON-LD và footer (`src/lib/filled.js`) |
 | Endpoint lead | `VITE_LEAD_ENDPOINT` | Chưa có thì form báo lỗi demo (không giả thành công) |
 | GTM / GA4 | `VITE_GTM_ID` | Thêm trigger History Change nếu muốn dùng `page_view` của GTM thay cho event `page_view` thủ công |

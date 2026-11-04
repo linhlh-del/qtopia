@@ -105,7 +105,8 @@ for (const p of pages) {
     const faq = graph.find((n) => n['@type'] === 'FAQPage')
     if (!faq) err(p, 'JSON-LD thiếu FAQPage')
     else {
-      const shown = [...body.matchAll(/<summary[\s\S]*?<h3[^>]*>([\s\S]*?)<\/h3>/g)].map((m) => decode(m[1].replace(/<!--.*?-->/g, '').trim()))
+      const shown = [...body.matchAll(/<button\b(?=[^>]*\bid="faq-q-\d+")[^>]*>([^<]*)/g)]
+        .map((m) => decode(m[1].trim()))
       const ldQ = faq.mainEntity.map((q) => q.name)
       if (JSON.stringify(shown) !== JSON.stringify(ldQ)) err(p, 'FAQPage không khớp FAQ hiển thị')
     }
