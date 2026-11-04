@@ -50,8 +50,8 @@ export const faq = [
 
 export const heroContent = {
   // H1 chứa từ khoá chính; slogan hiển thị ở <p> bên dưới (checklist SEO: không đặt slogan vào heading)
-  h1: "QTOPIA — thành phố cuối tuần bên biển",
-  slogan: "Trước biển, sau núi, gần rừng",
+  h1: "QTOPIA — THÀNH PHỐ CUỐI TUẦN CỦA SIÊU ĐÔ THỊ TP.HCM",
+  slogan: "Sở hữu rừng nguyên sinh, lưng tựa núi, mặt hướng biển",
   images: [
     {
       src: "/images/renders/view-from-sea.webp",
@@ -76,7 +76,7 @@ export const stories = [
     image: "/images/renders/birdview.webp",
     alt: "Phối cảnh tổng thể dự án QTOPIA bên bờ biển với núi xanh phía sau",
     align: "left",
-    label: "Một thành phố cuối tuần mang tên QTOPIA",
+    label: "Thành phố cuối tuần của siêu độ thị TP. HỒ CHÍ MINH",
     lead: "Biển ở phía trước, núi và rừng ở phía sau. QTOPIA kết nối không gian nghỉ dưỡng với nhịp vui của một tổ hợp Entertainment Complex.",
     points: [
       "Ba khu trải nghiệm: Quậy Station · Ocean Galaxy · Oasis Resort",

@@ -17,7 +17,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-q-navy shadow-[inset_0_-1px_0_rgba(255,255,255,0.08)]">
-      <div className="container-page flex h-[var(--header-h)] items-center justify-between gap-3">
+      <div className="container-page relative flex h-[var(--header-h)] items-center justify-between gap-3">
         <Link to="/" aria-label="QTOPIA — về trang chủ" className="flex min-h-11 shrink-0 items-center">
           <Img src="/images/brand/logo-horizontal-white.png" alt="QTOPIA" priority className="h-8 w-auto lg:h-9" />
         </Link>
@@ -36,7 +36,7 @@ export default function Header() {
             onClick={() => popup.open('header')}
             data-cta-name="header_consult"
             data-cta-location="header"
-            className="btn-base btn-primary w-20 shrink-0 !px-5 text-[1.045rem] leading-[1.1] sm:w-28 lg:w-40"
+            className="btn-base btn-primary w-[6.6rem] shrink-0 !px-5 text-[1.045rem] leading-[1.1] lg:w-40"
           >
             TU VẤN
           </button>
