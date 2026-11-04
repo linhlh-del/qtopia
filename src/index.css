@@ -1,0 +1,550 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Bảng màu thương hiệu QTOPIA (theo brand guideline) */
+  --color-q-blue: #062aa3;
+  --color-q-blue-600: #1a3fc0;
+  --color-q-navy: #050a2e;
+  --color-q-navy-700: #0b1446;
+  --color-q-red: #d30821;
+  --color-q-orange: #ff5f00;
+  --color-q-lime: #aaec0e;
+  --color-q-pink: #fb407a;
+  --color-q-lime-ink: #3d6e00; /* xanh lá đủ tương phản khi đặt trên nền sáng (nhãn section) */
+  --color-q-cream: #faf7f2;
+  --color-q-sand: #f1ece3;
+  --color-q-ink: #0b1020;
+  --color-q-muted: #5b6072;
+
+  /* Ưu tiên SF Pro (hiển thị thật trên iPhone/iPad/Mac), fallback Poppins/Inter cho thiết bị khác */
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Poppins', system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+
+  --shadow-soft: 0 10px 30px -12px rgba(5, 10, 46, 0.18);
+  --shadow-card: 0 24px 60px -24px rgba(5, 10, 46, 0.35);
+}
+
+:root {
+  /* Thời lượng & easing animation gom một chỗ (checklist v2 mục 11): xuất hiện 0.8–1.2s, hover/nút 0.25–0.35s */
+  --dur-fast: 0.3s;
+  --dur-base: 0.6s;
+  --dur-slow: 1s;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --stagger: 100ms;
+
+  /* Chiều cao header sticky (điện thoại / máy tính) và thanh CTA dưới đáy trên mobile */
+  --header-h: 64px;
+  --bar-h: 62px;
+
+  /* CTA: gradient đủ tương phản với chữ trắng (≥ 4.5:1) */
+  --cta-from: #c8104f;
+  --cta-to: #d63b00;
+}
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 72px;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+}
+
+/* Cuộn theo từng màn hình CHỈ ở máy tính (chuột) và chỉ trên trang chủ; điện thoại/tablet cuộn tự nhiên.
+   proximity (không mandatory) để section dài (mặt bằng, form) không bị kẹt. */
+@media (pointer: fine) and (min-width: 1024px) {
+  html[data-snap='home'] {
+    scroll-snap-type: y proximity;
+  }
+  [data-snap-section] {
+    scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-q-cream);
+  color: var(--color-q-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-page {
+      width: 78%;
+      padding-inline: 0;
+    }
+  }
+
+  .section-y {
+    padding-block: clamp(3.5rem, 7vw, 7rem);
+  }
+
+  /* Section gói gọn trong 1 khung hình thiết bị: cao tối thiểu bằng màn hình (trừ header),
+     nội dung canh giữa theo chiều dọc. Dùng min-height (không phải height) để màn rất thấp
+     vẫn giãn ra được thay vì cắt mất nội dung. */
+  .section-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Section luôn gọn trong đúng 1 khung hình thiết bị: cao bằng màn hình (trừ header),
+       không cao hơn. Phần nội dung co giãn được (ảnh, sơ đồ) nhận min-h-0 + flex-1 để
+       tự thu lại khi màn hình thấp, thay vì đẩy section dài ra. */
+    height: calc(100svh - var(--header-h));
+    max-height: calc(100svh - var(--header-h));
+    padding-block: clamp(2.25rem, 5vh, 4rem);
+    /* chừa chỗ cho thanh CTA cố định ở đáy (điện thoại/tablet) để không che mất nội dung */
+    padding-bottom: calc(clamp(2.25rem, 5vh, 4rem) + var(--bar-h));
+  }
+  @media (min-width: 1024px) {
+    .section-screen {
+      padding-bottom: clamp(2.25rem, 5vh, 4rem);
+    }
+  }
+
+  /* Màn hình thấp (điện thoại nhỏ, tablet nằm ngang): nén lề, chữ dẫn và thanh CTA
+     để nội dung vẫn vừa đúng 1 khung hình thay vì tràn sang section sau. */
+  @media (max-height: 740px) {
+    :root {
+      --bar-h: 54px;
+    }
+    .section-screen {
+      padding-block: 1.1rem;
+      padding-bottom: calc(1.1rem + var(--bar-h));
+    }
+    .prose-lead {
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .btn-base {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.88rem;
+    }
+  }
+  @media (max-height: 740px) and (min-width: 1024px) {
+    .section-screen {
+      padding-bottom: 1.1rem;
+    }
+  }
+
+  /* Màn hình rất thấp (iPhone SE, netbook, tablet xoay ngang): nén thêm một nấc nữa. */
+  @media (max-height: 620px) {
+    :root {
+      --bar-h: 48px;
+    }
+    .section-screen {
+      padding-block: 0.4rem;
+      padding-bottom: calc(0.4rem + var(--bar-h));
+    }
+    .prose-lead {
+      font-size: 0.75rem;
+      line-height: 1.35;
+      /* Màn cực thấp: câu dẫn rút còn 3 dòng để section không bị đẩy dài ra;
+         nội dung đầy đủ vẫn nằm trong trang chủ đề tương ứng. */
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
+    .section-label {
+      font-size: 0.72rem;
+    }
+  }
+  @media (max-height: 620px) and (min-width: 1024px) {
+    .section-screen {
+      padding-bottom: 0.6rem;
+    }
+  }
+
+  .section-eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* Nhãn section: chữ nhỏ, xanh lá — thay cho tiêu đề lớn nhiều chữ trước đây */
+  .section-label {
+    font-family: var(--font-display);
+    margin: 0;
+    font-size: clamp(0.82rem, 1.1vw, 0.95rem);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-q-lime-ink);
+  }
+  .section-label-light {
+    color: var(--color-q-lime);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    font-size: clamp(1.9rem, 4.2vw, 3.25rem);
+  }
+
+  .prose-lead {
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    line-height: 1.65;
+  }
+
+  /* Nút theo phong cách iOS: SF font, không in hoa, bo tròn mượt, phản hồi khi nhấn */
+  .btn-base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    padding: 0.8rem 1.55rem;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    min-height: 3rem; /* vùng chạm ≥ 48px */
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      filter var(--dur-fast) ease,
+      background-color var(--dur-fast) ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-base:active {
+    transform: scale(0.96);
+  }
+  .btn-base:focus-visible,
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible,
+  input:focus-visible {
+    outline: 3px solid var(--color-q-lime);
+    outline-offset: 2px;
+  }
+  .btn-primary {
+    background: linear-gradient(120deg, var(--cta-from), var(--cta-to));
+    color: #fff;
+    box-shadow: 0 12px 28px -10px rgba(200, 16, 79, 0.55);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.05);
+  }
+
+  /* Hiệu ứng phát sáng cho CTA: vệt sáng quét ngang (luôn chạy) + quầng sáng toả ra khi rê chuột.
+     Chỉ dùng transform/opacity nên không tính lại layout. */
+  .btn-primary,
+  .cta-fx,
+  button[type='submit'].btn-base {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    --cta-shine: rgb(255 255 255 / 0.45);
+    --cta-glow: rgb(255 255 255 / 0.3);
+  }
+  .btn-outline {
+    --cta-shine: rgb(255 255 255 / 0.35);
+    --cta-glow: rgb(170 236 14 / 0.35);
+  }
+  .btn-primary::after,
+  .cta-fx::after,
+  button[type='submit'].btn-base::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 38%, var(--cta-shine) 50%, transparent 62%);
+    transform: translate3d(-110%, 0, 0);
+    animation: btnShine 3.8s ease-in-out infinite;
+    will-change: transform;
+    pointer-events: none;
+  }
+  .btn-primary::before,
+  .cta-fx::before,
+  button[type='submit'].btn-base::before {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    z-index: -1;
+    background: radial-gradient(closest-side, var(--cta-glow), transparent 70%);
+    opacity: 0;
+    transition: opacity var(--dur-fast) ease;
+    pointer-events: none;
+  }
+  .btn-primary:hover::before,
+  .cta-fx:hover::before,
+  button[type='submit'].btn-base:hover::before {
+    opacity: 1;
+  }
+  .btn-primary:hover,
+  .cta-fx:hover {
+    box-shadow: 0 14px 34px -8px rgba(200, 16, 79, 0.65), 0 0 22px -4px rgba(255, 95, 0, 0.55);
+  }
+  .btn-base:disabled::after {
+    animation: none;
+    opacity: 0;
+  }
+  @keyframes btnShine {
+    0% {
+      transform: translate3d(-110%, 0, 0);
+    }
+    55%,
+    100% {
+      transform: translate3d(110%, 0, 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary::after,
+    .cta-fx::after,
+    button[type='submit'].btn-base::after {
+      display: none;
+    }
+  }
+  .btn-outline {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .btn-dark {
+    background: var(--color-q-navy);
+    color: #fff;
+  }
+  .btn-dark:hover {
+    background: var(--color-q-navy-700);
+  }
+
+  .card-soft {
+    border-radius: 1.75rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+}
+
+/* Super graphic "Orbit Lines" — họa tiết nền dạng vòng cung đồng tâm */
+.orbit-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-radial-gradient(
+    circle at var(--orbit-x, 85%) var(--orbit-y, 15%),
+    transparent 0,
+    transparent 58px,
+    rgba(255, 255, 255, 0.05) 59px,
+    rgba(255, 255, 255, 0.05) 60px
+  );
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Reveal theo data-attribute (hook useReveal). Chưa có JS → không có data-reveal → nội dung hiển thị bình thường. */
+[data-reveal='pending'] {
+  opacity: 0;
+}
+[data-reveal='visible'] {
+  animation: fade-up var(--dur-slow) var(--ease-out) both;
+}
+/* Phần tử con xuất hiện lần lượt (stagger 100ms): gắn class .stagger + style --i */
+[data-reveal='pending'] .stagger {
+  opacity: 0;
+  transform: translateY(20px);
+}
+[data-reveal='visible'] .stagger {
+  animation: fade-up var(--dur-slow) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * var(--stagger));
+}
+
+/* Số liệu đếm tăng dần (CountUp). Giá trị cuối LUÔN nằm trong DOM để bot đọc được;
+   số đang quay vẽ bằng ::after nên crawler không bao giờ đọc phải số dở dang. */
+.countup {
+  display: inline-grid;
+}
+.countup__final {
+  grid-area: 1 / 1;
+}
+.countup[data-state='armed'] {
+  opacity: 0;
+}
+.countup[data-state='running'] > .countup__final {
+  visibility: hidden;
+}
+.countup[data-state='running']::after {
+  content: attr(data-display);
+  grid-area: 1 / 1;
+  white-space: nowrap;
+}
+
+/* Ảnh hiện dần khi tải xong (chỉ bật sau khi JS chạy, để bản prerender không bị ẩn ảnh) */
+html.js-ready img[data-img-fade] {
+  opacity: 0;
+  transform: scale(1.03);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform 1.2s var(--ease-out);
+}
+html.js-ready img[data-img-fade][data-loaded] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .countup[data-state] {
+    opacity: 1 !important;
+  }
+  .countup[data-state='running'] > .countup__final {
+    visibility: visible !important;
+  }
+  .countup[data-state='running']::after {
+    content: none !important;
+  }
+  html.js-ready img[data-img-fade] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Nút nổi: nhịp pulse chậm (4s) cho nút gọi — tắt khi reduced-motion */
+@keyframes callPulse {
+  0%,
+  72%,
+  100% {
+    box-shadow: 0 10px 24px -8px rgba(5, 10, 46, 0.5), 0 0 0 0 rgba(200, 16, 79, 0.5);
+  }
+  86% {
+    box-shadow: 0 10px 24px -8px rgba(5, 10, 46, 0.5), 0 0 0 14px rgba(200, 16, 79, 0);
+  }
+}
+.fab-pulse {
+  animation: callPulse 4s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fab-pulse {
+    animation: none;
+  }
+}
+
+/* Viền zone bám theo path gốc; đốm sáng chạy hết chu vi từng khu. */
+@keyframes amenityZoneTravel {
+  to { stroke-dashoffset: -100; }
+}
+.amenity-zone { transition: opacity 250ms ease; }
+.amenity-zone > path:first-child { filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 10px currentColor); }
+.amenity-zone-runner {
+  animation: amenityZoneTravel 6s linear infinite;
+  filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 11px currentColor);
+  transition: color 220ms ease, filter 220ms ease;
+}
+.amenity-zone-runner-active {
+  filter: drop-shadow(0 0 7px currentColor) drop-shadow(0 0 17px currentColor);
+}
+.amenity-zone:nth-child(3) .amenity-zone-runner { animation-duration: 7s; }
+.amenity-zone:nth-child(4) .amenity-zone-runner { animation-duration: 8s; }
+.amenity-number {
+  left: var(--amenity-left-cropped);
+  scale: 1;
+  transition: scale 220ms ease, box-shadow 220ms ease;
+}
+@media (min-width: 1024px) {
+  .amenity-number { left: var(--amenity-left-full); }
+}
+/* Toàn màn hình: hiện trọn mặt bằng (không cắt bớt) nên nhãn dùng toạ độ gốc. */
+.amenity-map-full .amenity-number { left: var(--amenity-left-full); }
+.amenity-number:hover { scale: 1.2; }
+.amenity-number-selected {
+  z-index: 30;
+  scale: 1.2;
+}
+
+@keyframes drawerInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes drawerInUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.floorplan-drawer {
+  animation: drawerInUp 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Sơ đồ mặt bằng rất ngang (tỉ lệ ~3.2:1). Toàn màn hình: luôn giữ phương ngang,
+   mức 1x vừa khít màn hình để thấy trọn sơ đồ; phóng thêm thì kéo xem trong khung. */
+.floorplan-fullscreen {
+  width: calc(min(100vw, 100svh * var(--fp-ar)) * var(--fp-zoom, 1));
+}
+
+@media (min-width: 640px) {
+  .floorplan-drawer {
+    animation-name: drawerInRight;
+  }
+}
+
+@keyframes markerPing {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.marker-ping {
+  animation: markerPing 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .amenity-zone-runner,
+  .marker-ping {
+    animation: none !important;
+  }
+  .amenity-zone-runner { stroke-dasharray: none; }
+}
