@@ -50,6 +50,27 @@ const mapRoutes = [
   },
 ];
 
+const mapAdditionalLines = [
+  {
+    id: "green",
+    name: "Tuyến giao thông 04",
+    description: "Tuyến màu xanh lá trên bản đồ.",
+    color: "#2cec13",
+    points:
+      "21.2,258.9 46.6,273.3 65.7,283.5 77.4,289 89.7,292.4 102,289.7 125.3,289 152,287 182.2,285.6 208.2,285.6 223.3,282.8 231.5,282.8 242.4,284.9 253.4,287 269.1,289.7 285.6,295.2 297.2,296.5 315,302 321.2,303.4 328.7,302.7 337.6,298.6 345.2,294.5 354.1,291.8 367.1,286.3 381.5,277.4 387.6,275.3 408.2,279.4 432.1,283.5 460.2,286.3 495.8,288.3 522.5,287 539.7,285.6 553.4,278.7 561.6,266.4 569.1,255.5 574.6,241.8",
+  },
+  {
+    id: "red",
+    name: "Tuyến giao thông 05",
+    description: "Tuyến màu đỏ trên bản đồ.",
+    color: "#f51919",
+    points:
+      "665.7,293.1 686.2,298.6 702.7,302 717,305.4 733.5,308.9 749.2,310.2 756.1,312.3 769.1,319.8 790.3,328 816.3,339 836.9,351.3 861.5,363.7 895.1,378.7 918.4,387.6 936.9,395.9 952.6,403.4 973.2,419.1 985.5,432.8 998.5,455.4",
+  },
+];
+
+const legendRoutes = [...mapRoutes, ...mapAdditionalLines];
+
 /* =========================================
    MAP CHECK-IN LOCATIONS
 ========================================= */
@@ -106,7 +127,7 @@ function LocationMap() {
   const [activeRoute, setActiveRoute] = useState(null);
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center">
+    <div className="flex h-full w-full flex-col justify-center gap-3">
       <div className="relative isolate aspect-[1456/683] w-full overflow-hidden rounded-[12px] bg-white ring-1 ring-white/10">
         {/* ANIMATION STYLES */}
         <style>{`
@@ -117,6 +138,19 @@ function LocationMap() {
           to {
             stroke-dashoffset: -24;
           }
+        }
+
+        @keyframes qtopia-additional-line-flow {
+          to { stroke-dashoffset: -42; }
+        }
+
+        .qtopia-additional-line {
+          fill: none;
+          stroke-width: 6;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          stroke-dasharray: 24 9 0 9;
+          animation: qtopia-additional-line-flow 1.2s linear infinite;
         }
 
         @keyframes qtopia-marker-pulse {
@@ -145,7 +179,6 @@ function LocationMap() {
           stroke-dasharray: 3 11;
           stroke-linecap: round;
           stroke-linejoin: round;
-          animation: qtopia-route-flow var(--route-speed) linear infinite;
         }
 
         .qtopia-pulse {
@@ -155,6 +188,7 @@ function LocationMap() {
         @media (prefers-reduced-motion: reduce) {
           .qtopia-route,
           .qtopia-route-center,
+          .qtopia-additional-line,
           .qtopia-pulse {
             animation: none;
           }
@@ -203,6 +237,15 @@ function LocationMap() {
               />
             </g>
           ))}
+          {mapAdditionalLines.map((line) => (
+            <polyline
+              key={line.id}
+              points={line.points}
+              stroke={line.color}
+              opacity={activeRoute === null || activeRoute === line.id ? 1 : 0.25}
+              className="qtopia-additional-line"
+            />
+          ))}
         </svg>
 
         {/* LOCATION MARKERS */}
@@ -244,28 +287,29 @@ function LocationMap() {
             </span>
           </div>
         ))}
-        <div className="absolute bottom-3 right-3 z-30 w-fit max-w-[min(100%,18rem)] rounded-lg border border-white/20 bg-q-navy/90 p-3 text-white shadow-lg backdrop-blur-md">
-          <p className="mb-2 text-[9px] font-bold uppercase tracking-wider text-q-lime sm:text-[10px] lg:text-xs">
-            Chú thích tuyến giao thông
-          </p>
+      </div>
+      <div className="w-full rounded-xl border border-white/20 bg-white/10 p-3 text-white sm:p-4">
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-q-lime sm:text-xs">
+          Chú thích tuyến giao thông
+        </p>
 
-          <div className="flex flex-col gap-2">
-            {mapRoutes.map((route) => (
+        <div className="grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-3">
+            {legendRoutes.map((route) => (
               <button
                 key={route.id}
                 type="button"
                 onClick={() =>
                   setActiveRoute(activeRoute === route.id ? null : route.id)
                 }
-                aria-expanded={activeRoute === route.id}
-                className="flex items-start gap-2 text-left"
+                aria-pressed={activeRoute === route.id}
+                className="flex min-w-0 items-start gap-2 rounded-md p-1 text-left hover:bg-white/10"
               >
                 <span className="mt-1 flex shrink-0 items-center gap-0.5">
                   <span
                     className="h-[3px] w-3 rounded-full"
                     style={{ backgroundColor: route.color }}
                   />
-                  <span className="h-[3px] w-2 rounded-full bg-white" />
+                  <span className="h-[3px] w-2 rounded-full" style={{ backgroundColor: typeof route.id === 'number' ? '#fff' : route.color }} />
                   <span
                     className="h-[3px] w-3 rounded-full"
                     style={{ backgroundColor: route.color }}
@@ -288,7 +332,6 @@ function LocationMap() {
                 </span>
               </button>
             ))}
-          </div>
         </div>
       </div>
     </div>
@@ -377,7 +420,7 @@ export default function Location({ showTopicLink = true }) {
             </div>
           </div>
 
-          <div className="aspect-[1456/683] w-full min-w-0">
+          <div className="w-full min-w-0">
             <LocationMap />
           </div>
         </div>

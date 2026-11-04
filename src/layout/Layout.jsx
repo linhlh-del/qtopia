@@ -8,10 +8,10 @@ import Seo from '../components/Seo'
 import { ContactPopupProvider } from '../components/ContactPopup'
 import { initDelegatedTracking, loadGtm, track, trackScrollDepth, trackSectionViews } from '../lib/analytics'
 import { captureFirstTouch } from '../lib/utm'
+import { pauseOffscreenMotion } from '../lib/motion'
 
-/* Cuộn tới section khi URL có #id (nav, CTA, link chia sẻ); trang khác → về đầu trang.
-   Mở thẳng link: ~1,5 giây đầu bố cục còn đổi (ảnh, font) → căn lại section dưới header mỗi lần đổi,
-   dừng ngay khi người dùng tự cuộn / chạm / gõ phím. scroll-padding-top của <html> đã tính chiều cao header. */
+/* Cuộn tới section khi URL có #id; chỉ cuộn một lần để không giành quyền cuộn của người dùng.
+   scroll-padding-top của <html> đã tính chiều cao header. */
 function useScrollToSection() {
   const { pathname, hash, key } = useLocation()
   useEffect(() => {
@@ -20,32 +20,8 @@ function useScrollToSection() {
       window.scrollTo(0, 0)
       return undefined
     }
-    const el = () => document.getElementById(id)
-    const t = setTimeout(() => el()?.scrollIntoView({ block: 'start' }), 0)
-    let stop = false
-    const ro = new ResizeObserver(() =>
-      requestAnimationFrame(() => {
-        const target = el()
-        const header = document.querySelector('header')?.getBoundingClientRect().height || 0
-        if (!stop && target && Math.abs(target.getBoundingClientRect().top - header) > 2) {
-          target.scrollIntoView({ block: 'start', behavior: 'auto' })
-        }
-      }),
-    )
-    ro.observe(document.getElementById('main') || document.body)
-    const quit = () => {
-      stop = true
-      ro.disconnect()
-    }
-    const timer = setTimeout(quit, 1500)
-    const evs = ['wheel', 'touchstart', 'keydown', 'pointerdown']
-    evs.forEach((ev) => window.addEventListener(ev, quit, { passive: true, once: true }))
-    return () => {
-      clearTimeout(t)
-      clearTimeout(timer)
-      quit()
-      evs.forEach((ev) => window.removeEventListener(ev, quit))
-    }
+    const timer = window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ block: 'start' }), 0)
+    return () => window.clearTimeout(timer)
   }, [pathname, hash, key])
 }
 
@@ -68,9 +44,11 @@ export default function Layout() {
     track('page_view', { page_path: pathname, page_title: document.title })
     const stopScroll = trackScrollDepth()
     const stopSections = trackSectionViews()
+    const stopMotion = pauseOffscreenMotion()
     return () => {
       stopScroll()
       stopSections()
+      stopMotion()
     }
   }, [pathname])
 

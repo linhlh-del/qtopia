@@ -51,17 +51,6 @@ html {
   scroll-padding-top: var(--header-h);
 }
 
-/* Cuộn theo từng màn hình CHỈ ở máy tính (chuột) và chỉ trên trang chủ; điện thoại/tablet cuộn tự nhiên.
-   proximity (không mandatory) để section dài (mặt bằng, form) không bị kẹt. */
-@media (pointer: fine) and (min-width: 1024px) {
-  html[data-snap='home'] {
-    scroll-snap-type: y proximity;
-  }
-  [data-snap-section] {
-    scroll-snap-align: start;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -280,9 +269,15 @@ body {
     inset: 0;
     background: linear-gradient(105deg, transparent 38%, var(--cta-shine) 50%, transparent 62%);
     transform: translate3d(-110%, 0, 0);
-    animation: btnShine 3.8s ease-in-out infinite;
-    will-change: transform;
     pointer-events: none;
+  }
+  .btn-primary:hover::after,
+  .btn-primary:focus-visible::after,
+  .cta-fx:hover::after,
+  .cta-fx:focus-visible::after,
+  button[type='submit'].btn-base:hover::after,
+  button[type='submit'].btn-base:focus-visible::after {
+    animation: btnShine 1.2s ease-in-out 1;
   }
   .btn-primary::before,
   .cta-fx::before,
@@ -452,7 +447,8 @@ html.js-ready img[data-img-fade][data-loaded] {
     box-shadow: 0 10px 24px -8px rgba(5, 10, 46, 0.5), 0 0 0 14px rgba(200, 16, 79, 0);
   }
 }
-.fab-pulse {
+.fab-pulse:hover,
+.fab-pulse:focus-visible {
   animation: callPulse 4s ease-out infinite;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -477,6 +473,18 @@ html.js-ready img[data-img-fade][data-loaded] {
 }
 .amenity-zone:nth-child(3) .amenity-zone-runner { animation-duration: 7s; }
 .amenity-zone:nth-child(4) .amenity-zone-runner { animation-duration: 8s; }
+#vi-tri:not([data-motion-active]) .qtopia-route,
+#vi-tri:not([data-motion-active]) .qtopia-route-center,
+#vi-tri:not([data-motion-active]) .qtopia-additional-line,
+#vi-tri:not([data-motion-active]) .qtopia-pulse,
+#tien-ich:not([data-motion-active]) .amenity-zone-runner,
+html[data-motion-scrolling] #vi-tri .qtopia-route,
+html[data-motion-scrolling] #vi-tri .qtopia-route-center,
+html[data-motion-scrolling] #vi-tri .qtopia-additional-line,
+html[data-motion-scrolling] #vi-tri .qtopia-pulse,
+html[data-motion-scrolling] #tien-ich .amenity-zone-runner {
+  animation-play-state: paused;
+}
 .amenity-number {
   left: var(--amenity-left-cropped);
   scale: 1;

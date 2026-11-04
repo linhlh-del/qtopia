@@ -60,6 +60,6 @@ UTM đầu tiên của khách lưu ở localStorage và gửi kèm lead. Quy ư�
 - Tiêu đề section là chữ nhỏ màu xanh lá (`.section-label`), vẫn là `<h2>` chứa từ khoá cho SEO.
 - Hiệu ứng: CTA có vệt sáng quét + quầng sáng khi hover (`.btn-primary`, `.cta-fx`); số liệu đếm tăng dần
   (`CountUp`, giá trị cuối luôn nằm trong DOM cho bot); ảnh hiện dần khi tải xong (`Img` + `html.js-ready`).
-- Cuộn theo từng màn hình chỉ bật trên máy tính dùng chuột (`pointer: fine`, ≥ 1024px), kiểu `proximity`, chỉ cho section vừa một màn hình; điện thoại/tablet cuộn tự nhiên.
+- Trang cuộn tự nhiên trên mọi thiết bị; các nút điều hướng vẫn lướt tới section tương ứng.
 - Hiệu ứng xuất hiện dùng `data-reveal` (không dùng class) để không bị React ghi đè; thời lượng/easing ở biến CSS `--dur-*`, `--ease-out`.
 - Tên file ảnh viết thường, không dấu (Linux/Vercel phân biệt hoa-thường). Kích thước ảnh tra từ `src/data/image-sizes.json`.

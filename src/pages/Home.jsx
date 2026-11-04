@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Hero from "../sections/Hero";
 import Story from "../sections/Story";
 import Facts from "../sections/Facts";
@@ -14,14 +13,6 @@ import { stories } from "../data/project";
 
 // Trang chủ = landing page tổng quan. Thứ tự: giới thiệu → vị trí → tiện ích → sản phẩm → khám phá → pháp lý → FAQ → đăng ký.
 export default function Home() {
-  // Cuộn theo màn hình chỉ bật ở trang chủ (CSS chỉ áp dụng cho máy tính dùng chuột)
-  useEffect(() => {
-    document.documentElement.dataset.snap = "home";
-    return () => {
-      delete document.documentElement.dataset.snap;
-    };
-  }, []);
-
   return (
     <>
       <Hero />

@@ -96,7 +96,7 @@ export default function ValueNav() {
       <nav
         ref={barRef}
         aria-label="Lối tắt nhanh"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-q-navy/95 pb-[env(safe-area-inset-bottom)] text-white backdrop-blur lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-q-navy pb-[env(safe-area-inset-bottom)] text-white lg:hidden"
       >
         <div
           id="explore-sheet"
