@@ -134,7 +134,7 @@ function LocationMap() {
   };
 
   return (
-    <div className="flex h-full w-full flex-col justify-center gap-3">
+    <div className="flex h-full w-full flex-col justify-center gap-3 lg:justify-start">
       <div className="relative isolate aspect-[1456/683] w-full overflow-hidden rounded-[12px] bg-white ring-1 ring-white/10">
         {/* ANIMATION STYLES */}
         <style>{`
@@ -418,7 +418,7 @@ export default function Location({ showTopicLink = true }) {
           ref={ref}
           className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-5 lg:mt-7 lg:grid-cols-[minmax(0,7fr)_minmax(0,13fr)] lg:items-stretch lg:gap-8 [@media(max-height:740px)]:mt-2"
         >
-          <div className="flex min-w-0 flex-col justify-center">
+          <div className="flex min-w-0 flex-col justify-center lg:h-full lg:justify-start">
             <SectionHeading
               light
               label={locationContent.label}
@@ -474,7 +474,7 @@ export default function Location({ showTopicLink = true }) {
             </div>
           </div>
 
-          <div className="w-full min-w-0">
+          <div className="w-full min-w-0 lg:h-full">
             <LocationMap />
           </div>
         </div>

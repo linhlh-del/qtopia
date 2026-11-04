@@ -80,7 +80,7 @@ export const stories = [
     lead: "Biển ở phía trước, núi và rừng ở phía sau. QTOPIA kết nối không gian nghỉ dưỡng với nhịp vui của một tổ hợp Entertainment Complex.",
     points: [
       "Ba khu trải nghiệm: Quậy Station · Ocean Galaxy · Oasis Resort",
-      "Căn hộ AMA, MIRA, VITA và ARIA theo từng tháp",
+      "Loại hình căn hộ Studio · 1PN+ · 2PN · 3PN · Aqua Home theo từng tháp",
     ],
     cta: {
       label: "Khám phá mặt bằng",
@@ -109,14 +109,22 @@ export const stories = [
 
 // 8 ô số liệu — mỗi ô 1 con số (chạy hiệu ứng đếm) + đơn vị + chú thích ngắn.
 export const facts = [
-  { value: "3", unit: "Tháp", label: "Q5 · Q6 · Q7" },
-  { value: "4", unit: "Loại căn", label: "Studio · 1PN+ · 2PN · 3PN" },
-  { value: "3", unit: "Cụm tiện ích", label: "Station · Galaxy · Oasis" },
-  { value: "7", unit: "Tầng căn hộ", label: "Tầng 4 đến tầng 10" },
-  { value: "90", unit: "Phút", label: "Từ trung tâm TP.HCM (tham khảo)" },
+  { value: "7,5", unit: "ha", label: "Quy mô" },
+  { value: "9", unit: "Tháp", label: "Q5 · Q6 · Q7" },
+  {
+    value: "5",
+    unit: "Loại căn",
+    label: "Studio · 1PN+ · 2PN · 3PN · Aqua Home",
+  },
+  {
+    value: "3",
+    unit: "Cụm tiện ích",
+    label: "Quậy Station · Ocean Galaxy · Oasis Resort",
+  },
+  { value: "20", unit: "Tầng căn hộ", label: "Tầng 4 đến tầng 10" },
+  { value: "75", unit: "Phút", label: "Từ trung tâm TP.HCM (tham khảo)" },
   { value: "30", unit: "Phút", label: "Từ sân bay Long Thành (tham khảo)" },
   { value: "19", unit: "Phút", label: "Từ Hồ Tràm (tham khảo)" },
-  { value: "25", unit: "m²", label: "Diện tích sử dụng từ khoảng" },
 ];
 
 export const featuredAmenityGroups = [

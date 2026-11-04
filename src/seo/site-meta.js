@@ -38,10 +38,10 @@ export const pages = {
   '/': {
     title: 'QTOPIA — Thành phố cuối tuần bên biển gần TP.HCM',
     description:
-      'Khám phá QTOPIA, thành phố cuối tuần bên biển với Quậy Station, Ocean Galaxy, Oasis Resort và căn hộ AMA, MIRA, VITA, ARIA tại ba tháp Q5, Q6, Q7. Xem ngay.',
+      'QTOPIA – Thành phố cuối tuần bên biển, cách TP.HCM 75 phút. Sở hữu thiên nhiên núi, biển, rừng; nghỉ dưỡng Resort City, wellness, giải trí 24/7 và vận hành CBRE.',
     ogTitle: 'QTOPIA — Thành phố cuối tuần của siêu đô thị TP.HCM',
     ogDescription:
-      'Một điểm đến bên biển với ba khu trải nghiệm, Nightlife Hub và các loại căn từ Studio đến 3PN theo tài liệu dự án.',
+      'QTOPIA – Thành phố cuối tuần bên biển, cách TP.HCM 75 phút. Sở hữu thiên nhiên núi, biển, rừng; nghỉ dưỡng Resort City, wellness, giải trí 24/7 và vận hành CBRE.',
     breadcrumb: 'Trang chủ',
     changefreq: 'weekly',
     priority: 1.0,
