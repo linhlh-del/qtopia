@@ -109,7 +109,7 @@ function MapPinIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4 lg:h-5 lg:w-5"
+      className="h-5 w-5 lg:h-6 lg:w-6"
       aria-hidden="true"
     >
       <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
@@ -125,6 +125,8 @@ function MapPinIcon() {
 function LocationMap() {
   const [active, setActive] = useState(null);
   const [activeRoute, setActiveRoute] = useState(null);
+  // Điện thoại/tablet: chú thích tuyến thu gọn sau một nút để bản đồ + cự ly vừa một màn hình.
+  const [legendOpen, setLegendOpen] = useState(false);
   const toggleRoute = (id) => setActiveRoute((current) => current === id ? null : id);
   const onRouteKeyDown = (event, id) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -313,18 +315,18 @@ function LocationMap() {
               aria-label={place.name}
               aria-expanded={active === place.id}
               onClick={() => setActive(active === place.id ? null : place.id)}
-              className={`relative z-0 grid shrink-0 place-items-center bg-transparent p-0 text-[#e63946] drop-shadow-md transition-all duration-300 hover:scale-110 ${
+              className={`relative z-0 grid size-8 shrink-0 cursor-pointer place-items-center bg-transparent p-0 text-[#e63946] drop-shadow-md transition-all duration-300 hover:scale-110 ${
                 active === place.id ? "scale-110 text-q-lime" : ""
               }`}
             >
               <MapPinIcon />
-              <span className="qtopia-pulse pointer-events-none absolute -inset-[5px] rounded-full border-2 border-[#e63946]" />
+              <span className="qtopia-pulse pointer-events-none absolute inset-1 rounded-full border-2 border-[#e63946]" />
             </button>
 
             {/* LOCATION LABEL — ẩn mặc định, chỉ hiện khi bấm vào nút check-in */}
             <span
               aria-hidden="true"
-              className={`relative z-10 pointer-events-none whitespace-nowrap rounded-md border px-2 py-1 font-body text-[length:calc(8px*var(--type-scale))] font-semibold text-q-navy shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-[2px] transition-all duration-300 sm:text-[length:calc(10px*var(--type-scale))] lg:px-2.5 lg:text-xs ${
+              className={`relative z-10 pointer-events-none whitespace-nowrap rounded-md border px-2 py-1 font-body text-[length:calc(10px*var(--type-scale))] font-semibold text-q-navy shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-[2px] transition-all duration-300 sm:text-[length:calc(10px*var(--type-scale))] lg:px-2.5 lg:text-xs ${
                 active === place.id
                   ? "translate-y-0 border-q-lime bg-q-lime/70 opacity-100"
                   : "translate-y-1 border-white/40 bg-white/70 opacity-0"
@@ -335,12 +337,22 @@ function LocationMap() {
           </div>
         ))}
       </div>
-      <div className="w-full rounded-xl border border-white/20 bg-white/10 p-3 text-white sm:p-4">
-        <p className="mb-2 text-[length:calc(10px*var(--type-scale))] font-bold uppercase tracking-wider text-q-lime sm:text-xs">
+      <div className="w-full rounded-xl border border-white/20 bg-white/10 px-3 py-1 text-white sm:px-4 lg:py-4">
+        <button
+          type="button"
+          onClick={() => setLegendOpen((v) => !v)}
+          aria-expanded={legendOpen}
+          aria-controls="location-legend"
+          className="flex min-h-11 w-full cursor-pointer items-center justify-between gap-3 text-left text-xs font-bold uppercase tracking-wider text-q-lime lg:hidden"
+        >
+          Chú thích tuyến giao thông
+          <span aria-hidden="true" className={`text-base transition-transform duration-300 ${legendOpen ? "rotate-45" : ""}`}>+</span>
+        </button>
+        <p className="mb-2 hidden text-xs font-bold uppercase tracking-wider text-q-lime lg:block">
           Chú thích tuyến giao thông
         </p>
 
-        <div className="grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-3">
+        <div id="location-legend" className={`${legendOpen ? "grid" : "hidden"} grid-cols-2 gap-x-3 gap-y-2 pb-2 lg:grid lg:grid-cols-3 lg:pb-0`}>
           {legendRoutes.map((route) => (
             <button
               key={route.id}
@@ -373,14 +385,14 @@ function LocationMap() {
 
               <span className="min-w-0">
                 <span
-                  className={`block text-[length:calc(9px*var(--type-scale))] font-semibold sm:text-[length:calc(10px*var(--type-scale))] lg:text-xs ${
+                  className={`block text-xs font-semibold ${
                     activeRoute === route.id ? "text-q-lime" : "text-white"
                   }`}
                 >
                   {route.name}
                 </span>
-                {activeRoute === route.id && (
-                  <span className="mt-1 block text-[length:calc(8px*var(--type-scale))] leading-relaxed text-white/75 sm:text-[length:calc(9px*var(--type-scale))] lg:text-[length:calc(11px*var(--type-scale))]">
+                {activeRoute === route.id && !/^(Cập nhật|Tuyến màu)/.test(route.description) && (
+                  <span className="mt-1 block text-xs leading-relaxed text-white/75">
                     {route.description}
                   </span>
                 )}
@@ -425,7 +437,7 @@ export default function Location({ showTopicLink = true }) {
       <Container className="relative z-10 flex min-h-0 flex-1 flex-col">
         <div
           ref={ref}
-          className="location-layout mt-3 grid min-h-0 flex-1 grid-cols-1 gap-5 lg:mt-7 lg:grid-cols-[minmax(0,7fr)_minmax(0,13fr)] lg:items-stretch lg:gap-8 [@media(max-height:740px)]:mt-2"
+          className="location-layout mt-0 grid min-h-0 flex-1 grid-cols-1 gap-3 sm:mt-3 sm:gap-5 lg:mt-7 lg:grid-cols-[minmax(0,7fr)_minmax(0,13fr)] lg:items-stretch lg:gap-8 [@media(max-height:740px)]:mt-2"
         >
           <div className="location-copy flex min-w-0 flex-col justify-center lg:h-full lg:justify-start">
             <SectionHeading
@@ -458,7 +470,7 @@ export default function Location({ showTopicLink = true }) {
               tuyến đường và giao thông.
             </p>
 
-            <div className="flex flex-wrap gap-2 pt-2.5 lg:gap-3 lg:pt-5">
+            <div className="grid grid-cols-2 gap-2 pt-2.5 sm:flex sm:flex-wrap lg:gap-3 lg:pt-5 [&>*]:max-sm:!px-3 [&>*]:max-sm:!text-[0.82rem]">
               <Link
                 to="/#lien-he"
                 data-cta-name="location_register"

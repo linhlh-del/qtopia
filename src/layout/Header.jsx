@@ -6,7 +6,7 @@ import { useContactPopup } from "../components/ContactPopup";
 import { mainNav } from "../seo/site-meta";
 
 const navCls =
-  "font-display text-[length:calc(0.92rem*var(--type-scale))] xl:text-[length:calc(1.045rem*var(--type-scale))] leading-[1.1] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime";
+  "inline-flex items-center py-2 font-display text-[length:calc(0.92rem*var(--type-scale))] xl:text-[length:calc(1.045rem*var(--type-scale))] leading-[1.1] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime";
 
 // Header dính đầu trang (sticky, cao cố định --header-h). Nút "Tư vấn" luôn thấy cả trên điện thoại.
 export default function Header() {

@@ -1,0 +1,724 @@
+import { i as registerCms } from "./content-DBX5_AOn.js";
+import { useEffect, useRef } from "react";
+import { jsx, jsxs } from "react/jsx-runtime";
+// src/data/amenity-catalog.js
+var amenityCatalog = [
+	{
+		id: "quay-station",
+		name: "Quậy Station",
+		markers: [
+			{
+				n: 1,
+				name: "Quậy Beach"
+			},
+			{
+				n: 2,
+				name: "Nhà hàng Sunset"
+			},
+			{
+				n: 3,
+				name: "Q.Club"
+			},
+			{
+				n: 4,
+				name: "Quảng trường biển"
+			},
+			{
+				n: 5,
+				name: "Biểu tượng check-in"
+			},
+			{
+				n: 6,
+				name: "Khách sạn quốc tế"
+			}
+		]
+	},
+	{
+		id: "ocean-galaxy",
+		name: "Ocean Galaxy",
+		markers: [
+			{
+				n: 7,
+				name: "Cổng chào Wonder Gate"
+			},
+			{
+				n: 8,
+				name: "Đường dạo bộ cảnh quan"
+			},
+			{
+				n: 9,
+				name: "Hồ bơi Galaxy"
+			},
+			{
+				n: 10,
+				name: "Quậy bar Galaxy"
+			},
+			{
+				n: 11,
+				name: "Sàn DJ Ocean"
+			},
+			{
+				n: 12,
+				name: "Hồ bơi Infinity"
+			},
+			{
+				n: 13,
+				name: "Ocean Lounge"
+			},
+			{
+				n: 14,
+				name: "Locker"
+			},
+			{
+				n: 15,
+				name: "Con đường nước"
+			},
+			{
+				n: 16,
+				name: "Khu vui chơi Aqua Funny Park"
+			},
+			{
+				n: 17,
+				name: "Biểu tượng Kraken"
+			},
+			{
+				n: 18,
+				name: "Phố Wyndham"
+			},
+			{
+				n: 19,
+				name: "Phố TMDV Ocean Galaxy"
+			}
+		]
+	},
+	{
+		id: "oasis-resort",
+		name: "Oasis Resort",
+		markers: [
+			{
+				n: 20,
+				name: "Phố TMDV Oasis Resort"
+			},
+			{
+				n: 21,
+				name: "Hồ bơi Oasis"
+			},
+			{
+				n: 22,
+				name: "Quậy bar Oasis"
+			},
+			{
+				n: 23,
+				name: "Sân tắm nắng"
+			},
+			{
+				n: 24,
+				name: "Sân chơi nước Dolphin"
+			},
+			{
+				n: 25,
+				name: "Sân chơi khô Octo"
+			},
+			{
+				n: 26,
+				name: "Tổ hợp thể thao"
+			},
+			{
+				n: 27,
+				name: "Vườn Romantic Garden"
+			},
+			{
+				n: 28,
+				name: "Quậy bar & Lounge Green Terrace"
+			},
+			{
+				n: 29,
+				name: "Hidden Jacuzzi"
+			}
+		]
+	}
+];
+// src/data/project.js
+var siteMeta = {
+	projectName: "QTOPIA",
+	tagline: "Thành phố cuối tuần của siêu đô thị TP. Hồ Chí Minh",
+	hotline: "093 448 3138",
+	hotlineHref: "tel:+84934483138",
+	zalo: "https://zalo.me/1717736678695240623",
+	email: "",
+	address: "Thửa đất số 08, tờ bản đồ số 38, xã Phước Hải, TP. Hồ Chí Minh",
+	developer: "Phát Đạt Corporation"
+};
+var faq = [
+	{
+		q: "QTOPIA là dự án gì và nằm ở đâu?",
+		a: "Theo tài liệu dự án, QTOPIA là tổ hợp căn hộ và trải nghiệm giải trí, nghỉ dưỡng bên biển tại khu vực Phước Hải. Brochure định vị nơi đây là “thành phố cuối tuần” cách trung tâm TP.HCM khoảng 75 phút di chuyển."
+	},
+	{
+		q: "Từ TP.HCM đến QTOPIA mất bao lâu?",
+		a: "Brochure nêu thời gian tham khảo khoảng 75 phút từ trung tâm TP.HCM, 30 phút từ sân bay Long Thành và 19 phút từ Hồ Tràm. Thời gian thực tế phụ thuộc điểm xuất phát, tuyến đường và giao thông."
+	},
+	{
+		q: "QTOPIA có những khu tiện ích nào?",
+		a: "Ba khu trải nghiệm chính trong brochure là Quậy Station, Ocean Galaxy và Oasis Resort. Các điểm nổi bật gồm quảng trường biển, DJ Ocean, Aqua Funny Park, hồ bơi Oasis, khu thể thao và vườn Romantic Garden."
+	},
+	{
+		q: "Q5, Q6 và Q7 có những loại căn nào?",
+		a: "Tầng điển hình Q5–Q6 có AMA Studio, MIRA 1PN+ và VITA 2PN. Q7 có thêm ARIA 3PN. Brochure thể hiện tầng điển hình từ tầng 4 đến tầng 10."
+	},
+	{
+		q: "Diện tích căn hộ QTOPIA được tính như thế nào?",
+		a: "Tài liệu phân biệt diện tích sử dụng (SD) và diện tích tim tường (TT). Bản mặt bằng Q5–Q6 trên trang cho phép xem cả hai chỉ số theo từng mã căn; diện tích chính thức cần đối chiếu hồ sơ bán hàng."
+	},
+	{
+		q: "Căn hộ QTOPIA có thể dùng để ở hay cho thuê?",
+		a: "Brochure giới thiệu định hướng “tài sản 2 trong 1”: sử dụng làm nơi nghỉ cuối tuần hoặc khai thác cho thuê. Khả năng vận hành, chi phí và doanh thu phụ thuộc phương án thực tế; tài liệu không đưa ra mức lợi nhuận bảo đảm."
+	},
+	{
+		q: "Làm sao nhận thông tin sản phẩm mới nhất?",
+		a: "Bạn có thể để lại thông tin tại biểu mẫu tư vấn. Bảng giá, chính sách bán hàng, tiêu chuẩn bàn giao và hồ sơ pháp lý cần được xác nhận theo tài liệu chính thức ở thời điểm giao dịch."
+	}
+];
+var heroContent = {
+	images: [
+		{
+			src: "/images/renders/view-from-sea.webp",
+			alt: "Phối cảnh dự án căn hộ QTOPIA nhìn từ biển",
+			h1: "QTOPIA — THÀNH PHỐ CUỐI TUẦN\nCỦA SIÊU ĐÔ THỊ TP.HCM",
+			slogan: "Sở hữu rừng nguyên sinh, lưng tựa núi, mặt hướng biển"
+		},
+		{
+			src: "/images/renders/ocean-galaxy.webp",
+			alt: "Phối cảnh khu Ocean Galaxy về đêm với hồ bơi và sàn DJ tại QTOPIA",
+			h1: "Sở hữu nhà Sài Gòn có biển\ngiá chỉ từ 1.195 tỷ",
+			slogan: "Căn Studio QTOPIA tại Phước Hải — trước biển, sau núi, gần rừng."
+		},
+		{
+			src: "/images/renders/aqua-funny-park-night.webp",
+			alt: "Phối cảnh công viên nước Aqua Funny Park về đêm tại QTOPIA",
+			h1: "Thanh toán 10% đến khi\nnhận nhà",
+			slogan: "Khởi đầu từ 120 triệu · Hỗ trợ lãi suất 0% đến 24 tháng."
+		}
+	],
+	ctaPrimary: "Nhận thông tin dự án"
+};
+var stories = [{
+	id: "tong-quan",
+	image: "/images/renders/birdview.webp",
+	alt: "Phối cảnh tổng thể dự án QTOPIA bên bờ biển với núi xanh phía sau",
+	align: "left",
+	label: "Thành phố cuối tuần của siêu độ thị TP. HỒ CHÍ MINH",
+	lead: "Biển ở phía trước, núi và rừng ở phía sau. QTOPIA kết nối không gian nghỉ dưỡng với nhịp vui của một tổ hợp Entertainment Complex.",
+	points: ["Ba khu trải nghiệm: Quậy Station · Ocean Galaxy · Oasis Resort", "Loại hình căn hộ Studio · 1PN+ · 2PN · 3PN · Aqua Home theo từng tháp"],
+	cta: {
+		label: "Khám phá mặt bằng",
+		to: "/#mat-bang",
+		name: "story_tong_quan"
+	}
+}, {
+	id: "nightlife",
+	image: "/images/renders/ocean-galaxy.webp",
+	alt: "Phối cảnh Nightlife Hub Ocean Galaxy về đêm với hồ bơi, sàn DJ và pháo hoa tại QTOPIA",
+	align: "right",
+	label: "Một ngày, nhiều nhịp vui",
+	lead: "Ban ngày thư giãn bên hồ bơi, khám phá Aqua Funny Park. Khi đêm xuống, Ocean Galaxy tiếp nối bằng âm nhạc, ánh sáng và không gian giải trí bên biển.",
+	points: ["DJ Ocean · phố thương mại dịch vụ", "Oasis Resort · khu thể thao · vườn cảnh quan"],
+	cta: {
+		label: "Xem các khu tiện ích",
+		to: "/#tien-ich",
+		name: "story_nightlife"
+	}
+}];
+var facts = [
+	{
+		value: "7,5",
+		unit: "ha",
+		label: "Quy mô"
+	},
+	{
+		value: "9",
+		unit: "Tháp",
+		label: "Q5 · Q6 · Q7"
+	},
+	{
+		value: "5",
+		unit: "Loại căn",
+		label: "Studio · 1PN+ · 2PN · 3PN · Aqua Home"
+	},
+	{
+		value: "3",
+		unit: "Cụm tiện ích",
+		label: "Quậy Station · Ocean Galaxy · Oasis Resort"
+	},
+	{
+		value: "20",
+		unit: "Tầng căn hộ",
+		label: "Tầng 4 đến tầng 10"
+	},
+	{
+		value: "75",
+		unit: "Phút",
+		label: "Từ trung tâm TP.HCM (tham khảo)"
+	},
+	{
+		value: "30",
+		unit: "Phút",
+		label: "Từ sân bay Long Thành (tham khảo)"
+	},
+	{
+		value: "19",
+		unit: "Phút",
+		label: "Từ Hồ Tràm (tham khảo)"
+	}
+];
+var featuredAmenityGroups = [
+	{
+		id: "nightlife",
+		label: "Nhịp vui đêm",
+		items: [
+			{
+				image: "/images/renders/ocean-galaxy.webp",
+				caption: "Ocean Galaxy",
+				span: "big"
+			},
+			{
+				image: "/images/renders/dj-ocean.webp",
+				caption: "Sàn DJ Ocean"
+			},
+			{
+				image: "/images/renders/aqua-funny-park-night.webp",
+				caption: "Aqua Funny Park về đêm"
+			},
+			{
+				image: "/images/renders/ocean-galaxy-2.webp",
+				caption: "Beach club"
+			},
+			{
+				image: "/images/renders/ocean-galaxy-3.webp",
+				caption: "Phố TMDV Ocean Galaxy"
+			}
+		]
+	},
+	{
+		id: "resort",
+		label: "Ngày bên biển",
+		items: [
+			{
+				image: "/images/renders/aqua-funny-park.webp",
+				caption: "Aqua Funny Park",
+				span: "big"
+			},
+			{
+				image: "/images/renders/oasis-pool.webp",
+				caption: "Hồ bơi Oasis"
+			},
+			{
+				image: "/images/renders/cong-chao.webp",
+				caption: "Cổng chào Wonder Gate"
+			},
+			{
+				image: "/images/renders/tien-ich-1.webp",
+				caption: "Tổ hợp thể thao"
+			},
+			{
+				image: "/images/renders/tien-ich-3.webp",
+				caption: "Cảnh quan nội khu"
+			}
+		]
+	},
+	{
+		id: "rooftop",
+		label: "Không gian tầng mái",
+		items: [
+			{
+				image: "/images/renders/roof-q5.webp",
+				caption: "Tầng mái Q5 — Ocean Lounge",
+				span: "big"
+			},
+			{
+				image: "/images/renders/roof-q6.webp",
+				caption: "Tầng mái Q6 — Galaxy Dome"
+			},
+			{
+				image: "/images/renders/tien-ich-2.webp",
+				caption: "Khu thư giãn ngoài trời"
+			},
+			{
+				image: "/images/renders/tien-ich-5.webp",
+				caption: "Sân sinh hoạt chung"
+			},
+			{
+				image: "/images/renders/interior-studio.webp",
+				caption: "Nội thất căn Studio"
+			}
+		]
+	}
+];
+var locationContent = {
+	label: "Vị trí QTOPIA",
+	lead: "Phía trước là biển, phía sau là núi và rừng. Brochure giới thiệu QTOPIA như điểm đến cuối tuần cách trung tâm TP.HCM khoảng 75 phút.",
+	mapImage: "/images/position-map.webp",
+	highlights: [
+		{
+			label: "Trung tâm TP.HCM",
+			value: "75"
+		},
+		{
+			label: "Sân bay quốc tế Long Thành",
+			value: "30"
+		},
+		{
+			label: "Hồ Tràm",
+			value: "19"
+		},
+		{
+			label: "Quảng trường Phước Hải",
+			value: "2"
+		}
+	]
+};
+var masterPlan = {
+	image: "/images/matbangtienich.webp",
+	zones: amenityCatalog
+};
+var unitTypeInfo = {
+	"ama-studio": {
+		id: "ama-studio",
+		name: "AMA",
+		subtitle: "Studio",
+		color: "#ff9c57"
+	},
+	"mira-1pn": {
+		id: "mira-1pn",
+		name: "MIRA",
+		subtitle: "1PN+",
+		color: "#aee15a"
+	},
+	"vita-2pn": {
+		id: "vita-2pn",
+		name: "VITA",
+		subtitle: "2PN",
+		color: "#5fd4e0"
+	},
+	"aria-3pn": {
+		id: "aria-3pn",
+		name: "ARIA",
+		subtitle: "3PN",
+		color: "#c79bf0"
+	}
+};
+var unitLayoutImages = {
+	"q5-q6": {
+		"ama-studio": {
+			image: "/images/layouts/ama-studio-q5-q6.webp",
+			area: "SD 25,23 - 30,05 m² · TT 28,60 - 33,47 m²"
+		},
+		"mira-1pn": {
+			image: "/images/layouts/mira-1pn-q5-q6.webp",
+			area: "SD 41,67 m² · TT 47,44 m²"
+		},
+		"vita-2pn": {
+			image: "/images/layouts/vita-2pn-q5-q6.webp",
+			area: "SD 61,49 - 63,09 m² · TT 67,93 - 69,68 m²"
+		}
+	},
+	q7: {
+		"ama-studio": {
+			image: "/images/layouts/ama-studio-q7.webp",
+			area: "SD 25,10 - 29,28 m² · TT 28,35 - 32,94 m²"
+		},
+		"mira-1pn": {
+			image: "/images/layouts/mira-1pn-q7.webp",
+			area: "SD 44,65 m² · TT 48,52 m²"
+		},
+		"vita-2pn": {
+			image: "/images/layouts/vita-2pn-q7.webp",
+			area: "SD 56,17 - 56,54 m² · TT 62,66 - 62,91 m²"
+		},
+		"aria-3pn": {
+			image: "/images/layouts/aria-3pn-q7.webp",
+			area: "SD 71,72 - 73,34 m² · TT 79,18 - 80,96 m²"
+		}
+	}
+};
+var leadFormContent = {
+	label: "Tìm hiểu QTOPIA",
+	heading: "Nhận thông tin dự án QTOPIA",
+	description: "Để lại thông tin để nhận tài liệu sản phẩm và được liên hệ khi có cập nhật chính thức về bảng giá, chính sách bán hàng.",
+	image: "/images/renders/view-from-sea.webp",
+	consentNote: "Bằng việc gửi biểu mẫu, bạn đồng ý để bộ phận tư vấn liên hệ về thông tin dự án QTOPIA."
+};
+var legalContent = {
+	label: "Pháp lý dự án QTOPIA",
+	lead: "Các văn bản pháp lý chính của dự án theo thông tin đã công bố. Khách hàng nên đối chiếu bản gốc khi ký kết giao dịch.",
+	items: [
+		{
+			title: "Đấu giá quyền sử dụng đất",
+			subtitle: "QĐ 817/QĐ-UBND ngày 08/4/2019",
+			body: "UBND tỉnh Bà Rịa – Vũng Tàu công nhận kết quả đấu giá quyền sử dụng đất và tài sản gắn liền với đất đối với khu đất 73.842 m² tại thị trấn Phước Hải (nay là xã Phước Hải). Quyết định được điều chỉnh bởi QĐ 3594/QĐ-UBND ngày 27/12/2019 và QĐ 1812/QĐ-UBND ngày 06/7/2020."
+		},
+		{
+			title: "Quy hoạch chi tiết tỷ lệ 1/500",
+			subtitle: "QĐ 3636/QĐ-UBND ngày 24/12/2025",
+			body: "UBND xã Phước Hải phê duyệt quy hoạch chi tiết 1/500 Khu thương mại dịch vụ, căn hộ du lịch, biệt thự nghỉ dưỡng và khách sạn cao cấp: tổng diện tích 73.842 m², mật độ xây dựng tối đa 25%, hệ số sử dụng đất tối đa 4,02; khu đất tổ chức thành khu biển và khu núi."
+		},
+		{
+			title: "Giấy chứng nhận đăng ký đầu tư",
+			subtitle: "Sở Tài chính TP.HCM cấp ngày 10/06/2026",
+			body: "Cấp cho Công ty Cổ phần Đầu tư Serenity – pháp nhân chủ đầu tư dự án. Tổng vốn đầu tư khoảng 5.366,64 tỷ đồng."
+		},
+		{
+			title: "Giấy phép xây dựng & điều kiện mở bán",
+			subtitle: "Đang cập nhật",
+			body: "Website sẽ cập nhật giấy phép xây dựng, văn bản đủ điều kiện kinh doanh và mẫu Hợp đồng mua bán khi chủ đầu tư công bố. Chỉ đặt cọc, thanh toán theo văn bản do chủ đầu tư phát hành."
+		}
+	],
+	cta: "Nhận bộ hồ sơ pháp lý"
+};
+var legalNotice = { disclaimer: "Thông tin, hình ảnh, các tiện ích trong tài liệu bán hàng chỉ mang tính tương đối và có thể được điều chỉnh theo quyết định của Chủ đầu tư từng thời điểm đảm bảo phù hợp quy hoạch và thực tế thi công dự án. Các thông tin, cam kết chính thức sẽ được quy định cụ thể tại Hợp đồng mua bán. Việc quản lý, vận hành và kinh doanh khu đô thị sẽ do theo quy định của Ban quản lý." };
+var salesPolicy = {
+	label: "Chính sách bán hàng QTOPIA",
+	lead: "Chỉ từ 120 triệu, thanh toán 10% đến khi nhận nhà, lãi suất 0% đến 24 tháng, ân hạn nợ gốc 48 tháng.",
+	price: {
+		prefix: "Căn Studio chỉ từ",
+		value: "1.195",
+		unit: "tỷ đồng"
+	},
+	cta: "Nhận bảng tính dòng tiền",
+	methods: [
+		{
+			id: "chuan",
+			tab: "Thanh toán chuẩn",
+			tabShort: "Chuẩn",
+			title: "Phương thức thanh toán chuẩn",
+			milestones: [
+				{
+					label: "T",
+					amount: "50",
+					unit: "triệu",
+					note: "Ký TTĐC",
+					flex: .8
+				},
+				{
+					label: "T+7",
+					amount: "10",
+					unit: "%",
+					note: "Ký HĐMB",
+					between: "Thanh toán TB 3,75%/tháng",
+					flex: 2.6
+				},
+				{
+					label: "T+540",
+					top: "Nhận bàn giao",
+					amount: "25",
+					unit: "%",
+					note: "+ KPBT",
+					flex: 1
+				},
+				{
+					label: "Nhận sổ",
+					amount: "5",
+					unit: "%",
+					flex: .8
+				}
+			]
+		},
+		{
+			id: "nhanh-70",
+			tab: "Thanh toán nhanh 70%",
+			tabShort: "Nhanh 70%",
+			title: "Phương thức thanh toán nhanh 70%",
+			milestones: [
+				{
+					label: "T",
+					amount: "50",
+					unit: "triệu",
+					note: "Ký TTĐC",
+					flex: .8
+				},
+				{
+					label: "T+7",
+					amount: "10",
+					unit: "%",
+					note: "Ký HĐMB",
+					flex: 1
+				},
+				{
+					label: "T+30",
+					amount: "60",
+					unit: "%",
+					flex: 1.8
+				},
+				{
+					label: "T+540",
+					top: "Nhận bàn giao",
+					amount: "25",
+					unit: "%",
+					flex: 1
+				},
+				{
+					label: "Nhận sổ",
+					amount: "5",
+					unit: "%",
+					flex: .8
+				}
+			]
+		},
+		{
+			id: "vay-ngan-hang",
+			tab: "Vay ngân hàng",
+			tabShort: "Vay NH",
+			title: "Phương thức vay ngân hàng",
+			milestones: [
+				{
+					label: "T",
+					amount: "50",
+					unit: "triệu",
+					note: "Ký TTĐC",
+					flex: .8
+				},
+				{
+					label: "T+7",
+					amount: "15",
+					unit: "%",
+					note: "Ký HĐMB",
+					flex: 1
+				},
+				{
+					label: "T+30",
+					bank: "40%",
+					flex: 1.8
+				},
+				{
+					label: "T+540",
+					top: "Nhận bàn giao",
+					amount: "10",
+					unit: "%",
+					bank: "30%",
+					flex: 1
+				},
+				{
+					label: "Nhận sổ",
+					amount: "5",
+					unit: "%",
+					note: "+ KPBT",
+					flex: .8
+				}
+			],
+			perks: ["Hỗ trợ lãi suất 24 tháng hoặc đến khi bàn giao", "Ân hạn nợ gốc 48 tháng"],
+			perksNote: "*Áp dụng có điều kiện"
+		}
+	],
+	glossary: "TTĐC: thoả thuận đặt cọc · HĐMB: hợp đồng mua bán · KPBT: kinh phí bảo trì.",
+	disclaimer: "Chính sách được áp dụng theo văn bản ban hành chính thức của Chủ đầu tư và có thể thay đổi theo từng thời điểm."
+};
+var nearbyContent = {
+	label: "Tiện ích xung quanh QTOPIA",
+	lead: "Từ QTOPIA, các điểm đến biển, đô thị và đầu mối giao thông của khu vực đều nằm trong bán kính một chuyến đi ngắn. Thời gian di chuyển dưới đây là số liệu tham khảo theo brochure.",
+	groups: [{
+		title: "Kết nối giao thông",
+		icon: "pin",
+		items: [
+			{
+				name: "Trung tâm TP.HCM",
+				minutes: "75",
+				note: "Qua hệ thống cao tốc kết nối khu vực phía Đông"
+			},
+			{
+				name: "Sân bay Quốc tế Long Thành",
+				minutes: "30",
+				note: "Cửa ngõ hàng không quốc tế của vùng"
+			},
+			{
+				name: "Cảng Cái Mép – Thị Vải",
+				note: "Cụm cảng nước sâu trên bản đồ kết nối vùng"
+			},
+			{
+				name: "Biên Hòa",
+				note: "Đô thị công nghiệp – dịch vụ phía Bắc tuyến kết nối"
+			}
+		]
+	}, {
+		title: "Điểm đến biển & du lịch",
+		icon: "star",
+		items: [
+			{
+				name: "Quảng trường Phước Hải",
+				minutes: "2",
+				note: "Trung tâm sinh hoạt ngay cạnh dự án"
+			},
+			{
+				name: "Hồ Tràm",
+				minutes: "19",
+				note: "Dải biển nghỉ dưỡng lân cận"
+			},
+			{
+				name: "Vũng Tàu",
+				note: "Thành phố biển trên trục kết nối ven biển"
+			},
+			{
+				name: "Bà Rịa",
+				note: "Đô thị hành chính – dịch vụ của khu vực"
+			},
+			{
+				name: "Cần Giờ",
+				note: "Vùng sinh thái ven biển phía Tây"
+			}
+		]
+	}]
+};
+for (const [name, obj] of Object.entries({
+	siteMeta,
+	heroContent,
+	stories,
+	facts,
+	locationContent,
+	nearbyContent,
+	featuredAmenityGroups,
+	salesPolicy,
+	legalContent,
+	legalNotice,
+	faq,
+	leadFormContent
+})) registerCms(name, obj);
+var legalDisclaimer = legalNotice.disclaimer;
+// src/hooks/useReveal.js
+function useReveal() {
+	const ref = useRef(null);
+	useEffect(() => {
+		const el = ref.current;
+		if (!el) return void 0;
+		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			el.setAttribute("data-reveal", "visible");
+			return;
+		}
+		const io = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					entry.target.setAttribute("data-reveal", "visible");
+					io.unobserve(entry.target);
+				} else entry.target.setAttribute("data-reveal", "pending");
+			});
+		}, {
+			rootMargin: "0px 0px -8% 0px",
+			threshold: .08
+		});
+		io.observe(el);
+		return () => io.disconnect();
+	}, []);
+	return ref;
+}
+// src/components/ui/SectionHeading.jsx
+function SectionHeading({ label, lead, align = "left", light = false, className = "" }) {
+	return /* @__PURE__ */ jsxs("div", {
+		className: `flex flex-col gap-2 ${align === "center" ? "items-center text-center" : "items-start text-left"} ${className}`,
+		children: [/* @__PURE__ */ jsx("h2", {
+			className: `section-label ${light ? "section-label-light" : ""}`,
+			children: label
+		}), lead ? /* @__PURE__ */ jsx("p", {
+			className: `prose-lead m-0 max-w-2xl ${light ? "text-white/85" : "text-q-muted"}`,
+			children: lead
+		}) : null]
+	});
+}
+export { unitTypeInfo as _, featuredAmenityGroups as a, legalContent as c, masterPlan as d, nearbyContent as f, unitLayoutImages as g, stories as h, faq as i, legalDisclaimer as l, siteMeta as m, useReveal as n, heroContent as o, salesPolicy as p, facts as r, leadFormContent as s, SectionHeading as t, locationContent as u };

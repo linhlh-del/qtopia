@@ -12,7 +12,7 @@ export default function Register() {
       <div className="orbit-bg opacity-50" style={{ '--orbit-x': '12%', '--orbit-y': '85%' }} />
       <Container className="relative flex min-h-0 flex-1 flex-col justify-center">
         <div ref={ref} className="mx-auto flex max-h-full w-full flex-col overflow-hidden rounded-[1.75rem] bg-white text-q-ink shadow-card md:grid md:grid-cols-2">
-          <div className="relative min-h-[96px] flex-1 max-md:order-first md:min-h-[180px] md:flex-none">
+          <div className="relative hidden md:block md:min-h-[180px]">
             <Img
               src={leadFormContent.image}
               alt="Phối cảnh dự án căn hộ QTOPIA nhìn từ biển"
@@ -26,6 +26,7 @@ export default function Register() {
 
           <div className="shrink-0 p-5 sm:p-7">
             <h2 className="section-label">{leadFormContent.label}</h2>
+            <p className="m-0 mt-1 font-display text-lg font-bold text-q-navy md:hidden">{leadFormContent.heading}</p>
             <p className="mb-4 mt-2 text-sm text-q-muted sm:mb-5">{leadFormContent.description}</p>
             <LeadFormFields formLocation="lien-he" />
           </div>

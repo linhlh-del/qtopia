@@ -67,7 +67,7 @@ function AmenityPanel({ expanded, setExpanded, selected, setSelected, setSelecte
                 <div id={'amenities-' + zone.id} className="grid gap-1 border-t border-q-navy/10 p-2">
                   {amenitiesByZone[zone.id].map((amenity) => (
                     <button key={amenity.n} type="button" onClick={() => { setSelected(amenity.n); setSelectedZone(zone.id) }} aria-pressed={selected === amenity.n}
-                      className={'flex min-h-11 items-center gap-2 rounded-xl px-2 text-left text-xs leading-snug transition-colors sm:text-sm ' + (selected === amenity.n ? 'bg-q-navy text-white' : 'text-q-ink hover:bg-q-cream')}>
+                      className={'flex min-h-11 items-center gap-2 rounded-xl px-2 py-1.5 text-left text-xs leading-normal transition-colors sm:text-sm ' + (selected === amenity.n ? 'bg-q-navy text-white' : 'text-q-ink hover:bg-q-cream')}>
                       <span className="grid size-6 shrink-0 place-items-center rounded-full font-display text-xs font-bold text-white" style={{ background: runnerColors[zone.id] }}>{amenity.n}</span>
                       {amenity.name}
                     </button>
@@ -147,7 +147,7 @@ export default function MasterPlan() {
               return positions.map((position, index) => (
                 <button key={`${amenity.n}-${index}`} type="button" onClick={() => { showZone(zone.id); setSelected(amenity.n); setSelectedZone(zone.id) }}
                   aria-label={`${amenity.n}. ${amenity.name}`} aria-pressed={isSelected}
-                  className={'amenity-number absolute z-10 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-display text-[length:calc(0.7rem*var(--type-scale))] font-bold text-white ' + (isSelected ? 'amenity-number-selected' : '')}
+                  className={'amenity-number absolute z-10 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-display text-[length:calc(0.7rem*var(--type-scale))] font-bold text-white ' + (isSelected ? 'amenity-number-selected ' : '') + (expanded === zone.id || isSelected ? 'amenity-number-focus' : '')}
                   style={{ top: position.top, '--amenity-left-full': position.left, '--amenity-left-cropped': `${(parseFloat(position.left) * 1672 / 1120).toFixed(2)}%`, '--amenity-marker-color': runnerColors[zone.id] }}>
                   <span>{amenity.n}</span>
                 </button>
@@ -196,8 +196,21 @@ export default function MasterPlan() {
                 )
               })}
             </div>
+            {expanded && !fullscreen ? (
+              <ul className="m-0 mt-2 grid list-none grid-cols-2 gap-1 p-0 sm:grid-cols-3">
+                {amenitiesByZone[expanded].map((amenity) => (
+                  <li key={amenity.n}>
+                    <button type="button" onClick={() => setSelected(amenity.n)} aria-pressed={selected === amenity.n}
+                      className={'flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-xl px-2 py-1 text-left text-xs leading-snug ' + (selected === amenity.n ? 'bg-q-navy text-white' : 'bg-q-sand/60 text-q-navy')}>
+                      <span className="grid size-6 shrink-0 place-items-center rounded-full font-display text-[0.7rem] font-bold text-white" style={{ background: runnerColors[expanded] }}>{amenity.n}</span>
+                      <span className="min-w-0">{amenity.name}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             {selected ? <AmenityDetail inline n={selected} onClose={() => setSelected(null)} /> : null}
-            <p className={'mb-0 mt-2 text-center text-xs ' + (selected ? 'max-sm:hidden ' : '') + (fullscreen ? 'text-white/70' : 'text-q-muted')}>Chạm vào số trên mặt bằng để xem tên tiện ích.</p>
+            <p className={'mb-0 mt-2 text-center text-xs ' + (selected ? 'max-sm:hidden ' : '') + (fullscreen ? 'text-white/70' : 'text-q-muted')}>Chọn một khu để xem danh sách tiện ích, hoặc chạm vào điểm trên mặt bằng.</p>
           </div>
         </div>
       </Container>

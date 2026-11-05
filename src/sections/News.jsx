@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Container from '../components/ui/Container'
 import MediaFrame from '../components/ui/MediaFrame'
-import { getNewsHref, newsItems } from '../data/news'
+import { getNewsHref, hasRealNews, isSampleNews, newsItems } from '../data/news'
 
 function ArrowIcon({ direction = 'right' }) {
   return (
@@ -107,15 +107,15 @@ export default function News() {
       <Container>
         <header className="text-center">
           <p className="m-0 font-display text-xs font-bold uppercase tracking-[0.2em] text-q-lime-ink">Tin mới nhất</p>
-          <h2 className="mt-3 font-display text-[length:calc(clamp(1.7rem,3.8vw,2.8rem)*var(--type-scale))] font-extrabold uppercase leading-tight tracking-wide text-q-navy">
+          <h2 className="mt-2 font-display text-[length:calc(clamp(1.7rem,3.8vw,2.8rem)*var(--type-scale))] font-extrabold uppercase leading-tight tracking-wide text-q-navy">
             Tin tức & sự kiện
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-q-muted sm:text-base">
+          <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-q-muted sm:text-base">
             Cập nhật những thông tin mới nhất về QTOPIA.
           </p>
         </header>
 
-        <div className="mt-8 flex items-center justify-between gap-4 sm:mt-10">
+        <div className="mt-4 flex items-center justify-between gap-4 sm:mt-6 [@media(max-height:740px)]:mt-2">
           <div className="flex items-center gap-2" role="group" aria-label="Điều hướng tin tức">
             <button
               type="button"
@@ -147,7 +147,7 @@ export default function News() {
 
         <ul
           ref={trackRef}
-          className="m-0 mt-4 flex list-none snap-x snap-mandatory gap-4 overflow-x-auto p-1 pb-5 [scrollbar-width:none] sm:gap-6 lg:gap-8 [&::-webkit-scrollbar]:hidden"
+          className="m-0 mt-3 flex list-none snap-x snap-mandatory gap-4 overflow-x-auto p-1 pb-3 [scrollbar-width:none] sm:gap-6 lg:gap-8 [&::-webkit-scrollbar]:hidden"
           aria-label="Bài viết mới nhất"
         >
           {newsItems.map((item) => (
@@ -157,28 +157,28 @@ export default function News() {
                   <MediaFrame
                     src={item.image}
                     alt={item.title}
-                    ratio="16 / 10"
+                    ratio="16 / 9"
                     note="Khung ảnh demo"
                     className="transition-transform duration-500 group-hover:scale-[1.03]"
                   />
-                  <span className="absolute bottom-3 left-3 rounded-sm bg-q-navy px-3 py-1.5 font-display text-[length:calc(0.65rem*var(--type-scale))] font-bold uppercase tracking-wider text-q-lime">
+                  <span className="absolute bottom-3 left-3 rounded-sm bg-q-navy px-3 py-1.5 font-display text-[length:calc(0.75rem*var(--type-scale))] font-bold uppercase tracking-wider text-q-lime">
                     {item.category}
                   </span>
                 </Link>
-                <div className="flex flex-1 flex-col p-5">
+                <div className="flex flex-1 flex-col p-4 sm:p-5">
                   <h3 className="m-0 font-display text-lg font-bold leading-snug text-q-navy">
                     <Link to={getNewsHref(item.id)} className="text-inherit no-underline transition-colors hover:text-q-blue">
                       {item.title}
                     </Link>
                   </h3>
-                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-q-muted">{item.excerpt}</p>
-                  <div className="mt-auto flex items-center justify-between gap-3 border-t border-q-navy/10 pt-4">
-                    <span className="text-[length:calc(0.68rem*var(--type-scale))] font-semibold uppercase tracking-wider text-q-muted">Bài viết mẫu</span>
+                  <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-q-muted">{item.excerpt}</p>
+                  <div className="mt-auto flex items-center justify-between gap-3 border-t border-q-navy/10 pt-2">
+                    <span className="text-[length:calc(0.68rem*var(--type-scale))] font-semibold uppercase tracking-wider text-q-muted">{isSampleNews(item) ? 'Bài viết mẫu' : item.category}</span>
                     <Link
                       to={getNewsHref(item.id)}
-                      className="inline-flex items-center gap-2 font-display text-xs font-bold uppercase tracking-wide text-q-navy no-underline hover:text-q-blue"
+                      className="inline-flex min-h-10 items-center gap-2 font-display text-xs font-bold uppercase tracking-wide text-q-navy no-underline hover:text-q-blue"
                     >
-                      Đọc thêm
+                      Đọc thêm<span className="sr-only">: {item.title}</span>
                       <ArrowIcon />
                     </Link>
                   </div>
@@ -188,7 +188,7 @@ export default function News() {
           ))}
         </ul>
 
-        <div className="mt-1 flex justify-center gap-2" role="group" aria-label="Chọn trang tin tức">
+        <div className="mx-auto flex max-w-full flex-wrap justify-center" role="group" aria-label="Chọn trang tin tức">
           {pageTargets.map((_, page) => (
             <button
               key={page}
@@ -196,13 +196,18 @@ export default function News() {
               onClick={() => goToPage(page)}
               aria-label={`Đi tới trang ${page + 1}`}
               aria-current={page === activePage ? 'page' : undefined}
-              className={`h-2 rounded-full transition-all duration-200 ${
-                page === activePage ? 'w-6 bg-q-lime-ink' : 'w-2 bg-q-navy/20 hover:bg-q-navy/40'
-              }`}
-            />
+              className="group grid h-11 w-7 cursor-pointer place-items-center border-0 bg-transparent p-0"
+            >
+              <span
+                aria-hidden="true"
+                className={`block h-2 rounded-full transition-all duration-200 ${
+                  page === activePage ? 'w-6 bg-q-lime-ink' : 'w-2 bg-q-navy/20 group-hover:bg-q-navy/40'
+                }`}
+              />
+            </button>
           ))}
         </div>
-        <p className="mt-4 text-center text-xs text-q-muted">Bài viết và ảnh đang ở dạng minh họa.</p>
+        {hasRealNews() ? null : <p className="mt-4 text-center text-xs text-q-muted">Bài viết và ảnh đang ở dạng minh họa.</p>}
       </Container>
     </section>
   )

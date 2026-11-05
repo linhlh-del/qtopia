@@ -20,7 +20,7 @@ function imageMimeType(src) {
 
 export function headTags(path) {
   const m = pageMeta(path)
-  const hidden = Boolean(hiddenPages[path])
+  const hidden = Boolean(hiddenPages[path] || m.noindex)
   const url = absUrl(path)
   const imageSrc = m.ogImage || '/images/og-qtopia-trang-chu.webp'
   const image = absAsset(imageSrc)

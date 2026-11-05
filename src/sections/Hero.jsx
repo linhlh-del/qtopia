@@ -85,7 +85,7 @@ export default function Hero() {
           </button>
         </div>
 
-        <div className="mt-5 flex gap-2" role="group" aria-label="Chọn ảnh nền">
+        <div className="-ml-[0.9rem] mt-3 flex" role="group" aria-label="Chọn ảnh nền">
           {heroContent.images.map((img, i) => (
             <button
               key={img.src}
@@ -93,7 +93,7 @@ export default function Hero() {
               aria-label={`Hiển thị ảnh ${i + 1}`}
               aria-current={i === active ? 'true' : undefined}
               onClick={() => setActive(i)}
-              className="relative grid size-6 place-items-center before:absolute before:-inset-2.5 before:content-['']"
+              className="grid size-11 cursor-pointer place-items-center"
             >
               <span
                 className={`block h-1.5 rounded-full transition-all duration-300 ${

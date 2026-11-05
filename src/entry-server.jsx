@@ -1,24 +1,30 @@
 // Bản build SSR: dùng ở bước prerender (scripts/prerender.mjs) để ghi HTML tĩnh cho từng route.
-import { renderToPipeableStream } from 'react-dom/server'
-import { PassThrough } from 'node:stream'
+import { prerenderToNodeStream } from 'react-dom/static'
 import { StaticRouter } from 'react-router-dom'
 import App from './App.jsx'
+import { preloadAll } from './components/DeferredSection'
 
-export function render(url) {
-  return new Promise((resolve, reject) => {
-    const output = new PassThrough()
-    let html = ''
-    output.on('data', (chunk) => { html += chunk.toString() })
-    output.on('end', () => resolve(html))
-    output.on('error', reject)
-    const stream = renderToPipeableStream(
+// prerender (react-dom/static) chờ mọi Suspense/lazy xong rồi mới xuất HTML hoàn chỉnh: không có script
+// inline $RC/$RT để ghép nội dung → HTML sạch hơn và tương thích CSP chặn inline script.
+async function renderOnce(url) {
+  const { prelude } = await prerenderToNodeStream(
     <StaticRouter location={url}>
       <App />
     </StaticRouter>,
-    { onAllReady() { stream.pipe(output) }, onError: reject },
-    )
-  })
+  )
+  let html = ''
+  for await (const chunk of prelude) html += chunk.toString()
+  return html
+}
+
+// Tải trước mọi component lazy → render đồng bộ, không còn ranh giới Suspense treo
+// → không sinh script inline $RC/$RT (HTML sạch, tương thích CSP chặn inline script).
+export async function render(url) {
+  await preloadAll()
+  return renderOnce(url)
 }
 
 export { headTags, tagsToHtml } from './seo/head'
-export { SITE_URL, SITE_URL_PLACEHOLDER, pages, hiddenPages, routes, absUrl } from './seo/site-meta'
+export { SITE_URL, SITE_URL_PLACEHOLDER, pages, hiddenPages, routes, indexableRoutes, absUrl } from './seo/site-meta'
+export { buildCmsSchema } from './cms/schema'
+export { pageDefaults } from './seo/site-meta'

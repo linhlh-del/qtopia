@@ -13,11 +13,11 @@ import { loadEnv } from 'vite'
 
 process.env.NODE_ENV = 'production'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const dist = join(root, process.env.QTOPIA_BUILD_DIR || 'dist')
+const dist = resolve(root, process.env.QTOPIA_BUILD_DIR || 'dist')
 const env = { ...loadEnv('production', root, ''), ...process.env }
 
-const ssr = await import(pathToFileURL(join(root, process.env.QTOPIA_SSR_DIR || '.ssr', 'entry-server.js')).href)
-const { render, headTags, tagsToHtml, routes, hiddenPages, SITE_URL, SITE_URL_PLACEHOLDER, absUrl } = ssr
+const ssr = await import(pathToFileURL(resolve(root, process.env.QTOPIA_SSR_DIR || '.ssr', 'entry-server.js')).href)
+const { pages, pageDefaults, buildCmsSchema, render, headTags, tagsToHtml, routes, indexableRoutes, hiddenPages, SITE_URL, SITE_URL_PLACEHOLDER, absUrl } = ssr
 
 if (SITE_URL === SITE_URL_PLACEHOLDER) {
   const msg = `\n⚠  VITE_SITE_URL chưa được đặt — canonical, og:url, sitemap, JSON-LD đang dùng domain MẪU (${SITE_URL}).\n   Đặt VITE_SITE_URL=https://<tên-miền-thật> trong .env.production rồi build lại trước khi phát hành.\n`
@@ -55,11 +55,14 @@ write('404.html', await page('/404'))
 
 /* ---------- sitemap.xml + robots.txt ---------- */
 const lastmod = new Date().toISOString().slice(0, 10)
-const urls = routes
-  .map((r) => `  <url><loc>${absUrl(r)}</loc><lastmod>${lastmod}</lastmod></url>`)
+const urls = indexableRoutes
+  .map((r) => `  <url><loc>${absUrl(r)}</loc><lastmod>${lastmod}</lastmod><changefreq>${pages[r].changefreq || 'monthly'}</changefreq><priority>${(pages[r].priority ?? 0.5).toFixed(1)}</priority></url>`)
   .join('\n')
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`)
 write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`)
+
+/* ---------- cms-schema.json: CMS đọc để biết trường nào sửa được (CORS * cấu hình ở nginx/vercel) ---------- */
+write('cms-schema.json', JSON.stringify(buildCmsSchema({ pageDefaults, routes, siteUrl: SITE_URL, leadEndpoint: env.VITE_LEAD_ENDPOINT || '' }), null, 2) + '\n')
 
 console.log(`Xong: ${routes.length} trang + 404 · domain ${SITE_URL}`)
 void hiddenPages

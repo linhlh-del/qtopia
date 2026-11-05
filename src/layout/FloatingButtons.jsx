@@ -65,12 +65,22 @@ function ZaloButton({ popup, where }) {
 export default function FloatingButtons() {
   const popup = useContactPopup()
   const [past, setPast] = useState(false)
+  // Điện thoại: nút "lên đầu trang" chỉ hiện khi khách đang cuộn NGƯỢC lên (có ý định quay lại đầu trang),
+  // ẩn khi cuộn xuống để không đè lên chữ / bản đồ / form ở góc phải dưới.
+  const [scrollingUp, setScrollingUp] = useState(false)
 
   useEffect(() => {
     let frame = 0
+    let lastY = window.scrollY
+    let idle = 0
     const check = () => {
       frame = 0
-      setPast(window.scrollY > window.innerHeight * 0.7)
+      const y = window.scrollY
+      setPast(y > window.innerHeight * 0.7)
+      if (Math.abs(y - lastY) > 8) setScrollingUp(y < lastY)
+      lastY = y
+      window.clearTimeout(idle)
+      idle = window.setTimeout(() => setScrollingUp(false), 2500)
     }
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(check)
@@ -80,8 +90,13 @@ export default function FloatingButtons() {
     return () => {
       window.removeEventListener('scroll', onScroll)
       cancelAnimationFrame(frame)
+      window.clearTimeout(idle)
     }
   }, [])
+  const mobileTop = past && scrollingUp
+  const mobileTopCls = `transition-all duration-[var(--dur-base)] ease-[var(--ease-out)] ${
+    mobileTop ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
+  }`
 
   const toTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
   const topCls = `transition-all duration-[var(--dur-base)] ease-[var(--ease-out)] ${
@@ -99,7 +114,7 @@ export default function FloatingButtons() {
           tabIndex={past ? 0 : -1}
           data-cta-name="back_to_top"
           data-cta-location="floating"
-          className={`${fab} bg-q-navy ${topCls}`}
+          className={`${fab} bg-white !text-q-navy ring-1 ring-q-navy/15 ${topCls}`}
         >
           <Icon name="up" size={22} />
         </button>
@@ -125,10 +140,10 @@ export default function FloatingButtons() {
         onClick={toTop}
         aria-label="Lên đầu trang"
         title="Lên đầu trang"
-        tabIndex={past ? 0 : -1}
+        tabIndex={mobileTop ? 0 : -1}
         data-cta-name="back_to_top"
         data-cta-location="floating_mobile"
-        className={`${fab} fixed bottom-[calc(var(--bar-h)+0.75rem)] right-4 z-30 bg-q-navy lg:hidden ${topCls}`}
+        className={`${fab} fixed bottom-[calc(var(--bar-h)+0.75rem)] right-4 z-30 bg-white !text-q-navy ring-1 ring-q-navy/15 lg:hidden ${mobileTopCls}`}
       >
         <Icon name="up" size={22} />
       </button>

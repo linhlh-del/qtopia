@@ -11,17 +11,14 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { newsItems } from '../src/data/news.js'
-
-const dist = join(resolve(dirname(fileURLToPath(import.meta.url)), '..'), process.env.QTOPIA_BUILD_DIR || 'dist')
-const pages = [
-  '/',
-  '/vi-tri',
-  '/tien-ich',
-  '/mat-bang',
-  '/tin-tuc',
-  ...newsItems.map((item) => `/tin-tuc/${item.id}`),
-]
+const dist = resolve(dirname(fileURLToPath(import.meta.url)), '..', process.env.QTOPIA_BUILD_DIR || 'dist')
+// Kiểm tra đúng các URL được index: đọc từ sitemap.xml (trang noindex như bài mẫu không nằm trong đó).
+const sitemapXml = existsSync(join(dist, 'sitemap.xml')) ? readFileSync(join(dist, 'sitemap.xml'), 'utf8') : ''
+const pages = [...sitemapXml.matchAll(/<loc>https?:\/\/[^/<]+(\/[^<]*)<\/loc>/g)].map((m) => m[1].replace(/\/+$/, '') || '/')
+if (!pages.length) {
+  console.log('  ✗ không đọc được URL nào từ dist/sitemap.xml — chạy npm run build trước')
+  process.exit(1)
+}
 const fileOf = (p) => join(dist, p === '/' ? 'index.html' : `${p.slice(1)}/index.html`)
 
 let errors = 0

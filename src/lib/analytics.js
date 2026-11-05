@@ -37,11 +37,9 @@ export function loadGtm() {
     document.head.appendChild(s)
   }
   for (const event of ['pointerdown', 'keydown', 'scroll']) window.addEventListener(event, run, { once: true, passive: true })
-  // Queue events immediately; download analytics after content loads and the main thread is idle.
-  const schedule = () => {
-    if ('requestIdleCallback' in window) window.requestIdleCallback(run, { timeout: 5000 })
-    else window.setTimeout(run, 1000)
-  }
+  // Sự kiện xếp hàng ngay trong dataLayer; script GA/GTM (~180 KB) chỉ tải khi người dùng tương tác
+  // hoặc sau 10 giây kể từ khi trang tải xong — không tranh băng thông/main thread với LCP và TBT.
+  const schedule = () => window.setTimeout(run, 10000)
   if (document.readyState === 'complete') schedule()
   else window.addEventListener('load', schedule, { once: true })
 }

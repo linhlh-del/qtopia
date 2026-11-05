@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Container from '../components/ui/Container'
 import Icon from '../components/ui/Icons'
 import SectionHeading from '../components/ui/SectionHeading'
 import { useContactPopup } from '../components/ContactPopup'
-import { legalContent, legalDisclaimer } from '../data/project'
+import { legalContent } from '../data/project'
 import { useReveal } from '../hooks/useReveal'
 
 // Pháp lý: bên trái nhãn + câu dẫn + CTA nhận hồ sơ, bên phải accordion các văn bản pháp lý
@@ -11,10 +11,14 @@ import { useReveal } from '../hooks/useReveal'
 export default function Legal() {
   const ref = useReveal()
   const popup = useContactPopup()
-  const [open, setOpen] = useState(0)
+  // Điện thoại/tablet: đóng hết để section gọn trong một màn hình; máy tính: mở sẵn mục đầu.
+  const [open, setOpen] = useState(null)
+  useEffect(() => {
+    if (window.matchMedia('(min-width: 1024px)').matches) setOpen(0) // eslint-disable-line react-hooks/set-state-in-effect
+  }, [])
 
   return (
-    <section id="phap-ly" data-snap-section className="section-screen !h-auto !max-h-none min-h-[calc(100svh-var(--header-h))] !justify-start bg-q-cream">
+    <section id="phap-ly" data-snap-section className="section-screen bg-q-cream">
       <Container>
         <div className="grid gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start lg:gap-12">
           <div className="flex flex-col items-start gap-4">
@@ -79,7 +83,6 @@ export default function Legal() {
             })}
           </div>
         </div>
-        <p className="mb-0 mt-4 text-[length:calc(0.7rem*var(--type-scale))] leading-snug text-q-muted sm:text-xs">{legalDisclaimer}</p>
       </Container>
     </section>
   )

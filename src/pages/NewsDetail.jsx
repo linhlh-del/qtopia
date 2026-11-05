@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import Container from '../components/ui/Container'
 import MediaFrame from '../components/ui/MediaFrame'
-import { getNewsHref, newsItems } from '../data/news'
+import { getNewsHref, isSampleNews, newsItems } from '../data/news'
 import NotFound from './NotFound'
 
 export default function NewsDetail() {
@@ -33,7 +33,12 @@ export default function NewsDetail() {
           <article className="w-full">
             <div className="mx-auto max-w-3xl text-center">
               <p className="m-0 font-display text-xs font-bold uppercase tracking-[0.18em] text-q-lime-ink">
-                {article.category} <span className="px-2 text-q-navy/30">/</span> Bài viết mẫu
+                {article.category}
+                {isSampleNews(article) ? (
+                  <>
+                    <span className="px-2 text-q-navy/30">/</span> Bài viết mẫu
+                  </>
+                ) : null}
               </p>
               <h1 className="section-title mt-4 text-[length:calc(clamp(1.8rem,4vw,3rem)*var(--type-scale))] text-q-navy">{article.title}</h1>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-q-muted">{article.excerpt}</p>
@@ -51,17 +56,22 @@ export default function NewsDetail() {
               <div className="min-w-0">
                 <div className="space-y-5 text-base leading-[1.85] text-q-ink">
                   <p className="m-0">{article.excerpt}</p>
-                  <h2 className="m-0 pt-2 font-display text-xl font-bold leading-snug text-q-navy">Thông tin bài viết</h2>
-                  <p className="m-0">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae neque ac nisi
-                    consequat interdum. Aenean sed sapien at augue consequat tempor, ut feugiat erat
-                    posuere. Nội dung này là văn bản mẫu để minh họa bố cục bài viết.
-                  </p>
-                  <p className="m-0">
-                    Curabitur aliquam risus vel dui tincidunt, id malesuada justo consequat. Integer
-                    malesuada, lectus sed facilisis placerat, erat nibh volutpat erat, vitae feugiat
-                    turpis sapien non est. Nội dung chính thức sẽ được cập nhật sau.
-                  </p>
+                  {article.body ? (
+                    article.body
+                      .split(/\n\s*\n/)
+                      .map((para) => para.trim())
+                      .filter(Boolean)
+                      .map((para) => (
+                        <p key={para.slice(0, 32)} className="m-0 whitespace-pre-line">
+                          {para}
+                        </p>
+                      ))
+                  ) : (
+                    <>
+                      <h2 className="m-0 pt-2 font-display text-xl font-bold leading-snug text-q-navy">Thông tin bài viết</h2>
+                      <p className="m-0">Nội dung chi tiết của bài viết sẽ được cập nhật sau.</p>
+                    </>
+                  )}
                 </div>
                 <div className="mt-8 border-t border-q-navy/10 pt-5">
                   <span className="rounded-full bg-q-navy/5 px-3 py-1.5 text-xs font-semibold text-q-navy">{article.category}</span>

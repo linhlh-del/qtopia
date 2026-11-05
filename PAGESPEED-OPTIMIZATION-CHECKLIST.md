@@ -21,6 +21,20 @@ Ba lượt Lighthouse cuối trên static server cục bộ cho trung vị: mobi
 
 Các số này **không đại diện cho Vercel**: server cục bộ không nén HTML/CSS/JS bằng gzip/Brotli, còn Lighthouse mobile dao động đáng kể. Cần đo lại trên preview đã deploy trước khi kết luận mục tiêu Performance mobile ≥95 hoặc LCP ≤2,5 s đã đạt.
 
+## Đo lại 06/11/2026 trên Vercel và đợt tối ưu tiếp theo
+
+[Báo cáo mobile 06/11](https://pagespeed.web.dev/analysis/https-qtopia-tau-vercel-app/eh7yas3w2k?form_factor=mobile): **Performance 97 · Accessibility 97 · Best Practices 100 · SEO 100**. Các chỉ số: FCP 1,0 s, LCP 2,4 s, TBT 90 ms, CLS 0, SI 1,2 s.
+
+| Checklist | Phát hiện trong báo cáo | Đã sửa |
+|---|---|---|
+| [x] | Improve image delivery: tiết kiệm được 93 KiB. Ảnh `birdview`/`view-from-sea` hiển thị ~1543 px nhưng phải tải bản 1920 px. | `scripts/optimize-images.mjs` thêm biến thể 1080/1600 px và giảm quality ảnh render 76 → 70 (effort 6). `view-from-sea-1920`: 245 → 212 KiB; trình duyệt chọn được bản 1600 (166 KiB). |
+| [x] | Reduce unused JS 115 KiB và 2 long task (~95 ms), cả hai đều do `gtag/js`. | `loadGtm()` chỉ tải GA/GTM khi người dùng tương tác, hoặc 10 s sau sự kiện `load`. Sự kiện phát sinh trước đó vẫn xếp hàng trong `dataLayer`. |
+| [x] | Touch targets: các chấm phân trang tin tức chỉ 8 px. | Mỗi chấm có vùng chạm 44 × 44 px, kích thước hiển thị giữ nguyên. |
+| [x] | Identical links: các nút "Đọc thêm" cùng tên nhưng dẫn tới bài khác nhau. | Thêm tên bài vào tên link bằng `sr-only`. |
+| [x] | Best Practices: thiếu CSP, COOP, XFO. | Thêm header trong `vercel.json` và `deploy/nginx-qtopia.conf`; `serve-dist` cũng gửi các header này để test cục bộ. |
+| [ ] | Render-blocking CSS 17 KiB (ước tính 80 ms). | Để nguyên: inline cả file CSS vào mỗi trang làm mất cache giữa các trang, mà lợi ích chỉ khoảng 80 ms. |
+| [ ] | Đo lại sau deploy. | Cần chạy PageSpeed 3 lần mỗi chế độ trên domain chính thức sau khi chuyển sang VPS (nginx gzip + cache). |
+
 ## Checklist P0 — làm trước
 
 | Checklist | Công việc và vị trí code | Bằng chứng / cách nghiệm thu |

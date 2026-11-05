@@ -6,7 +6,18 @@ Phỏng theo checklist `seo-landing-page-bds` do người dùng cung cấp. Đâ
 
 **Cách tick:** Mỗi dòng chỉ tick một cột. **Đạt** = đã kiểm chứng trong source; **Chưa đạt** = thiếu hoặc mới làm một phần; **Cần xác minh** = cần tài khoản, site live hoặc thiết bị thật. Hai tiêu chí có điều kiện 4.5 và 12.6 được ghi **không áp dụng**, vì site chưa có công cụ tính vay/giá hoặc section bảng giá. Xem bằng chứng và giới hạn ở [QTOPIA-SEO-AUDIT.md](QTOPIA-SEO-AUDIT.md).
 
-**Tổng hợp:** 11 đạt, 50 chưa đạt, 14 cần xác minh, 2 không áp dụng (tổng 77 tiêu chí).
+**Cập nhật 06/11/2026:** các tiêu chí 1.3–1.7, 2.1, 2.5, 3.3, 5.2–5.6, 10.1–10.4 và 13.3 đã chuyển sang Đạt, sau khi `npm run build && npm run seo:check` chạy với 0 lỗi trên 7 URL được index.
+
+Các thay đổi chính trong đợt này:
+
+- 5 trang chính cho sitelinks, có JSON-LD `ItemList`/`SiteNavigationElement`.
+- Bài tin mẫu được gắn `noindex` và loại khỏi sitemap.
+- Sitemap có thêm `changefreq` và `priority`.
+- Địa chỉ dự án lấy theo phaply.qtopia.vn.
+- Có header bảo mật và cấu hình nginx với 404 thật, gzip, HTTPS.
+- Lead nhận qua CMS khi đã cấu hình endpoint. Mục 4.2 (gửi lead thử end-to-end) vẫn phải test sau khi đặt `VITE_LEAD_ENDPOINT`.
+
+Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 
 ## 0. Mục tiêu và cách đo
 
@@ -26,21 +37,21 @@ Phỏng theo checklist `seo-landing-page-bds` do người dùng cung cấp. Đâ
 | :-: | :------: | :----------: | --- | ------------------------------------------------------------------------------------------------------------- |
 | [x] |   [ ]    |     [ ]      | 1.1 | `lang="vi"`, `charset="UTF-8"`, viewport, `robots` phù hợp từng route.                                        |
 | [ ] |   [x]    |     [ ]      | 1.2 | Domain chính thức QTOPIA được cấu hình nhất quán trong canonical, OG URL, sitemap, robots và schema.          |
-| [ ] |   [x]    |     [ ]      | 1.3 | Mỗi route có title riêng, ưu tiên từ khóa ở đầu, mục tiêu ≤ 60 ký tự.                                         |
-| [ ] |   [x]    |     [ ]      | 1.4 | Mỗi route có description riêng, đúng nội dung, mục tiêu 150–160 ký tự; có thông tin cụ thể và CTA tự nhiên.   |
+| [x] |   [ ]    |     [ ]      | 1.3 | Mỗi route có title riêng, ưu tiên từ khóa ở đầu, mục tiêu ≤ 60 ký tự.                                         |
+| [x] |   [ ]    |     [ ]      | 1.4 | Mỗi route có description riêng, đúng nội dung, mục tiêu 150–160 ký tự; có thông tin cụ thể và CTA tự nhiên.   |
 | [ ] |   [x]    |     [ ]      | 1.5 | Open Graph đủ `og:type`, `og:title`, `og:description`, `og:image` 1200×630, `og:url`; kiểm tra Facebook/Zalo. |
-| [ ] |   [x]    |     [ ]      | 1.6 | Canonical tự trỏ cho trang indexable; trang 404 noindex và không vào sitemap.                                 |
-| [ ] |   [x]    |     [ ]      | 1.7 | Đếm độ dài title/description từ HTML build, không chỉ từ config.                                              |
+| [x] |   [ ]    |     [ ]      | 1.6 | Canonical tự trỏ cho trang indexable; trang 404 noindex và không vào sitemap.                                 |
+| [x] |   [ ]    |     [ ]      | 1.7 | Đếm độ dài title/description từ HTML build, không chỉ từ config.                                              |
 
 ## 2. Nội dung, HTML và Local SEO
 
 | Đạt | Chưa đạt | Cần xác minh | ID  | Tiêu chí                                                                                                                                              |
 | :-: | :------: | :----------: | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ ] |   [x]    |     [ ]      | 2.1 | Mỗi route đúng một H1; H2/H3 theo thứ bậc; slogan để trong đoạn văn nếu không mô tả chủ đề.                                                           |
+| [x] |   [ ]    |     [ ]      | 2.1 | Mỗi route đúng một H1; H2/H3 theo thứ bậc; slogan để trong đoạn văn nếu không mô tả chủ đề.                                                           |
 | [x] |   [ ]    |     [ ]      | 2.2 | Dùng `header`, `nav`, `main`, `section`, `footer`; có liên kết bỏ qua menu cho bàn phím.                                                              |
 | [ ] |   [x]    |     [ ]      | 2.3 | Ảnh nội dung có alt mô tả đúng ảnh; ảnh trang trí dùng alt rỗng đúng cách.                                                                            |
 | [ ] |   [x]    |     [ ]      | 2.4 | Tên dự án, chủ đầu tư, vị trí và số liệu nhất quán giữa nội dung, metadata, schema, form và footer.                                                   |
-| [ ] |   [x]    |     [ ]      | 2.5 | Xác minh địa chỉ QTOPIA, đơn vị hành chính hiện hành và tên địa danh cũ bằng nguồn chính thức; đối chiếu Google Business Profile nếu có.              |
+| [x] |   [ ]    |     [ ]      | 2.5 | Xác minh địa chỉ QTOPIA, đơn vị hành chính hiện hành và tên địa danh cũ bằng nguồn chính thức; đối chiếu Google Business Profile nếu có.              |
 | [ ] |   [x]    |     [ ]      | 2.6 | Những thông tin giá, pháp lý, tiến độ và cam kết đầu tư chỉ xuất bản khi có tài liệu xác thực.                                                        |
 | [ ] |   [x]    |     [ ]      | 2.7 | Đối chiếu từng số liệu và tên pháp nhân với [trang công bố pháp lý](https://phaply.qtopia.vn/), ghi rõ phạm vi dự án/giai đoạn nếu số liệu khác nhau. |
 | [ ] |   [x]    |     [ ]      | 2.8 | Kiểm tra loại hình sản phẩm trong nội dung và schema: trang pháp lý dùng “căn hộ du lịch”; không tự diễn đạt thành căn hộ ở nếu hồ sơ không hỗ trợ.   |
@@ -51,7 +62,7 @@ Phỏng theo checklist `seo-landing-page-bds` do người dùng cung cấp. Đâ
 | :-: | :------: | :----------: | --- | ------------------------------------------------------------------------------------------------------------- |
 | [ ] |   [x]    |     [ ]      | 3.1 | Màu, font, thời lượng hiệu ứng gom trong CSS variables; giao diện mobile trước, lưới co giãn tốt.             |
 | [ ] |   [x]    |     [ ]      | 3.2 | Chữ thân dễ đọc (`line-height` khoảng 1,6–1,8); khoảng trắng đủ thoáng; CTA đạt vùng chạm tối thiểu 48×48 px. |
-| [ ] |   [x]    |     [ ]      | 3.3 | Ảnh được nén và dùng WebP/AVIF khi phù hợp; có `width`/`height` hoặc aspect ratio.                            |
+| [x] |   [ ]    |     [ ]      | 3.3 | Ảnh được nén và dùng WebP/AVIF khi phù hợp; có `width`/`height` hoặc aspect ratio.                            |
 | [x] |   [ ]    |     [ ]      | 3.4 | Ảnh hero được ưu tiên (`fetchpriority="high"`, không lazy); ảnh dưới màn đầu lazy.                            |
 | [x] |   [ ]    |     [ ]      | 3.5 | Không tải iframe, PDF, bảng giá hoặc mặt bằng nặng trước khi cần.                                             |
 | [ ] |   [x]    |     [ ]      | 3.6 | CSS/JS build thành file riêng, chia bundle theo route nếu có lợi và loại bỏ thư viện không dùng.              |
@@ -61,7 +72,7 @@ Phỏng theo checklist `seo-landing-page-bds` do người dùng cung cấp. Đâ
 | Đạt | Chưa đạt | Cần xác minh | ID  | Tiêu chí                                                                                                                         |
 | :-: | :------: | :----------: | --- | -------------------------------------------------------------------------------------------------------------------------------- |
 | [x] |   [ ]    |     [ ]      | 4.1 | Form ngắn gồm họ tên, số điện thoại và nút gửi; có label, báo lỗi rõ và validate số Việt Nam.                                    |
-| [ ] |   [x]    |     [ ]      | 4.2 | Form chỉ báo thành công sau khi hệ nhận lead xác nhận; kiểm tra lead thật end to end.                                            |
+| [ ] |   [ ]    |     [x]      | 4.2 | Form chỉ báo thành công sau khi hệ nhận lead xác nhận; kiểm tra lead thật end to end.                                            |
 | [x] |   [ ]    |     [ ]      | 4.3 | Mobile có CTA cố định phù hợp: khám phá giá trị chính, gọi, Zalo, nhận thông tin/bảng giá.                                       |
 | [x] |   [ ]    |     [ ]      | 4.4 | Có đường tới vị trí, tiện ích, mặt bằng, giá hoặc tư vấn, tùy dữ liệu QTOPIA thật.                                               |
 | N/A |   N/A    |     N/A      | 4.5 | Nếu có công cụ tính vay/giá, kết quả và điều kiện tính minh bạch, không trình bày như giá chào bán chính thức khi chưa xác minh. |
@@ -71,11 +82,11 @@ Phỏng theo checklist `seo-landing-page-bds` do người dùng cung cấp. Đâ
 | Đạt | Chưa đạt | Cần xác minh | ID  | Tiêu chí                                                                                                                                                            |
 | :-: | :------: | :----------: | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [ ] |   [x]    |     [ ]      | 5.1 | Trang chủ giới thiệu tổng quan QTOPIA; các route con chỉ tạo khi có nội dung thật (ví dụ `/vi-tri`, `/tien-ich`, `/mat-bang`, `/bang-gia`, `/tin-tuc`, `/tien-do`). |
-| [ ] |   [x]    |     [ ]      | 5.2 | Mỗi route có title, description, H1, canonical và OG riêng.                                                                                                         |
-| [ ] |   [x]    |     [ ]      | 5.3 | Tin tức chỉ index khi là bài thật; bài mẫu/lorem ipsum không đưa vào sitemap.                                                                                       |
-| [ ] |   [x]    |     [ ]      | 5.4 | Internal link dùng văn bản mô tả trang đích; không lạm dụng liên kết ra ngoài.                                                                                      |
-| [ ] |   [x]    |     [ ]      | 5.5 | `sitemap.xml` chỉ chứa URL 200 chính thức, có `lastmod`; `robots.txt` khai báo Sitemap và cho phép tải CSS/JS/ảnh.                                                  |
-| [ ] |   [x]    |     [ ]      | 5.6 | Có trang 404 trả HTTP 404 thật.                                                                                                                                     |
+| [x] |   [ ]    |     [ ]      | 5.2 | Mỗi route có title, description, H1, canonical và OG riêng.                                                                                                         |
+| [x] |   [ ]    |     [ ]      | 5.3 | Tin tức chỉ index khi là bài thật; bài mẫu/lorem ipsum không đưa vào sitemap.                                                                                       |
+| [x] |   [ ]    |     [ ]      | 5.4 | Internal link dùng văn bản mô tả trang đích; không lạm dụng liên kết ra ngoài.                                                                                      |
+| [x] |   [ ]    |     [ ]      | 5.5 | `sitemap.xml` chỉ chứa URL 200 chính thức, có `lastmod`; `robots.txt` khai báo Sitemap và cho phép tải CSS/JS/ảnh.                                                  |
+| [x] |   [ ]    |     [ ]      | 5.6 | Có trang 404 trả HTTP 404 thật.                                                                                                                                     |
 
 ## 6. Quy tắc code
 
@@ -94,7 +105,7 @@ Phỏng theo checklist `seo-landing-page-bds` do người dùng cung cấp. Đâ
 | [ ] |   [x]    |     [ ]      | 7.2 | Kiểm tra nội dung và số liệu dự án khớp tài liệu chủ đầu tư.                                                         |
 | [ ] |   [ ]    |     [x]      | 7.3 | Chạy Lighthouse/PageSpeed trên mobile và desktop; ghi kết quả theo URL và thời điểm.                                 |
 | [ ] |   [ ]    |     [x]      | 7.4 | Kiểm tra OG preview trên Facebook/Zalo và các CTA/form trên điện thoại thật.                                         |
-| [ ] |   [x]    |     [ ]      | 7.5 | Kiểm tra canonical, sitemap, robots sau khi gắn domain chính thức.                                                   |
+| [ ] |   [ ]    |     [x]      | 7.5 | Kiểm tra canonical, sitemap, robots sau khi gắn domain chính thức.                                                   |
 
 ## 8. Google Search Console
 
@@ -122,10 +133,10 @@ Phỏng theo checklist `seo-landing-page-bds` do người dùng cung cấp. Đâ
 
 | Đạt | Chưa đạt | Cần xác minh | ID   | Tiêu chí                                                                                                                    |
 | :-: | :------: | :----------: | ---- | --------------------------------------------------------------------------------------------------------------------------- |
-| [ ] |   [x]    |     [ ]      | 10.1 | Lập bảng cho từng URL: URL \| từ khóa \| title \| description \| H1 \| OG image.                                            |
-| [ ] |   [x]    |     [ ]      | 10.2 | Dưới H1/H2 có đoạn giải thích rõ, tự nhiên; section chính có ID ổn định và đoạn trả lời ngắn cho câu hỏi người tìm kiếm.    |
-| [ ] |   [x]    |     [ ]      | 10.3 | Menu và internal link có mô tả/anchor text rõ; không dùng một loạt nhãn “Xem thêm”.                                         |
-| [ ] |   [x]    |     [ ]      | 10.4 | JSON-LD khớp nội dung hiển thị: `WebSite`, `Organization`, loại dự án phù hợp, `BreadcrumbList`, `FAQPage` khi có FAQ thật. |
+| [x] |   [ ]    |     [ ]      | 10.1 | Lập bảng cho từng URL: URL \| từ khóa \| title \| description \| H1 \| OG image.                                            |
+| [x] |   [ ]    |     [ ]      | 10.2 | Dưới H1/H2 có đoạn giải thích rõ, tự nhiên; section chính có ID ổn định và đoạn trả lời ngắn cho câu hỏi người tìm kiếm.    |
+| [x] |   [ ]    |     [ ]      | 10.3 | Menu và internal link có mô tả/anchor text rõ; không dùng một loạt nhãn “Xem thêm”.                                         |
+| [x] |   [ ]    |     [ ]      | 10.4 | JSON-LD khớp nội dung hiển thị: `WebSite`, `Organization`, loại dự án phù hợp, `BreadcrumbList`, `FAQPage` khi có FAQ thật. |
 | [ ] |   [x]    |     [ ]      | 10.5 | Không điền địa chỉ/hotline/schema thương mại bằng dữ liệu mẫu; chạy Rich Results Test và Schema Markup Validator.           |
 | [ ] |   [ ]    |     [x]      | 10.6 | OG image riêng cho các trang chính; sau index kiểm tra snippet thực tế vì Google có thể viết lại.                           |
 
@@ -157,7 +168,7 @@ Phỏng theo checklist `seo-landing-page-bds` do người dùng cung cấp. Đâ
 | :-: | :------: | :----------: | ---- | ------------------------------------------------------------------------------------------------------------------------- |
 | [ ] |   [ ]    |     [x]      | 13.1 | Đo LCP, INP, CLS bằng dữ liệu thực tế; kiểm tra ảnh hero, font swap, kích thước khung, tác vụ JS dài.                     |
 | [ ] |   [ ]    |     [x]      | 13.2 | HTTPS và redirect về một hostname; cache dài cho asset có hash, gzip/brotli ở hosting.                                    |
-| [ ] |   [x]    |     [ ]      | 13.3 | Favicon, manifest, theme-color, 404 đúng mã; không có redirect chain.                                                     |
+| [x] |   [ ]    |     [ ]      | 13.3 | Favicon, manifest, theme-color, 404 đúng mã; không có redirect chain.                                                     |
 | [ ] |   [ ]    |     [x]      | 13.4 | Điều hướng bàn phím và focus rõ; test Chrome, Safari iOS, Firefox, Samsung Internet; màn 375 px, tablet, desktop 1440 px. |
 | [ ] |   [ ]    |     [x]      | 13.5 | Kiểm tra lead thật, analytics thật, OG preview, schema, Lighthouse trước và sau publish.                                  |
 | [ ] |   [ ]    |     [x]      | 13.6 | Sau 1–2 tuần: xem Search Console/GA4, cập nhật snippet, hiệu năng và tỷ lệ chuyển đổi.                                    |

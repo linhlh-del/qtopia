@@ -29,3 +29,11 @@ dist-ssr
 dist-perf
 .ssr-perf
 performance-results
+
+# CMS (sinh lúc build) + bản release trên VPS
+src/generated/
+public/cms-status.json
+public/assets/cms/
+releases/
+dist-*/
+.audit-*.json

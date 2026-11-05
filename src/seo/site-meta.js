@@ -1,4 +1,5 @@
-import { newsItems } from '../data/news'
+import { cmsSeo } from '../cms/content'
+import { hasRealNews, isSampleNews, newsItems } from '../data/news'
 
 /* ============================================================
    SEO — MỘT NGUỒN DUY NHẤT cho title, description, H1, intro, snippet của từng trang và menu.
@@ -48,15 +49,31 @@ export const pages = {
     ogImageAlt: 'Phối cảnh tòa căn hộ QTOPIA bên biển về đêm, Thành phố cuối tuần',
     menu: 'Tổng quan dự án căn hộ QTOPIA',
   },
+  '/tong-quan': {
+    title: 'Tổng quan QTOPIA — Thành phố cuối tuần tại Phước Hải',
+    description:
+      'Tổng quan dự án QTOPIA tại Phước Hải: các tháp Q5, Q6, Q7, căn Studio đến 3PN, ba khu tiện ích Quậy Station, Ocean Galaxy, Oasis Resort. Xem số liệu dự án.',
+    breadcrumb: 'Tổng quan',
+    h1: 'Tổng quan dự án QTOPIA — thành phố cuối tuần bên biển',
+    intro: [
+      'QTOPIA là tổ hợp căn hộ và trải nghiệm giải trí, nghỉ dưỡng bên biển tại khu vực Phước Hải: phía trước là biển, phía sau là núi và rừng.',
+      'Trang này tóm tắt số liệu chính của dự án, ba khu trải nghiệm và các văn bản pháp lý đã công bố, để bạn nắm nhanh QTOPIA trước khi đi vào vị trí, tiện ích và mặt bằng.',
+    ],
+    changefreq: 'monthly',
+    priority: 0.9,
+    ogImage: '/images/og-qtopia-trang-chu.webp',
+    ogImageAlt: 'Phối cảnh tổng thể dự án QTOPIA bên bờ biển với núi xanh phía sau',
+    menu: 'Tổng quan dự án QTOPIA: số liệu, tiện ích, pháp lý',
+  },
   '/vi-tri': {
     title: 'Vị trí QTOPIA — Trước biển, sau núi, gần TP.HCM',
     description:
-      'Tìm hiểu vị trí QTOPIA tại khu vực Phước Hải: trước biển, sau núi, gần rừng. Brochure nêu khoảng 90 phút từ trung tâm TP.HCM và 30 phút từ sân bay Long Thành.',
+      'Tìm hiểu vị trí QTOPIA tại khu vực Phước Hải: trước biển, sau núi, gần rừng. Brochure nêu khoảng 75 phút từ trung tâm TP.HCM và 30 phút từ sân bay Long Thành.',
     breadcrumb: 'Vị trí',
     h1: 'Vị trí QTOPIA — trước biển, sau núi, gần rừng',
     intro: [
       'Theo brochure, QTOPIA được phát triển tại khu vực Phước Hải với địa thế trước biển, sau núi, gần rừng — một bối cảnh cho những chuyến nghỉ cuối tuần.',
-      'Các mốc kết nối được tài liệu giới thiệu gồm khoảng 90 phút từ trung tâm TP.HCM, 30 phút từ sân bay Long Thành, 19 phút từ Hồ Tràm và 2 phút từ Quảng trường Phước Hải. Thời gian thực tế có thể thay đổi.',
+      'Các mốc kết nối được tài liệu giới thiệu gồm khoảng 75 phút từ trung tâm TP.HCM, 30 phút từ sân bay Long Thành, 19 phút từ Hồ Tràm và 2 phút từ Quảng trường Phước Hải. Thời gian thực tế có thể thay đổi.',
     ],
     changefreq: 'monthly',
     priority: 0.8,
@@ -96,6 +113,38 @@ export const pages = {
     ogImageAlt: 'Phối cảnh tiện ích sân thượng tháp Q5 thuộc dự án QTOPIA',
     menu: 'Sơ đồ căn Q5–Q6 và các loại căn tháp Q7',
   },
+  '/chinh-sach-ban-hang': {
+    title: 'Chính sách bán hàng QTOPIA — Studio từ 1.195 tỷ',
+    description:
+      'Chính sách bán hàng QTOPIA: căn Studio từ 1.195 tỷ, ký HĐMB chỉ 10%, thanh toán nhanh 70% hoặc vay ngân hàng hỗ trợ lãi suất 24 tháng. Nhận bảng tính dòng tiền.',
+    breadcrumb: 'Chính sách bán hàng',
+    h1: 'Chính sách bán hàng QTOPIA — 3 phương thức thanh toán',
+    intro: [
+      'Căn Studio QTOPIA có giá chỉ từ 1.195 tỷ đồng. Khách hàng chọn một trong ba phương thức: thanh toán chuẩn theo tiến độ, thanh toán nhanh 70% hoặc vay ngân hàng.',
+      'Với phương thức vay, chính sách hỗ trợ lãi suất 24 tháng hoặc đến khi bàn giao và ân hạn nợ gốc 48 tháng (áp dụng có điều kiện). Chính sách áp dụng theo văn bản chính thức của Chủ đầu tư.',
+    ],
+    changefreq: 'weekly',
+    priority: 0.9,
+    ogImage: '/images/og-qtopia-trang-chu.webp',
+    ogImageAlt: 'Chính sách bán hàng và phương thức thanh toán căn hộ QTOPIA',
+    menu: 'Giá, tiến độ thanh toán và hỗ trợ vay QTOPIA',
+  },
+  '/tien-ich-xung-quanh': {
+    title: 'Tiện ích xung quanh QTOPIA — Hồ Tràm, Long Thành',
+    description:
+      'Tiện ích xung quanh QTOPIA: 2 phút tới Quảng trường Phước Hải, 19 phút tới Hồ Tràm, 30 phút tới sân bay Long Thành; gần Vũng Tàu, Bà Rịa. Xem bản đồ kết nối.',
+    breadcrumb: 'Tiện ích xung quanh',
+    h1: 'Tiện ích xung quanh QTOPIA — biển, đô thị và sân bay',
+    intro: [
+      'Ngoài ba khu tiện ích nội khu, QTOPIA nằm gần các điểm đến biển như Hồ Tràm, Vũng Tàu và trung tâm Phước Hải, cùng các đầu mối giao thông của khu vực.',
+      'Danh sách dưới đây tổng hợp các mốc trên bản đồ kết nối của dự án; thời gian di chuyển là số liệu tham khảo theo brochure.',
+    ],
+    changefreq: 'monthly',
+    priority: 0.8,
+    ogImage: '/images/og-qtopia-vi-tri.webp',
+    ogImageAlt: 'Góc nhìn từ trên cao vị trí dự án QTOPIA giữa biển, núi và khu dân cư',
+    menu: 'Các điểm đến và kết nối quanh QTOPIA',
+  },
   '/tin-tuc': {
     title: 'Tin tức QTOPIA — Cập nhật thông tin dự án',
     description:
@@ -108,13 +157,17 @@ export const pages = {
     ogImage: '/images/og-qtopia-trang-chu.webp',
     ogImageAlt: 'Thông tin và bài viết về dự án QTOPIA',
     menu: 'Tin tức và sự kiện QTOPIA',
+    noindex: !hasRealNews(),
   },
   ...Object.fromEntries(
     newsItems.map((item) => {
-      let description = `${item.excerpt} Bài viết mẫu về ${item.category.toLowerCase()} tại QTOPIA.`
-      while (description.length < 150) description += ' Lorem ipsum dolor sit amet.'
+      const sample = isSampleNews(item)
+      let description = sample
+        ? `${item.excerpt} Bài viết mẫu về ${item.category.toLowerCase()} tại QTOPIA.`
+        : `${item.excerpt} ${item.category} QTOPIA — đọc chi tiết bài viết.`
+      if (sample) while (description.length < 150) description += ' Lorem ipsum dolor sit amet.'
       if (description.length > 160) {
-        description = description.slice(0, description.lastIndexOf(' ', 160))
+        description = description.slice(0, description.lastIndexOf(' ', 157)) + '…'
       }
 
       const path = `/tin-tuc/${item.id}`
@@ -126,17 +179,37 @@ export const pages = {
           breadcrumb: item.category,
           changefreq: 'monthly',
           priority: 0.5,
-          ogImage: '/images/og-qtopia-trang-chu.webp',
-          ogImageAlt: 'Bài viết mẫu về dự án QTOPIA',
+          ogImage: item.image || '/images/og-qtopia-trang-chu.webp',
+          ogImageAlt: sample ? 'Bài viết mẫu về dự án QTOPIA' : item.title,
           menu: item.title,
+          // Bài mẫu (chưa có nội dung thật) không được index và không vào sitemap.
+          noindex: sample,
         },
       ]
     }),
   ),
 }
 
+/** Mặc định SEO trong code (trước khi CMS đè) — dùng cho cms-schema.json */
+export const pageDefaults = JSON.parse(JSON.stringify(pages))
+
+// SEO sửa trên CMS (title / description / ảnh OG) đè lên mặc định
+for (const [path, meta] of Object.entries(pages)) {
+  const o = cmsSeo(path)
+  if (o.title) meta.title = o.title
+  if (o.description) {
+    meta.description = o.description
+    if (meta.ogDescription) meta.ogDescription = o.description
+  }
+  if (o.title && meta.ogTitle) meta.ogTitle = o.title
+  if (o.ogImage) meta.ogImage = o.ogImage
+}
+
 /** Trang con theo chủ đề (liên kết nội bộ ở footer + CTA trong section) */
-export const topicPaths = ['/vi-tri', '/tien-ich', '/mat-bang']
+export const topicPaths = ['/tong-quan', '/vi-tri', '/tien-ich', '/tien-ich-xung-quanh', '/mat-bang', '/chinh-sach-ban-hang']
+
+/** 5 trang chính muốn Google hiển thị dạng sitelinks (snippet con) dưới kết quả trang chủ. */
+export const sitelinkPaths = ['/tong-quan', '/vi-tri', '/tien-ich', '/chinh-sach-ban-hang', '/tien-ich-xung-quanh']
 
 /** Trang không đưa vào sitemap, noindex */
 export const hiddenPages = {
@@ -148,9 +221,11 @@ export const hiddenPages = {
 }
 
 export const routes = Object.keys(pages)
+/** Route được index (đưa vào sitemap) */
+export const indexableRoutes = routes.filter((r) => !pages[r].noindex)
 
 /** Menu chính (anchor nhảy tới section trên trang chủ) */
-export const mainNav = [
+export const mainNav = ([
   { to: '/#tong-quan', label: 'Tổng quan', title: 'Tổng quan dự án căn hộ QTOPIA' },
   { to: '/#vi-tri', label: 'Vị trí', title: pages['/vi-tri'].menu },
   { to: '/#tien-ich', label: 'Tiện ích', title: pages['/tien-ich'].menu },
@@ -159,7 +234,7 @@ export const mainNav = [
   { to: '/#tin-tuc', label: 'Tin tức', title: 'Tin tức và thông tin dự án QTOPIA' },
   { to: '/#phap-ly', label: 'Pháp lý', title: 'Thông tin pháp lý dự án QTOPIA' },
   { to: '/#lien-he', label: 'Liên hệ', title: 'Liên hệ nhận thông tin dự án QTOPIA' },
-]
+]).filter((item) => item.to !== '/#tin-tuc' || hasRealNews())
 
 export const absUrl = (path) => SITE_URL + (path === '/' ? '/' : path)
 export const absAsset = (src) => (/^https?:/.test(src) ? src : SITE_URL + src)

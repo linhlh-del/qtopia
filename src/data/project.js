@@ -1,3 +1,4 @@
+import { registerCms } from "../cms/content";
 import { amenityCatalog } from "./amenity-catalog";
 
 // Nguồn dữ liệu duy nhất cho nội dung dự án QTOPIA.
@@ -13,18 +14,18 @@ export const siteMeta = {
   hotlineHref: "tel:+84934483138",
   zalo: "https://zalo.me/1717736678695240623",
   email: "", // chưa có
-  address: "", // cần địa chỉ hành chính hiện hành
+  address: "Thửa đất số 08, tờ bản đồ số 38, xã Phước Hải, TP. Hồ Chí Minh", // theo phaply.qtopia.vn
   developer: "Phát Đạt Corporation",
 };
 
 export const faq = [
   {
     q: "QTOPIA là dự án gì và nằm ở đâu?",
-    a: "Theo tài liệu dự án, QTOPIA là tổ hợp căn hộ và trải nghiệm giải trí, nghỉ dưỡng bên biển tại khu vực Phước Hải. Brochure định vị nơi đây là “thành phố cuối tuần” cách trung tâm TP.HCM khoảng 90 phút di chuyển.",
+    a: "Theo tài liệu dự án, QTOPIA là tổ hợp căn hộ và trải nghiệm giải trí, nghỉ dưỡng bên biển tại khu vực Phước Hải. Brochure định vị nơi đây là “thành phố cuối tuần” cách trung tâm TP.HCM khoảng 75 phút di chuyển.",
   },
   {
     q: "Từ TP.HCM đến QTOPIA mất bao lâu?",
-    a: "Brochure nêu thời gian tham khảo khoảng 90 phút từ trung tâm TP.HCM, 30 phút từ sân bay Long Thành và 19 phút từ Hồ Tràm. Thời gian thực tế phụ thuộc điểm xuất phát, tuyến đường và giao thông.",
+    a: "Brochure nêu thời gian tham khảo khoảng 75 phút từ trung tâm TP.HCM, 30 phút từ sân bay Long Thành và 19 phút từ Hồ Tràm. Thời gian thực tế phụ thuộc điểm xuất phát, tuyến đường và giao thông.",
   },
   {
     q: "QTOPIA có những khu tiện ích nào?",
@@ -207,7 +208,7 @@ export const featuredAmenityGroups = [
 
 export const locationContent = {
   label: "Vị trí QTOPIA",
-  lead: "Phía trước là biển, phía sau là núi và rừng. Brochure giới thiệu QTOPIA như điểm đến cuối tuần cách trung tâm TP.HCM khoảng 90 phút.",
+  lead: "Phía trước là biển, phía sau là núi và rừng. Brochure giới thiệu QTOPIA như điểm đến cuối tuần cách trung tâm TP.HCM khoảng 75 phút.",
   mapImage: "/images/position-map.webp",
   highlights: [
     { label: "Trung tâm TP.HCM", value: "75" },
@@ -327,8 +328,10 @@ export const legalContent = {
   cta: "Nhận bộ hồ sơ pháp lý",
 };
 
-export const legalDisclaimer =
-  "Thông tin, hình ảnh, các tiện ích trong tài liệu bán hàng chỉ mang tính tương đối và có thể được điều chỉnh theo quyết định của Chủ đầu tư từng thời điểm đảm bảo phù hợp quy hoạch và thực tế thi công dự án. Các thông tin, cam kết chính thức sẽ được quy định cụ thể tại Hợp đồng mua bán. Việc quản lý, vận hành và kinh doanh khu đô thị sẽ do theo quy định của Ban quản lý.";
+export const legalNotice = {
+  disclaimer:
+    "Thông tin, hình ảnh, các tiện ích trong tài liệu bán hàng chỉ mang tính tương đối và có thể được điều chỉnh theo quyết định của Chủ đầu tư từng thời điểm đảm bảo phù hợp quy hoạch và thực tế thi công dự án. Các thông tin, cam kết chính thức sẽ được quy định cụ thể tại Hợp đồng mua bán. Việc quản lý, vận hành và kinh doanh khu đô thị sẽ do theo quy định của Ban quản lý.",
+};
 
 /* ── Chính sách bán hàng (theo bảng CSBH của chủ đầu tư) ───────────────────
    Mỗi mốc: label (mốc thời gian), top (ghi chú nhỏ phía trên), amount + unit (số lớn),
@@ -337,12 +340,13 @@ export const legalDisclaimer =
 export const salesPolicy = {
   label: "Chính sách bán hàng QTOPIA",
   lead: "Chỉ từ 120 triệu, thanh toán 10% đến khi nhận nhà, lãi suất 0% đến 24 tháng, ân hạn nợ gốc 48 tháng.",
-  price: { prefix: "Căn Studio chỉ từ", value: "1,195", unit: "tỷ đồng" },
+  price: { prefix: "Căn Studio chỉ từ", value: "1.195", unit: "tỷ đồng" },
   cta: "Nhận bảng tính dòng tiền",
   methods: [
     {
       id: "chuan",
       tab: "Thanh toán chuẩn",
+      tabShort: "Chuẩn",
       title: "Phương thức thanh toán chuẩn",
       milestones: [
         { label: "T", amount: "50", unit: "triệu", note: "Ký TTĐC", flex: 0.8 },
@@ -368,6 +372,7 @@ export const salesPolicy = {
     {
       id: "nhanh-70",
       tab: "Thanh toán nhanh 70%",
+      tabShort: "Nhanh 70%",
       title: "Phương thức thanh toán nhanh 70%",
       milestones: [
         { label: "T", amount: "50", unit: "triệu", note: "Ký TTĐC", flex: 0.8 },
@@ -386,6 +391,7 @@ export const salesPolicy = {
     {
       id: "vay-ngan-hang",
       tab: "Vay ngân hàng",
+      tabShort: "Vay NH",
       title: "Phương thức vay ngân hàng",
       milestones: [
         { label: "T", amount: "50", unit: "triệu", note: "Ký TTĐC", flex: 0.8 },
@@ -413,3 +419,42 @@ export const salesPolicy = {
   disclaimer:
     "Chính sách được áp dụng theo văn bản ban hành chính thức của Chủ đầu tư và có thể thay đổi theo từng thời điểm.",
 };
+
+/* ── Tiện ích xung quanh (trang /tien-ich-xung-quanh) ─────────────────────────
+   Chỉ dùng các mốc có trên bản đồ vị trí / brochure; thời gian là tham khảo. */
+export const nearbyContent = {
+  label: "Tiện ích xung quanh QTOPIA",
+  lead: "Từ QTOPIA, các điểm đến biển, đô thị và đầu mối giao thông của khu vực đều nằm trong bán kính một chuyến đi ngắn. Thời gian di chuyển dưới đây là số liệu tham khảo theo brochure.",
+  groups: [
+    {
+      title: "Kết nối giao thông",
+      icon: "pin",
+      items: [
+        { name: "Trung tâm TP.HCM", minutes: "75", note: "Qua hệ thống cao tốc kết nối khu vực phía Đông" },
+        { name: "Sân bay Quốc tế Long Thành", minutes: "30", note: "Cửa ngõ hàng không quốc tế của vùng" },
+        { name: "Cảng Cái Mép – Thị Vải", note: "Cụm cảng nước sâu trên bản đồ kết nối vùng" },
+        { name: "Biên Hòa", note: "Đô thị công nghiệp – dịch vụ phía Bắc tuyến kết nối" },
+      ],
+    },
+    {
+      title: "Điểm đến biển & du lịch",
+      icon: "star",
+      items: [
+        { name: "Quảng trường Phước Hải", minutes: "2", note: "Trung tâm sinh hoạt ngay cạnh dự án" },
+        { name: "Hồ Tràm", minutes: "19", note: "Dải biển nghỉ dưỡng lân cận" },
+        { name: "Vũng Tàu", note: "Thành phố biển trên trục kết nối ven biển" },
+        { name: "Bà Rịa", note: "Đô thị hành chính – dịch vụ của khu vực" },
+        { name: "Cần Giờ", note: "Vùng sinh thái ven biển phía Tây" },
+      ],
+    },
+  ],
+};
+
+/* ── Đăng ký với CMS: nội dung đã publish đè lên các object này lúc build (xem src/cms/content.js) ── */
+for (const [name, obj] of Object.entries({
+  siteMeta, heroContent, stories, facts, locationContent, nearbyContent,
+  featuredAmenityGroups, salesPolicy, legalContent, legalNotice, faq, leadFormContent,
+})) registerCms(name, obj);
+
+// Sau khi CMS đã đè nội dung
+export const legalDisclaimer = legalNotice.disclaimer;

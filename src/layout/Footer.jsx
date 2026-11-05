@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import Img from '../components/ui/Img'
 import { legalDisclaimer, siteMeta } from '../data/project'
 import { isFilled } from '../lib/filled'
+import { hasRealNews } from '../data/news'
 import { mainNav, pages, topicPaths } from '../seo/site-meta'
 
 const linkCls = 'inline-flex min-h-11 items-center font-display text-sm font-medium text-white/85 no-underline transition-colors hover:text-q-lime'
@@ -30,9 +31,11 @@ export default function Footer() {
           {/* Trang con theo chủ đề — liên kết nội bộ có từ khoá */}
           <nav aria-label="Chân trang — trang chủ đề" className="flex flex-col items-start gap-0.5">
             <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-q-lime">Thông tin chi tiết</p>
-            <Link to="/tin-tuc" title={pages['/tin-tuc'].menu} className={linkCls}>
-              Tin tức & sự kiện
-            </Link>
+            {hasRealNews() ? (
+              <Link to="/tin-tuc" title={pages['/tin-tuc'].menu} className={linkCls}>
+                Tin tức & sự kiện
+              </Link>
+            ) : null}
             {topicPaths.map((p) => (
               <Link key={p} to={p} title={pages[p].menu} className={linkCls}>
                 {pages[p].breadcrumb} căn hộ QTOPIA
@@ -43,7 +46,7 @@ export default function Footer() {
           <div className="flex flex-col gap-2.5 text-sm leading-relaxed">
             <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-q-lime">Liên hệ</p>
             {isFilled(siteMeta.hotline) ? (
-              <a href={siteMeta.hotlineHref} className="font-semibold text-white no-underline hover:underline">
+              <a href={siteMeta.hotlineHref} className="inline-flex min-h-11 items-center self-start font-semibold text-white no-underline hover:underline">
                 Hotline: {siteMeta.hotline}
               </a>
             ) : null}

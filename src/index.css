@@ -476,7 +476,8 @@ body {
   opacity: 0.75;
 }
 @media (max-width: 1023px) {
-  .location-art-mascot { left: -2%; bottom: 0; width: 170px; opacity: 0.6; }
+  /* mascot chỉ trang trí: ẩn trên điện thoại/tablet để không lòi khỏi mép và không đè bản đồ */
+  .location-art-mascot { display: none; }
   .location-art-paraglider { top: 1%; right: 5%; width: 80px; }
   .location-art-crystal { top: 0; left: 3%; width: 52px; opacity: 0.85; }
   .location-art-orb { bottom: 5%; left: auto; right: 5%; width: 70px; opacity: 0.85; }
@@ -729,6 +730,13 @@ html.js-ready img[data-img-fade][data-loaded] {
 /* Toàn màn hình: hiện trọn mặt bằng (không cắt bớt) nên nhãn dùng toạ độ gốc. */
 .amenity-map-full .amenity-number { left: var(--amenity-left-full); }
 .amenity-number:hover { scale: 1.2; }
+/* Điện thoại: mặt bằng nhỏ, số chồng lên nhau → chỉ hiện chấm màu 14px; số hiện lại cho khu đang chọn
+   (danh sách tên tiện ích nằm ngay dưới mặt bằng). Vùng chạm vẫn 44px. */
+@media (max-width: 639px) {
+  .amenity-layout .amenity-number:not(.amenity-number-focus)::before { width: 0.875rem; height: 0.875rem; }
+  .amenity-layout .amenity-number:not(.amenity-number-focus) > span { display: none; }
+  .amenity-layout .amenity-number:not(.amenity-number-focus) { z-index: 5; }
+}
 .amenity-number-selected {
   z-index: 30;
   scale: 1.2;
@@ -791,7 +799,36 @@ html.js-ready img[data-img-fade][data-loaded] {
 }
 
 /* Render offscreen sections only when needed, preserving their layout space. */
-main > section:not(#top) { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+main > section:not(#top) {
+  content-visibility: auto;
+  /* chiều cao giả ≈ đúng 1 màn hình → kéo thanh cuộn nhanh không bị nhảy / khoảng trống lớn */
+  contain-intrinsic-size: auto calc(100svh - var(--header-h));
+}
+
+/* Điện thoại xoay ngang (màn thấp ≤ 500px): không ép mỗi section cao đúng 1 màn hình —
+   nội dung cuộn tự nhiên, lề gọn; thanh CTA đáy vẫn được chừa chỗ. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .section-screen {
+    min-height: 0;
+    padding-block: 1.25rem;
+    padding-bottom: calc(1.25rem + var(--bar-h));
+  }
+  .location-art-mascot { display: none; }
+}
+
+/* Laptop thấp: mascot bị cắt đáy → ẩn */
+@media (max-height: 740px) {
+  .location-art-mascot { display: none; }
+}
+
+/* Thiết bị cảm ứng: ẩn hướng dẫn "rê chuột" */
+@media (hover: none) {
+  .hint-hover { display: none; }
+}
+/* Thiết bị có chuột: ẩn hướng dẫn chạm */
+@media (hover: hover) {
+  .hint-touch { display: none; }
+}
 #mat-bang:not([data-motion-active]) .amenity-zone-runner { animation-play-state: paused; }
 
 /* Tablet, including landscape: reduced 20% from 2.07 (2.07 × 0.8 = 1.656).

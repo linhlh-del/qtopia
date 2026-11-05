@@ -3,8 +3,9 @@
 React 19 + Vite + Tailwind v4, prerender HTML tĩnh cho từng route (SEO, Open Graph, Zalo/Facebook đọc được không cần JS).
 
 ```bash
-npm run dev        # chạy dev
-npm run build      # build client + SSR + prerender (dist/), in cảnh báo nếu chưa đặt VITE_SITE_URL
+npm run dev            # chạy dev
+npm run build          # lấy nội dung CMS (nếu cấu hình) + build client + SSR + prerender (dist/), sitemap, cms-schema.json
+npm run build:release  # (VPS) build vào releases/<id>, seo-check, đổi symlink current — xem deploy/DEPLOY.md
 npm run seo:check  # kiểm tra dist/ theo checklist SEO v2 (H1, title/description, OG, alt, JSON-LD, sitemap, robots, 404)
 npm run serve      # phục vụ dist/ giống hosting thật (thư mục tĩnh + 404 đúng mã) tại :4180
 ```
@@ -13,7 +14,7 @@ npm run serve      # phục vụ dist/ giống hosting thật (thư mục tĩnh 
 
 | Mục | Ở đâu | Ghi chú |
 |---|---|---|
-| Tên miền | `.env.production` → `VITE_SITE_URL` | `https://qtopia-tau.vercel.app` |
+| Tên miền | `.env.production` → `VITE_SITE_URL` | `https://qtopia.rever.io.vn` (domain phụ trên Cloudflare, chuyển sang domain chính thức khi có) |
 | Hotline, Zalo, địa chỉ, email | `src/data/project.js` → `siteMeta` | Giá trị placeholder tự bị loại khỏi JSON-LD và footer (`src/lib/filled.js`) |
 | Endpoint lead | `VITE_LEAD_ENDPOINT` | Chưa có thì form báo lỗi demo (không giả thành công) |
 | GTM / GA4 | `VITE_GTM_ID` | Thêm trigger History Change nếu muốn dùng `page_view` của GTM thay cho event `page_view` thủ công |
@@ -29,6 +30,13 @@ Chỉ dùng ảnh gốc Chủ đầu tư giao: `public/images/renders` (thư m�
 (mặt bằng từng loại căn) và `public/images/brand` (logo). Mọi ảnh từng cắt ra từ brochure PDF đã được gỡ;
 chỗ nào chưa có ảnh thật thì component `MediaFrame` giữ nguyên khung và hiện placeholder, nên khi thay ảnh
 vào bố cục không đổi.
+
+## Trang chính (sitelinks) và CMS
+
+- 5 trang chính muốn Google hiện dạng snippet con: `/tong-quan`, `/vi-tri`, `/tien-ich`, `/chinh-sach-ban-hang`, `/tien-ich-xung-quanh` (khai báo ở `sitelinkPaths`, `src/seo/site-meta.js`; trang chủ có JSON-LD `ItemList` các trang này). Ngoài ra có `/mat-bang`.
+- Bài tin còn chữ mẫu → tự `noindex` và không vào sitemap; sửa bài trên CMS là tự được index.
+- Nội dung sửa được trên CMS: mọi object trong `src/data/project.js` / `news.js` đã `registerCms(...)`; SEO từng trang trong `site-meta.js`. Schema cho CMS sinh tự động ra `dist/cms-schema.json` (`src/cms/schema.js`).
+- Hosting VPS + CMS Vercel: `deploy/DEPLOY.md`.
 
 ## Một nguồn dữ liệu
 

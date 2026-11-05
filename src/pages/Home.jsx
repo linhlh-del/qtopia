@@ -12,6 +12,7 @@ import Legal from "../sections/Legal";
 import Faq from "../sections/Faq";
 import Register from "../sections/Register";
 import { stories } from "../data/project";
+import { hasRealNews } from "../data/news";
 
 // Trang chủ = landing page tổng quan. Thứ tự: giới thiệu → vị trí → tiện ích → sản phẩm → khám phá → pháp lý → FAQ → đăng ký.
 export default function Home() {
@@ -26,7 +27,8 @@ export default function Home() {
       <FeaturedAmenities />
       <Residences />
       <SalesPolicy />
-      <News />
+      {/* Chưa có bài thật (còn bài mẫu) → ẩn section Tin tức trên trang chủ */}
+      {hasRealNews() ? <News /> : null}
       <Legal />
       <Faq />
       <Register />

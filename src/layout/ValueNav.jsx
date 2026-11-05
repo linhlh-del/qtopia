@@ -191,7 +191,7 @@ export default function ValueNav() {
                 data-cta-name={`value_nav_${it.key}`}
                 data-cta-location="side_rail"
                 className={`group relative grid size-12 place-items-center rounded-full border no-underline shadow-soft transition-colors duration-300 ${
-                  active === it.id ? 'border-q-navy bg-q-navy text-white' : 'border-q-navy/15 bg-white/95 text-q-navy hover:bg-white'
+                  active === it.id ? 'border-q-lime bg-q-navy text-q-lime ring-2 ring-white/70' : 'border-q-navy/15 bg-white/95 text-q-navy hover:bg-white'
                 }`}
               >
                 <Icon name={it.icon} />

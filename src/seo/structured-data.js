@@ -3,7 +3,7 @@
    Hotline / địa chỉ chưa điền thật (isFilled=false) thì không đưa vào schema. */
 import { siteMeta, faq, masterPlan } from '../data/project'
 import { isFilled } from '../lib/filled'
-import { SITE, SITE_URL, absAsset, absUrl, pageMeta, pages } from './site-meta'
+import { SITE, SITE_URL, absAsset, absUrl, pageMeta, pages, sitelinkPaths } from './site-meta'
 
 const ID = {
   site: `${SITE_URL}/#website`,
@@ -90,6 +90,19 @@ export function structuredData(path) {
   }
 
   if (path === '/') {
+    // Danh sách trang chính (gợi ý cấu trúc site cho Google khi tạo sitelinks; Google tự quyết định hiển thị).
+    graph.push({
+      '@type': 'ItemList',
+      '@id': `${SITE_URL}/#main-pages`,
+      name: 'Các trang chính của QTOPIA',
+      itemListElement: sitelinkPaths.map((p, i) => ({
+        '@type': 'SiteNavigationElement',
+        position: i + 1,
+        name: pages[p].breadcrumb,
+        description: pages[p].menu,
+        url: absUrl(p),
+      })),
+    })
     graph.push({
       '@type': 'FAQPage',
       mainEntity: faq.map((f) => ({

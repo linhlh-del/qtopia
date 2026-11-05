@@ -1,11 +1,12 @@
-import { lazy, Suspense } from 'react'
+import { Suspense } from 'react'
+import { preloadable } from './components/DeferredSection'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './layout/Layout'
 import Home from './pages/Home'
-const Topic = lazy(() => import('./pages/Topic'))
-const NotFound = lazy(() => import('./pages/NotFound'))
-const NewsPage = lazy(() => import('./pages/NewsPage'))
-const NewsDetail = lazy(() => import('./pages/NewsDetail'))
+const Topic = preloadable(() => import('./pages/Topic'))
+const NotFound = preloadable(() => import('./pages/NotFound'))
+const NewsPage = preloadable(() => import('./pages/NewsPage'))
+const NewsDetail = preloadable(() => import('./pages/NewsDetail'))
 import { topicPaths } from './seo/site-meta'
 
 export default function App() {

@@ -5,10 +5,31 @@ import MasterPlan from '../sections/MasterPlan'
 import FeaturedAmenities from '../sections/FeaturedAmenities'
 import Residences from '../sections/Residences'
 import Register from '../sections/Register'
+import Story from '../sections/Story'
+import Facts from '../sections/Facts'
+import Legal from '../sections/Legal'
+import SalesPolicy from '../sections/SalesPolicy'
+import NearbyPlaces from '../sections/NearbyPlaces'
+import { stories } from '../data/project'
 import { pages } from '../seo/site-meta'
 
 // Trang con theo chủ đề (SEO nhóm từ khoá ngách): H1 + đoạn giới thiệu riêng + nội dung section tương ứng.
 const BODY = {
+  '/tong-quan': () => (
+    <>
+      <Facts showTopicLink={false} />
+      <Story data={stories[0]} />
+      <Story data={stories[1]} />
+      <Legal />
+    </>
+  ),
+  '/chinh-sach-ban-hang': () => <SalesPolicy showTopicLink={false} />,
+  '/tien-ich-xung-quanh': () => (
+    <>
+      <NearbyPlaces />
+      <Location showTopicLink={false} />
+    </>
+  ),
   '/vi-tri': () => <Location showTopicLink={false} />,
   '/tien-ich': () => (
     <>

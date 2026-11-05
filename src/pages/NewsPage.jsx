@@ -75,7 +75,7 @@ export default function NewsPage() {
                 <div className="mt-auto pt-6">
                   <NewsMeta item={featured} />
                   <Link to={getNewsHref(featured.id)} className="btn-base btn-primary mt-5 inline-flex no-underline">
-                    Đọc bài viết
+                    Đọc bài viết<span className="sr-only">: {featured.title}</span>
                   </Link>
                 </div>
               </div>

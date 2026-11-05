@@ -209,7 +209,7 @@ export default function Residences({ showTopicLink = true }) {
                       top: `${(unit.labelY / FLOOR_VIEWBOX_H) * 100}%`,
                       background: unit.labelColor,
                     }}
-                    className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-1.5 py-0.5 font-display text-[length:calc(10px*var(--type-scale))] font-bold leading-none text-white shadow-sm transition-transform sm:text-xs ${isActive ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'}`}
+                    className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-1.5 py-0.5 before:absolute before:-inset-x-1.5 before:-inset-y-2.5 before:content-[''] font-display text-[length:calc(10px*var(--type-scale))] font-bold leading-none text-white shadow-sm transition-transform sm:text-xs ${isActive ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'}`}
                   >
                     {unit.code}
                   </button>
@@ -253,7 +253,8 @@ export default function Residences({ showTopicLink = true }) {
             </aside>
           ) : null}
 
-          <div className="absolute right-3 top-3 z-40 flex items-center gap-2">
+          {/* Điện thoại: nút nằm ở hành lang giữa hai dãy căn để không che mã căn ở góc trên */}
+          <div className="absolute right-3 top-3 z-40 flex items-center gap-2 max-lg:top-1/2 max-lg:-translate-y-1/2">
             {fullscreen ? (
               <div className="flex items-center overflow-hidden rounded-full bg-q-navy/80 backdrop-blur">
                 <button type="button" onClick={() => setZoom((current) => Math.max(1, current - 1))} disabled={zoom === 1}
@@ -271,7 +272,7 @@ export default function Residences({ showTopicLink = true }) {
           </div>
         </div>
 
-        <p className="mt-2 text-center text-xs text-q-muted">Rê chuột hoặc chọn mã căn để xem layout và diện tích.</p>
+        <p className="hint-hover mt-2 text-center text-xs text-q-muted">Rê chuột hoặc chọn mã căn để xem layout và diện tích.</p>
         {showTopicLink ? (
           <div className="mt-3 flex justify-center">
             <Link to="/mat-bang" title="Mặt bằng tầng điển hình và các loại căn hộ QTOPIA" data-cta-name="floorplan_detail" data-cta-location="mat-bang" className="btn-base btn-dark cta-fx no-underline">
