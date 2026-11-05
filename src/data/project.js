@@ -323,3 +323,55 @@ export const legalContent = {
 
 export const legalDisclaimer =
   "Thông tin, hình ảnh, các tiện ích trong tài liệu bán hàng chỉ mang tính tương đối và có thể được điều chỉnh theo quyết định của Chủ đầu tư từng thời điểm đảm bảo phù hợp quy hoạch và thực tế thi công dự án. Các thông tin, cam kết chính thức sẽ được quy định cụ thể tại Hợp đồng mua bán. Việc quản lý, vận hành và kinh doanh khu đô thị sẽ do theo quy định của Ban quản lý.";
+
+/* ── Chính sách bán hàng (theo bảng CSBH của chủ đầu tư) ───────────────────
+   Mỗi mốc: label (mốc thời gian), top (ghi chú nhỏ phía trên), amount + unit (số lớn),
+   note (ghi chú dưới số), bank (khoản ngân hàng giải ngân), between (chữ trên đoạn line
+   từ mốc này tới mốc kế tiếp), flex (độ rộng tương đối của khoảng trên timeline). */
+export const salesPolicy = {
+  label: "Chính sách bán hàng QTOPIA",
+  lead: "Căn Studio QTOPIA chỉ từ 1,195 tỷ đồng, với 3 phương thức thanh toán linh hoạt: chuẩn theo tiến độ, thanh toán nhanh 70% hoặc vay ngân hàng.",
+  price: { prefix: "Căn Studio chỉ từ", value: "1,195", unit: "tỷ đồng" },
+  cta: "Nhận bảng tính dòng tiền",
+  methods: [
+    {
+      id: "chuan",
+      tab: "Thanh toán chuẩn",
+      title: "Phương thức thanh toán chuẩn",
+      milestones: [
+        { label: "T", amount: "50", unit: "triệu", note: "Ký TTĐC", flex: 0.8 },
+        { label: "T+7", amount: "10", unit: "%", note: "Ký HĐMB", between: "Thanh toán TB 3,75%/tháng", flex: 2.6 },
+        { label: "T+540", top: "Nhận bàn giao", amount: "25", unit: "%", note: "+ KPBT", flex: 1 },
+        { label: "Nhận sổ", amount: "5", unit: "%", flex: 0.8 },
+      ],
+    },
+    {
+      id: "nhanh-70",
+      tab: "Thanh toán nhanh 70%",
+      title: "Phương thức thanh toán nhanh 70%",
+      milestones: [
+        { label: "T", amount: "50", unit: "triệu", note: "Ký TTĐC", flex: 0.8 },
+        { label: "T+7", amount: "10", unit: "%", note: "Ký HĐMB", flex: 1 },
+        { label: "T+30", amount: "60", unit: "%", flex: 1.8 },
+        { label: "T+540", top: "Nhận bàn giao", amount: "25", unit: "%", flex: 1 },
+        { label: "Nhận sổ", amount: "5", unit: "%", flex: 0.8 },
+      ],
+    },
+    {
+      id: "vay-ngan-hang",
+      tab: "Vay ngân hàng",
+      title: "Phương thức vay ngân hàng",
+      milestones: [
+        { label: "T", amount: "50", unit: "triệu", note: "Ký TTĐC", flex: 0.8 },
+        { label: "T+7", amount: "15", unit: "%", note: "Ký HĐMB", flex: 1 },
+        { label: "T+30", bank: "40%", flex: 1.8 },
+        { label: "T+540", top: "Nhận bàn giao", amount: "10", unit: "%", bank: "30%", flex: 1 },
+        { label: "Nhận sổ", amount: "5", unit: "%", note: "+ KPBT", flex: 0.8 },
+      ],
+      perks: ["Hỗ trợ lãi suất 24 tháng hoặc đến khi bàn giao", "Ân hạn nợ gốc 48 tháng"],
+      perksNote: "*Áp dụng có điều kiện",
+    },
+  ],
+  glossary: "TTĐC: thoả thuận đặt cọc · HĐMB: hợp đồng mua bán · KPBT: kinh phí bảo trì.",
+  disclaimer: "Chính sách được áp dụng theo văn bản ban hành chính thức của Chủ đầu tư và có thể thay đổi theo từng thời điểm.",
+};

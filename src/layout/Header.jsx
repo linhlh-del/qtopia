@@ -5,7 +5,7 @@ import Icon from '../components/ui/Icons'
 import { useContactPopup } from '../components/ContactPopup'
 import { mainNav } from '../seo/site-meta'
 
-const navCls = 'font-display text-[1.045rem] leading-[1.1] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime'
+const navCls = 'font-display text-[0.92rem] xl:text-[1.045rem] leading-[1.1] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime'
 
 // Header dính đầu trang (sticky, cao cố định --header-h). Nút "Tư vấn" luôn thấy cả trên điện thoại.
 export default function Header() {
@@ -22,7 +22,7 @@ export default function Header() {
           <Img src="/images/brand/logo-horizontal-white.png" alt="QTOPIA" priority className="h-8 w-auto lg:h-9" />
         </Link>
 
-        <nav aria-label="Menu chính" className="hidden items-center gap-4 whitespace-nowrap lg:flex xl:gap-7">
+        <nav aria-label="Menu chính" className="hidden items-center gap-3 whitespace-nowrap lg:flex xl:gap-6">
           {mainNav.map((item) => (
             <Link key={item.to} to={item.to} title={item.title} className={navCls}>
               {item.label}

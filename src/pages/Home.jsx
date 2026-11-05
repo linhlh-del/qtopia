@@ -5,6 +5,7 @@ import Location from "../sections/Location";
 import MasterPlan from "../sections/MasterPlan";
 import FeaturedAmenities from "../sections/FeaturedAmenities";
 import Residences from "../sections/Residences";
+import SalesPolicy from "../sections/SalesPolicy";
 import News from "../sections/News";
 import Legal from "../sections/Legal";
 import Faq from "../sections/Faq";
@@ -23,6 +24,7 @@ export default function Home() {
       <MasterPlan />
       <FeaturedAmenities />
       <Residences />
+      <SalesPolicy />
       <News />
       <Legal />
       <Faq />

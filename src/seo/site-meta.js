@@ -156,6 +156,7 @@ export const mainNav = [
   { to: '/#vi-tri', label: 'Vị trí', title: pages['/vi-tri'].menu },
   { to: '/#tien-ich', label: 'Tiện ích', title: pages['/tien-ich'].menu },
   { to: '/#mat-bang', label: 'Mặt bằng', title: pages['/mat-bang'].menu },
+  { to: '/#chinh-sach', label: 'Chính sách', title: 'Chính sách bán hàng và phương thức thanh toán QTOPIA' },
   { to: '/#tin-tuc', label: 'Tin tức', title: 'Tin tức và thông tin dự án QTOPIA' },
   { to: '/#phap-ly', label: 'Pháp lý', title: 'Thông tin pháp lý dự án QTOPIA' },
   { to: '/#lien-he', label: 'Liên hệ', title: 'Liên hệ nhận thông tin dự án QTOPIA' },
