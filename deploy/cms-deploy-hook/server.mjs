@@ -65,6 +65,7 @@ function authorized(request, project) {
 }
 
 function respond(response, status, body) {
+  if (status >= 400) console.warn(`[deploy] ${status} ${JSON.stringify(body)}`);
   response.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
@@ -147,12 +148,17 @@ const server = createServer(async (request, response) => {
       respond(response, 413, { accepted: false, error: 'Request too large.' });
       return;
     }
-    let project;
-    try {
-      project = JSON.parse(body).project;
-    } catch {
-      respond(response, 400, { accepted: false, error: 'Invalid JSON.' });
-      return;
+    // Một số bản cms-admin gửi POST không có body (kiểu Vercel Deploy Hook) → lấy project từ ?project=
+    // hoặc project duy nhất đang bật. Token vẫn bắt buộc như cũ.
+    const enabled = Object.keys(PROJECTS);
+    let project = url.searchParams.get('project') || (enabled.length === 1 ? enabled[0] : undefined);
+    if (body.trim()) {
+      try {
+        project = JSON.parse(body).project || project;
+      } catch {
+        respond(response, 400, { accepted: false, error: 'Invalid JSON.' });
+        return;
+      }
     }
     if (typeof project !== 'string' || !Object.hasOwn(PROJECTS, project)) {
       respond(response, 400, { accepted: false, error: 'Invalid project.' });
