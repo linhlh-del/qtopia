@@ -9,6 +9,7 @@
  *   QTOPIA_BASE_DIR   thư mục chứa releases/ và current   (mặc định: thư mục cha của mã nguồn)
  *   QTOPIA_KEEP       số bản release giữ lại để rollback   (mặc định 5)
  *   QTOPIA_GIT_PULL=1 cập nhật mã nguồn (git pull --ff-only) trước khi build
+ *   QTOPIA_CHOWN      vd. www-data:www-data — khi build bằng root, trả quyền thư mục release cho user web
  *
  * Rollback thủ công: ln -sfn releases/<id> current.tmp && mv -T current.tmp current
  */
@@ -53,6 +54,8 @@ try {
   run(process.execPath, [join(root, 'scripts/build.mjs')], env)
   log('kiểm tra SEO bản build')
   run(process.execPath, [join(root, 'scripts/seo-check.mjs')], env)
+
+  if (process.env.QTOPIA_CHOWN) run('chown', ['-R', process.env.QTOPIA_CHOWN, out])
 
   // đổi symlink nguyên tử: tạo link tạm rồi rename đè lên `current`
   const tmp = `${current}.tmp-${process.pid}`

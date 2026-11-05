@@ -1,0 +1,23 @@
+# /etc/systemd/system/qtopia-deploy-hook.service
+# Nhận lệnh "Đăng" từ CMS (Supabase Edge Function cms-admin) → chạy `npm run build:release` trong /var/www/qtopia/src.
+# Chạy bằng root vì Node được cài qua nvm trong /root. Chỉ nghe 127.0.0.1:8790; nginx proxy /cms-deploy vào đây,
+# mọi request phải có Bearer token. Thư mục build và lệnh build cố định trong server.mjs, request không đổi được.
+[Unit]
+Description=QTOPIA CMS deploy hook
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/qtopia-deploy-hook
+EnvironmentFile=/etc/qtopia-deploy-hook.env
+# Node/npm của nvm (sửa số phiên bản nếu đổi Node: ls /root/.nvm/versions/node)
+Environment=PATH=/root/.nvm/versions/node/v24.14.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=NPM_BIN=/root/.nvm/versions/node/v24.14.1/bin/npm
+ExecStart=/root/.nvm/versions/node/v24.14.1/bin/node /opt/qtopia-deploy-hook/server.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
