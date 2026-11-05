@@ -58,9 +58,12 @@ const jobs = new Map(Object.keys(PROJECTS).map((project) => [project, {
   rerun: false,
 }]));
 
-function authorized(request, project) {
+// Token lấy từ header `Authorization: Bearer …` hoặc tham số `?token=…` trong URL
+// (một số bản cms-admin gọi hook như Vercel Deploy Hook: chỉ POST tới URL, không gửi header/body).
+function authorized(request, project, url) {
   const expected = Buffer.from(PROJECTS[project].token);
-  const actual = Buffer.from((request.headers.authorization || '').replace(/^Bearer\s+/i, ''));
+  const given = (request.headers.authorization || '').replace(/^Bearer\s+/i, '') || url.searchParams.get('token') || '';
+  const actual = Buffer.from(given);
   return expected.length === actual.length && timingSafeEqual(expected, actual);
 }
 
@@ -127,7 +130,7 @@ const server = createServer(async (request, response) => {
       respond(response, 400, { error: 'Invalid project.' });
       return;
     }
-    if (!authorized(request, project)) {
+    if (!authorized(request, project, url)) {
       respond(response, 401, { error: 'Unauthorized.' });
       return;
     }
@@ -164,7 +167,7 @@ const server = createServer(async (request, response) => {
       respond(response, 400, { accepted: false, error: 'Invalid project.' });
       return;
     }
-    if (!authorized(request, project)) {
+    if (!authorized(request, project, url)) {
       respond(response, 401, { accepted: false, error: 'Unauthorized.' });
       return;
     }
