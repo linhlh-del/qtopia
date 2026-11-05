@@ -225,7 +225,7 @@ export const routes = Object.keys(pages)
 export const indexableRoutes = routes.filter((r) => !pages[r].noindex)
 
 /** Menu chính (anchor nhảy tới section trên trang chủ) */
-export const mainNav = ([
+export const mainNav = [
   { to: '/#tong-quan', label: 'Tổng quan', title: 'Tổng quan dự án căn hộ QTOPIA' },
   { to: '/#vi-tri', label: 'Vị trí', title: pages['/vi-tri'].menu },
   { to: '/#tien-ich', label: 'Tiện ích', title: pages['/tien-ich'].menu },
@@ -234,7 +234,7 @@ export const mainNav = ([
   { to: '/#tin-tuc', label: 'Tin tức', title: 'Tin tức và thông tin dự án QTOPIA' },
   { to: '/#phap-ly', label: 'Pháp lý', title: 'Thông tin pháp lý dự án QTOPIA' },
   { to: '/#lien-he', label: 'Liên hệ', title: 'Liên hệ nhận thông tin dự án QTOPIA' },
-]).filter((item) => item.to !== '/#tin-tuc' || hasRealNews())
+]
 
 export const absUrl = (path) => SITE_URL + (path === '/' ? '/' : path)
 export const absAsset = (src) => (/^https?:/.test(src) ? src : SITE_URL + src)
