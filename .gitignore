@@ -25,3 +25,7 @@ dist-ssr
 
 # SSR build (prerender)
 .ssr
+
+dist-perf
+.ssr-perf
+performance-results

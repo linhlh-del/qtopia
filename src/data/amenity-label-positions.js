@@ -1,4 +1,4 @@
-// Vị trí nhãn trên matbangtienich.png (tính theo % chiều rộng / chiều cao ảnh gốc).
+// Vị trí nhãn trên matbangtienich.webp (tính theo % chiều rộng / chiều cao ảnh gốc).
 // Mỗi số có thể xuất hiện nhiều lần; chỉnh top và left tại đây để tinh chỉnh tay.
 export const amenityLabelPositions = {
   1: [{ top: '60.1%', left: '61.6%' }],

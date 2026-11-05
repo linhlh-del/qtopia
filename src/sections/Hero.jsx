@@ -1,19 +1,44 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import Container from '../components/ui/Container'
 import Img from '../components/ui/Img'
 import { useContactPopup } from '../components/ContactPopup'
 import { heroContent } from '../data/project'
+import { responsiveImageProps } from '../lib/responsive-image'
 
 // Hero = ẢNH LÀM CHỦ. Khối chữ gói trong dải đáy (~20% chiều cao), chữ nhỏ, chỉ 1 CTA.
 export default function Hero() {
   const [active, setActive] = useState(0)
   const popup = useContactPopup()
   const slide = heroContent.images[active]
+  // Accept editorial line breaks as text, without rendering arbitrary HTML.
+  const titleLines = slide.h1.split(/\r?\n|<\/?br\s*\/?>/i)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
-    const id = window.setTimeout(() => setActive((i) => (i + 1) % heroContent.images.length), 6500)
-    return () => window.clearTimeout(id)
+    let preloadId = 0
+    let rotateId = 0
+    const startRotation = () => {
+      preloadId = window.setTimeout(() => {
+        const next = heroContent.images[(active + 1) % heroContent.images.length]
+        const image = new window.Image()
+        const imageProps = responsiveImageProps(next.src, '100vw')
+        image.decoding = 'async'
+        image.sizes = imageProps.sizes
+        if (imageProps.srcSet) image.srcset = imageProps.srcSet
+        image.src = imageProps.src
+      }, 2500)
+      rotateId = window.setTimeout(
+        () => setActive((i) => (i + 1) % heroContent.images.length),
+        6500,
+      )
+    }
+    if (document.readyState === 'complete') startRotation()
+    else window.addEventListener('load', startRotation, { once: true })
+    return () => {
+      window.removeEventListener('load', startRotation)
+      window.clearTimeout(preloadId)
+      window.clearTimeout(rotateId)
+    }
   }, [active])
 
   return (
@@ -22,16 +47,14 @@ export default function Hero() {
       data-snap-section
       className="relative flex min-h-[calc(100svh-var(--header-h))] items-end overflow-hidden bg-q-navy text-white"
     >
-      {heroContent.images.map((img, i) => (
+      {heroContent.images.slice(active, active + 1).map((img) => (
         <Img
           key={img.src}
           src={img.src}
           alt={img.alt}
-          priority={i === 0}
+          priority={active === 0}
           fade={false}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1600ms] ${
-            i === active ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={`${active === 0 ? '' : 'hero-image-enter '}absolute inset-0 h-full w-full object-cover`}
         />
       ))}
       {/* Lớp phủ chỉ đậm ở dải đáy — phần còn lại để ảnh hiện rõ */}
@@ -42,7 +65,12 @@ export default function Hero() {
         <div className="flex max-w-lg flex-col items-start gap-3">
           <div key={slide.src} className="hero-copy-enter flex flex-col gap-3">
             <h1 className="m-0 font-display text-[clamp(1.35rem,3.1vw,2.1rem)] font-extrabold leading-[1.15] tracking-tight text-white">
-              {slide.h1}
+              {titleLines.map((line, i) => (
+                <Fragment key={i}>
+                  {i > 0 && <br />}
+                  <span className={titleLines.length > 1 ? 'whitespace-nowrap' : undefined}>{line}</span>
+                </Fragment>
+              ))}
             </h1>
             <p className="m-0 font-display text-sm font-semibold text-q-lime sm:text-base">{slide.slogan}</p>
           </div>

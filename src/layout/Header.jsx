@@ -6,7 +6,7 @@ import { useContactPopup } from "../components/ContactPopup";
 import { mainNav } from "../seo/site-meta";
 
 const navCls =
-  "font-display text-[0.92rem] xl:text-[1.045rem] leading-[1.1] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime";
+  "font-display text-[length:calc(0.92rem*var(--type-scale))] xl:text-[length:calc(1.045rem*var(--type-scale))] leading-[1.1] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime";
 
 // Header dính đầu trang (sticky, cao cố định --header-h). Nút "Tư vấn" luôn thấy cả trên điện thoại.
 export default function Header() {
@@ -18,7 +18,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-q-navy shadow-[inset_0_-1px_0_rgba(255,255,255,0.08)]">
-      <div className="container-page relative flex h-[var(--header-h)] items-center justify-between gap-3">
+      <div className="container-page header-container relative flex h-[var(--header-h)] items-center justify-between gap-3">
         <Link
           to="/"
           aria-label="QTOPIA — về trang chủ"
@@ -27,14 +27,13 @@ export default function Header() {
           <Img
             src="/images/brand/logo-horizontal-white.png"
             alt="QTOPIA"
-            priority
-            className="h-8 w-auto lg:h-9"
+            className="h-7 w-auto sm:h-8 lg:h-9"
           />
         </Link>
 
         <nav
           aria-label="Menu chính"
-          className="hidden items-center gap-3 whitespace-nowrap lg:flex xl:gap-6"
+          className="hidden items-center gap-3 whitespace-nowrap xl:flex xl:gap-6"
         >
           {mainNav.map((item) => (
             <Link
@@ -54,7 +53,7 @@ export default function Header() {
             onClick={() => popup.open("header")}
             data-cta-name="header_consult"
             data-cta-location="header"
-            className="btn-base btn-primary w-[6.6rem] shrink-0 !px-5 text-[1.045rem] leading-[1.1] md:max-lg:w-[5.346rem] lg:w-40"
+            className="btn-base btn-primary min-w-24 shrink-0 whitespace-nowrap !px-4 text-[length:calc(1.045rem*var(--type-scale))] leading-[1.1] lg:w-40"
           >
             TƯ VẤN
           </button>
@@ -64,7 +63,7 @@ export default function Header() {
             aria-controls="mobile-nav"
             aria-label={open ? "Đóng menu" : "Mở menu"}
             onClick={() => setOpen((v) => !v)}
-            className="grid size-12 cursor-pointer place-items-center text-white lg:hidden"
+            className="grid size-12 cursor-pointer place-items-center text-white xl:hidden"
           >
             <Icon name={open ? "close" : "menu"} size={24} />
           </button>
@@ -75,7 +74,7 @@ export default function Header() {
         <nav
           id="mobile-nav"
           aria-label="Menu di động"
-          className="max-h-[calc(100svh-var(--header-h)-var(--bar-h))] overflow-y-auto border-t border-white/10 bg-q-navy lg:hidden"
+          className="max-h-[calc(100svh-var(--header-h)-var(--bar-h))] overflow-y-auto border-t border-white/10 bg-q-navy xl:hidden"
         >
           <ul className="container-page m-0 flex list-none flex-col py-3">
             {mainNav.map((item) => (
@@ -83,7 +82,7 @@ export default function Header() {
                 <Link
                   to={item.to}
                   title={item.title}
-                  className="flex min-h-12 items-center border-b border-white/10 font-display text-[1.1rem] leading-[1.1] font-medium text-white no-underline"
+                  className="flex min-h-12 items-center border-b border-white/10 font-display text-[length:calc(1.1rem*var(--type-scale))] leading-[1.1] font-medium text-white no-underline"
                 >
                   {item.label}
                 </Link>

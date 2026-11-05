@@ -8,23 +8,89 @@ const GTM_ID = import.meta.env?.VITE_GTM_ID || ''
 export function track(event, params = {}) {
   if (typeof window === 'undefined') return
   window.dataLayer = window.dataLayer || []
-  window.dataLayer.push({ event, ...params })
+  if (!GTM_ID && window.gtag) window.gtag('event', event, params)
+  else window.dataLayer.push({ event, ...params })
 }
 
 /* Nạp GTM sau khi trang rảnh để không chặn render (checklist 13: tải GTM không chặn render) */
 export function loadGtm() {
-  if (typeof window === 'undefined' || !GTM_ID || document.getElementById('gtm-loader')) return
+  if (typeof window === 'undefined' || window.__qtopiaAnalytics) return
+  window.__qtopiaAnalytics = true
   window.dataLayer = window.dataLayer || []
-  window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' })
+  if (!GTM_ID) {
+    window.gtag = function () { window.dataLayer.push(arguments) }
+    window.gtag('js', new Date())
+    window.gtag('config', 'G-6LEMBK6FTP', { send_page_view: false })
+  }
+  let loaded = false
   const run = () => {
+    if (loaded) return
+    loaded = true
+    for (const event of ['pointerdown', 'keydown', 'scroll']) window.removeEventListener(event, run)
     const s = document.createElement('script')
     s.id = 'gtm-loader'
     s.async = true
-    s.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(GTM_ID)}`
+    if (GTM_ID) window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' })
+    s.src = GTM_ID
+      ? `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(GTM_ID)}`
+      : 'https://www.googletagmanager.com/gtag/js?id=G-6LEMBK6FTP'
     document.head.appendChild(s)
   }
-  if ('requestIdleCallback' in window) window.requestIdleCallback(run, { timeout: 3000 })
-  else window.setTimeout(run, 1500)
+  for (const event of ['pointerdown', 'keydown', 'scroll']) window.addEventListener(event, run, { once: true, passive: true })
+  // Queue events immediately; download analytics after content loads and the main thread is idle.
+  const schedule = () => {
+    if ('requestIdleCallback' in window) window.requestIdleCallback(run, { timeout: 5000 })
+    else window.setTimeout(run, 1000)
+  }
+  if (document.readyState === 'complete') schedule()
+  else window.addEventListener('load', schedule, { once: true })
+}
+
+export function trackWebVitals() {
+  let active = true
+  let timer = 0
+  let idleId = 0
+  let stopMetrics = () => {}
+
+  const start = async () => {
+    try {
+      const { onCLS, onINP, onLCP } = await import('web-vitals')
+      if (!active) return
+      const report = ({ name, value, delta, rating }) => {
+        track('web_vital', {
+          metric_name: name,
+          metric_value: value,
+          metric_delta: delta,
+          metric_unit: name === 'CLS' ? 'score' : 'ms',
+          metric_rating: rating,
+          page_path: window.location.pathname,
+        })
+      }
+      const unsubscribe = [onCLS(report), onINP(report), onLCP(report)]
+      stopMetrics = () => unsubscribe.forEach((stop) => stop())
+    } catch (error) {
+      console.error('Failed to initialize Core Web Vitals reporting.', error)
+    }
+  }
+
+  const schedule = () => {
+    if ('requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(start, { timeout: 5000 })
+    } else {
+      timer = window.setTimeout(start, 1000)
+    }
+  }
+
+  if (document.readyState === 'complete') schedule()
+  else window.addEventListener('load', schedule, { once: true })
+
+  return () => {
+    active = false
+    window.removeEventListener('load', schedule)
+    window.clearTimeout(timer)
+    if (idleId) window.cancelIdleCallback(idleId)
+    stopMetrics()
+  }
 }
 
 /* Một listener cho mọi CTA: gắn data-cta-name / data-cta-location / data-cta-target; tel: và Zalo tự nhận diện */

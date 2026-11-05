@@ -40,7 +40,7 @@ function BankBadge({ value, className = '' }) {
     <span
       className={`inline-flex flex-col items-center rounded-2xl border border-q-pink/60 bg-q-pink/10 px-3 py-1.5 text-center leading-tight ${className}`}
     >
-      <span className="text-[0.68rem] font-medium uppercase tracking-wider text-white/75">NH giải ngân</span>
+      <span className="text-[length:calc(0.68rem*var(--type-scale))] font-medium uppercase tracking-wider text-white/75">NH giải ngân</span>
       <span className="font-display text-xl font-extrabold text-q-pink">{value}</span>
     </span>
   )
@@ -54,7 +54,7 @@ function TimelineHorizontal({ milestones }) {
       <div className="flex">
         {milestones.map((m, i) => (
           <div key={i} style={{ flex: m.flex ?? 1 }} className="flex min-w-0 flex-col items-center justify-end px-1 pb-2 text-center">
-            <span className="h-4 whitespace-nowrap text-[0.7rem] text-white/60 lg:text-xs">{m.top || ''}</span>
+            <span className="h-4 whitespace-nowrap text-[length:calc(0.7rem*var(--type-scale))] text-white/60 lg:text-xs">{m.top || ''}</span>
             <span className="whitespace-nowrap font-display text-lg font-semibold text-white lg:text-xl">{m.label}</span>
           </div>
         ))}
@@ -109,7 +109,7 @@ function TimelineVertical({ milestones }) {
           <div className="flex items-start justify-between gap-3 rounded-2xl bg-white/5 px-3.5 py-2.5">
             <div className="flex min-w-0 flex-col">
               <span className="font-display text-base font-semibold text-white">{m.label}</span>
-              {m.top ? <span className="text-[0.7rem] text-white/60">{m.top}</span> : null}
+              {m.top ? <span className="text-[length:calc(0.7rem*var(--type-scale))] text-white/60">{m.top}</span> : null}
               {m.note ? <span className="text-xs text-white/70">{m.note}</span> : null}
             </div>
             <div className="flex shrink-0 flex-col items-end gap-1.5">
@@ -217,7 +217,7 @@ export default function SalesPolicy() {
                   aria-controls={`csbh-panel-${m.id}`}
                   tabIndex={on ? 0 : -1}
                   onClick={() => select(m.id)}
-                  className={`min-h-11 cursor-pointer rounded-full px-2 font-display text-[0.72rem] font-semibold leading-tight transition-colors duration-300 sm:px-5 sm:text-sm ${
+                  className={`min-h-11 cursor-pointer rounded-full px-2 font-display text-[length:calc(0.72rem*var(--type-scale))] font-semibold leading-tight transition-colors duration-300 sm:px-5 sm:text-sm ${
                     on ? 'bg-q-lime text-q-navy' : 'bg-transparent text-white/80 hover:bg-white/10 hover:text-white'
                   }`}
                 >
@@ -257,7 +257,7 @@ export default function SalesPolicy() {
           </div>
 
           <div className="stagger mt-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between" style={{ '--i': 2 }}>
-            <div className="flex flex-col gap-1 text-[0.7rem] leading-snug text-white/60 sm:text-xs">
+            <div className="flex flex-col gap-1 text-[length:calc(0.7rem*var(--type-scale))] leading-snug text-white/60 sm:text-xs">
               <span>{salesPolicy.glossary}</span>
               <span>{salesPolicy.disclaimer}</span>
             </div>

@@ -205,6 +205,7 @@ function LocationMap() {
         <Img
           src={locationContent.mapImage}
           alt="Bản đồ vị trí và cự ly kết nối từ dự án QTOPIA"
+          sizes="(min-width: 1024px) 60vw, 100vw"
           className="absolute inset-0 block h-full w-full object-contain"
         />
 
@@ -323,7 +324,7 @@ function LocationMap() {
             {/* LOCATION LABEL — ẩn mặc định, chỉ hiện khi bấm vào nút check-in */}
             <span
               aria-hidden="true"
-              className={`relative z-10 pointer-events-none whitespace-nowrap rounded-md border px-2 py-1 font-body text-[8px] font-semibold text-q-navy shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-[2px] transition-all duration-300 sm:text-[10px] lg:px-2.5 lg:text-xs ${
+              className={`relative z-10 pointer-events-none whitespace-nowrap rounded-md border px-2 py-1 font-body text-[length:calc(8px*var(--type-scale))] font-semibold text-q-navy shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-[2px] transition-all duration-300 sm:text-[length:calc(10px*var(--type-scale))] lg:px-2.5 lg:text-xs ${
                 active === place.id
                   ? "translate-y-0 border-q-lime bg-q-lime/70 opacity-100"
                   : "translate-y-1 border-white/40 bg-white/70 opacity-0"
@@ -335,7 +336,7 @@ function LocationMap() {
         ))}
       </div>
       <div className="w-full rounded-xl border border-white/20 bg-white/10 p-3 text-white sm:p-4">
-        <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-q-lime sm:text-xs">
+        <p className="mb-2 text-[length:calc(10px*var(--type-scale))] font-bold uppercase tracking-wider text-q-lime sm:text-xs">
           Chú thích tuyến giao thông
         </p>
 
@@ -372,14 +373,14 @@ function LocationMap() {
 
               <span className="min-w-0">
                 <span
-                  className={`block text-[9px] font-semibold sm:text-[10px] lg:text-xs ${
+                  className={`block text-[length:calc(9px*var(--type-scale))] font-semibold sm:text-[length:calc(10px*var(--type-scale))] lg:text-xs ${
                     activeRoute === route.id ? "text-q-lime" : "text-white"
                   }`}
                 >
                   {route.name}
                 </span>
                 {activeRoute === route.id && (
-                  <span className="mt-1 block text-[8px] leading-relaxed text-white/75 sm:text-[9px] lg:text-[11px]">
+                  <span className="mt-1 block text-[length:calc(8px*var(--type-scale))] leading-relaxed text-white/75 sm:text-[length:calc(9px*var(--type-scale))] lg:text-[length:calc(11px*var(--type-scale))]">
                     {route.description}
                   </span>
                 )}
@@ -424,15 +425,15 @@ export default function Location({ showTopicLink = true }) {
       <Container className="relative z-10 flex min-h-0 flex-1 flex-col">
         <div
           ref={ref}
-          className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-5 lg:mt-7 lg:grid-cols-[minmax(0,7fr)_minmax(0,13fr)] lg:items-stretch lg:gap-8 [@media(max-height:740px)]:mt-2"
+          className="location-layout mt-3 grid min-h-0 flex-1 grid-cols-1 gap-5 lg:mt-7 lg:grid-cols-[minmax(0,7fr)_minmax(0,13fr)] lg:items-stretch lg:gap-8 [@media(max-height:740px)]:mt-2"
         >
-          <div className="flex min-w-0 flex-col justify-center lg:h-full lg:justify-start">
+          <div className="location-copy flex min-w-0 flex-col justify-center lg:h-full lg:justify-start">
             <SectionHeading
               light
               label={locationContent.label}
               lead={locationContent.lead}
             />
-            <ul className="m-0 flex list-none flex-col p-0">
+            <ul className="location-highlights m-0 flex list-none flex-col p-0">
               {locationContent.highlights.map((h, i) => (
                 <li
                   key={h.label}
@@ -452,7 +453,7 @@ export default function Location({ showTopicLink = true }) {
               ))}
             </ul>
 
-            <p className="mt-1.5 text-[0.7rem] leading-snug text-white/65 lg:mt-3 lg:text-xs">
+            <p className="mt-1.5 text-[length:calc(0.7rem*var(--type-scale))] leading-snug text-white/65 lg:mt-3 lg:text-xs">
               Thời gian di chuyển tham khảo theo brochure; thực tế phụ thuộc
               tuyến đường và giao thông.
             </p>
@@ -482,7 +483,7 @@ export default function Location({ showTopicLink = true }) {
             </div>
           </div>
 
-          <div className="w-full min-w-0 lg:h-full">
+          <div className="location-map-row w-full min-w-0 lg:h-full">
             <LocationMap />
           </div>
         </div>

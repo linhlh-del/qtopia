@@ -5,7 +5,7 @@ import { createServer } from 'node:http'
 import { dirname, extname, join, normalize, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const dist = join(resolve(dirname(fileURLToPath(import.meta.url)), '..'), 'dist')
+const dist = join(resolve(dirname(fileURLToPath(import.meta.url)), '..'), process.env.QTOPIA_BUILD_DIR || 'dist')
 const port = Number(process.env.PORT || 4180)
 const types = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',

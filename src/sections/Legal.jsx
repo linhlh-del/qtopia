@@ -53,7 +53,7 @@ export default function Legal() {
                         <Icon name="shield" size={18} />
                       </span>
                       <span className="flex min-w-0 flex-1 flex-col">
-                        <span className="font-display text-[0.95rem] font-semibold leading-snug text-q-navy sm:text-base">{item.title}</span>
+                        <span className="font-display text-[length:calc(0.95rem*var(--type-scale))] font-semibold leading-snug text-q-navy sm:text-base">{item.title}</span>
                         <span className="text-xs font-normal text-q-muted sm:text-sm">{item.subtitle}</span>
                       </span>
                       <span
@@ -79,7 +79,7 @@ export default function Legal() {
             })}
           </div>
         </div>
-        <p className="mb-0 mt-4 text-[0.7rem] leading-snug text-q-muted sm:text-xs">{legalDisclaimer}</p>
+        <p className="mb-0 mt-4 text-[length:calc(0.7rem*var(--type-scale))] leading-snug text-q-muted sm:text-xs">{legalDisclaimer}</p>
       </Container>
     </section>
   )

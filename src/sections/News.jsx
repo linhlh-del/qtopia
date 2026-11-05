@@ -21,6 +21,7 @@ export default function News() {
   const trackRef = useRef(null)
   const [activePage, setActivePage] = useState(0)
   const [pageTargets, setPageTargets] = useState([0, 0, 0, 0])
+  const pageTargetsRef = useRef(pageTargets)
 
   const updatePagination = useCallback(() => {
     const track = trackRef.current
@@ -32,11 +33,13 @@ export default function News() {
     const cardsPerPage = Math.max(1, Math.floor((track.clientWidth + gap) / cardStep))
     const pageCount = Math.ceil(newsItems.length / cardsPerPage)
     const maxScroll = track.scrollWidth - track.clientWidth
+    const trackLeft = track.getBoundingClientRect().left
     const targets = Array.from({ length: pageCount }, (_, page) => {
       const card = track.children[Math.min(page * cardsPerPage, newsItems.length - 1)]
-      const cardLeft = card.getBoundingClientRect().left - track.getBoundingClientRect().left + track.scrollLeft
+      const cardLeft = card.getBoundingClientRect().left - trackLeft + track.scrollLeft
       return Math.min(cardLeft, maxScroll)
     })
+    pageTargetsRef.current = targets
 
     setPageTargets((current) =>
       current.length === targets.length && current.every((target, page) => target === targets[page])
@@ -51,24 +54,46 @@ export default function News() {
     setActivePage(nearestPage)
   }, [])
 
+  const updateActivePage = useCallback(() => {
+    const track = trackRef.current
+    const targets = pageTargetsRef.current
+    if (!track || !targets.length) return
+
+    const nearestPage = targets.reduce(
+      (nearest, target, page) =>
+        Math.abs(target - track.scrollLeft) < Math.abs(targets[nearest] - track.scrollLeft) ? page : nearest,
+      0,
+    )
+    setActivePage((current) => current === nearestPage ? current : nearestPage)
+  }, [])
+
   useEffect(() => {
     const track = trackRef.current
     if (!track) return undefined
 
-    let frame = requestAnimationFrame(updatePagination)
+    let measureFrame = requestAnimationFrame(updatePagination)
+    let scrollFrame = 0
     const onResize = () => {
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(updatePagination)
+      cancelAnimationFrame(measureFrame)
+      measureFrame = requestAnimationFrame(updatePagination)
+    }
+    const onScroll = () => {
+      if (scrollFrame) return
+      scrollFrame = requestAnimationFrame(() => {
+        scrollFrame = 0
+        updateActivePage()
+      })
     }
     const resizeObserver = new ResizeObserver(onResize)
     resizeObserver.observe(track)
-    window.addEventListener('resize', onResize)
+    track.addEventListener('scroll', onScroll, { passive: true })
     return () => {
-      cancelAnimationFrame(frame)
+      cancelAnimationFrame(measureFrame)
+      cancelAnimationFrame(scrollFrame)
       resizeObserver.disconnect()
-      window.removeEventListener('resize', onResize)
+      track.removeEventListener('scroll', onScroll)
     }
-  }, [updatePagination])
+  }, [updateActivePage, updatePagination])
 
   const goToPage = (page) => {
     const track = trackRef.current
@@ -82,7 +107,7 @@ export default function News() {
       <Container>
         <header className="text-center">
           <p className="m-0 font-display text-xs font-bold uppercase tracking-[0.2em] text-q-lime-ink">Tin mới nhất</p>
-          <h2 className="mt-3 font-display text-[clamp(1.7rem,3.8vw,2.8rem)] font-extrabold uppercase leading-tight tracking-wide text-q-navy">
+          <h2 className="mt-3 font-display text-[length:calc(clamp(1.7rem,3.8vw,2.8rem)*var(--type-scale))] font-extrabold uppercase leading-tight tracking-wide text-q-navy">
             Tin tức & sự kiện
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-q-muted sm:text-base">
@@ -122,7 +147,6 @@ export default function News() {
 
         <ul
           ref={trackRef}
-          onScroll={updatePagination}
           className="m-0 mt-4 flex list-none snap-x snap-mandatory gap-4 overflow-x-auto p-1 pb-5 [scrollbar-width:none] sm:gap-6 lg:gap-8 [&::-webkit-scrollbar]:hidden"
           aria-label="Bài viết mới nhất"
         >
@@ -137,7 +161,7 @@ export default function News() {
                     note="Khung ảnh demo"
                     className="transition-transform duration-500 group-hover:scale-[1.03]"
                   />
-                  <span className="absolute bottom-3 left-3 rounded-sm bg-q-navy px-3 py-1.5 font-display text-[0.65rem] font-bold uppercase tracking-wider text-q-lime">
+                  <span className="absolute bottom-3 left-3 rounded-sm bg-q-navy px-3 py-1.5 font-display text-[length:calc(0.65rem*var(--type-scale))] font-bold uppercase tracking-wider text-q-lime">
                     {item.category}
                   </span>
                 </Link>
@@ -149,7 +173,7 @@ export default function News() {
                   </h3>
                   <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-q-muted">{item.excerpt}</p>
                   <div className="mt-auto flex items-center justify-between gap-3 border-t border-q-navy/10 pt-4">
-                    <span className="text-[0.68rem] font-semibold uppercase tracking-wider text-q-muted">Bài viết mẫu</span>
+                    <span className="text-[length:calc(0.68rem*var(--type-scale))] font-semibold uppercase tracking-wider text-q-muted">Bài viết mẫu</span>
                     <Link
                       to={getNewsHref(item.id)}
                       className="inline-flex items-center gap-2 font-display text-xs font-bold uppercase tracking-wide text-q-navy no-underline hover:text-q-blue"

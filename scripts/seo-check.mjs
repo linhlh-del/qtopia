@@ -13,7 +13,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { newsItems } from '../src/data/news.js'
 
-const dist = join(resolve(dirname(fileURLToPath(import.meta.url)), '..'), 'dist')
+const dist = join(resolve(dirname(fileURLToPath(import.meta.url)), '..'), process.env.QTOPIA_BUILD_DIR || 'dist')
 const pages = [
   '/',
   '/vi-tri',

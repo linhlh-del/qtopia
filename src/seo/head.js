@@ -4,12 +4,30 @@
 import { SITE, absAsset, absUrl, hiddenPages, pageMeta } from './site-meta'
 import { structuredData } from './structured-data'
 
+function imageMimeType(src) {
+  const path = src.split(/[?#]/, 1)[0].toLowerCase()
+  const extension = path.slice(path.lastIndexOf('.') + 1)
+  const types = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    webp: 'image/webp',
+  }
+  const type = types[extension]
+  if (!type) throw new Error(`Unsupported image format: ${src}`)
+  return type
+}
+
 export function headTags(path) {
   const m = pageMeta(path)
   const hidden = Boolean(hiddenPages[path])
   const url = absUrl(path)
-  const image = absAsset(m.ogImage || '/images/og-qtopia-trang-chu.jpg')
-  const twitterImage = absAsset(m.twitterImage || SITE.twitterImage)
+  const imageSrc = m.ogImage || '/images/og-qtopia-trang-chu.webp'
+  const image = absAsset(imageSrc)
+  const twitterImageSrc = m.twitterImage || SITE.twitterImage
+  const twitterImage = absAsset(twitterImageSrc)
+  const ogImageType = imageMimeType(imageSrc)
+  const twitterImageType = imageMimeType(twitterImageSrc)
   const tags = [
     { tag: 'meta', key: 'name:description', attrs: { name: 'description', content: m.description } },
     { tag: 'meta', key: 'name:robots', attrs: { name: 'robots', content: hidden ? 'noindex, follow' : 'index, follow' } },
@@ -21,7 +39,7 @@ export function headTags(path) {
     { tag: 'meta', key: 'property:og:description', attrs: { property: 'og:description', content: m.ogDescription || m.description } },
     { tag: 'meta', key: 'property:og:url', attrs: { property: 'og:url', content: url } },
     { tag: 'meta', key: 'property:og:image', attrs: { property: 'og:image', content: image } },
-    { tag: 'meta', key: 'property:og:image:type', attrs: { property: 'og:image:type', content: SITE.ogImageType } },
+    { tag: 'meta', key: 'property:og:image:type', attrs: { property: 'og:image:type', content: ogImageType } },
     { tag: 'meta', key: 'property:og:image:width', attrs: { property: 'og:image:width', content: String(SITE.ogImageWidth) } },
     { tag: 'meta', key: 'property:og:image:height', attrs: { property: 'og:image:height', content: String(SITE.ogImageHeight) } },
     { tag: 'meta', key: 'property:og:image:alt', attrs: { property: 'og:image:alt', content: m.ogImageAlt || SITE.name } },
@@ -29,7 +47,7 @@ export function headTags(path) {
     { tag: 'meta', key: 'name:twitter:title', attrs: { name: 'twitter:title', content: m.ogTitle || m.title } },
     { tag: 'meta', key: 'name:twitter:description', attrs: { name: 'twitter:description', content: m.ogDescription || m.description } },
     { tag: 'meta', key: 'name:twitter:image', attrs: { name: 'twitter:image', content: twitterImage } },
-    { tag: 'meta', key: 'name:twitter:image:type', attrs: { name: 'twitter:image:type', content: SITE.ogImageType } },
+    { tag: 'meta', key: 'name:twitter:image:type', attrs: { name: 'twitter:image:type', content: twitterImageType } },
     { tag: 'meta', key: 'name:twitter:image:width', attrs: { name: 'twitter:image:width', content: String(SITE.ogImageWidth) } },
     { tag: 'meta', key: 'name:twitter:image:height', attrs: { name: 'twitter:image:height', content: String(SITE.ogImageHeight) } },
     { tag: 'meta', key: 'name:twitter:image:alt', attrs: { name: 'twitter:image:alt', content: m.twitterImageAlt || SITE.twitterImageAlt } },

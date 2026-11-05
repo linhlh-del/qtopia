@@ -17,7 +17,7 @@ function NewsImage({ item, className = '' }) {
 
 function NewsMeta({ item }) {
   return (
-    <div className="flex items-center justify-between gap-3 text-[0.7rem] font-semibold uppercase tracking-wider text-q-muted">
+    <div className="flex items-center justify-between gap-3 text-[length:calc(0.7rem*var(--type-scale))] font-semibold uppercase tracking-wider text-q-muted">
       <span><span className="mr-1 text-q-lime-ink">#</span>{item.category}</span>
       <span>Bài viết mẫu</span>
     </div>
@@ -51,7 +51,7 @@ export default function NewsPage() {
         <div className="orbit-bg opacity-60" style={{ '--orbit-x': '85%', '--orbit-y': '20%' }} />
         <Container className="relative text-center">
           <p className="m-0 font-display text-xs font-bold uppercase tracking-[0.2em] text-q-lime">Cập nhật từ QTOPIA</p>
-          <h1 className="section-title mt-3 text-[clamp(1.9rem,4.4vw,3.4rem)] text-white">Tin tức & sự kiện</h1>
+          <h1 className="section-title mt-3 text-[length:calc(clamp(1.9rem,4.4vw,3.4rem)*var(--type-scale))] text-white">Tin tức & sự kiện</h1>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/75 sm:text-base">
             Cập nhật thông tin và những câu chuyện xoay quanh QTOPIA.
           </p>

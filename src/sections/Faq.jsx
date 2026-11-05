@@ -33,7 +33,7 @@ export default function Faq() {
                     aria-expanded={isOpen}
                     aria-controls={`faq-a-${i}`}
                     onClick={() => setOpen(isOpen ? null : i)}
-                    className="flex min-h-12 w-full cursor-pointer items-center justify-between gap-4 py-2.5 text-left font-display text-[0.95rem] font-semibold text-q-navy sm:min-h-14 sm:py-3 sm:text-base [@media(max-height:740px)]:min-h-10 [@media(max-height:740px)]:py-1.5"
+                    className="flex min-h-12 w-full cursor-pointer items-center justify-between gap-4 py-2.5 text-left font-display text-[length:calc(0.95rem*var(--type-scale))] font-semibold text-q-navy sm:min-h-14 sm:py-3 sm:text-base [@media(max-height:740px)]:min-h-10 [@media(max-height:740px)]:py-1.5"
                   >
                     {item.q}
                     <span

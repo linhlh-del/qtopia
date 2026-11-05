@@ -1,4 +1,4 @@
-// Q5–Q6: hệ toạ độ khớp ảnh mat-bangq5-q6.png (1279 × 404).
+// Q5–Q6: hệ toạ độ khớp ảnh mat-bangq5-q6.webp (1279 × 404).
 // Cả hai hàng lấy từ zone draw do người dùng cung cấp.
 export const FLOOR_VIEWBOX_W = 1279
 export const FLOOR_VIEWBOX_H = 404
@@ -68,7 +68,7 @@ export const q5q6FloorPlan = {
   id: 'q5-q6',
   label: 'Tháp Q5 & Q6',
   floorRange: 'Tầng điển hình',
-  image: '/images/mat-bangq5-q6.png',
+  image: '/images/mat-bangq5-q6.webp',
   imageWidth: FLOOR_VIEWBOX_W,
   imageHeight: FLOOR_VIEWBOX_H,
   units: [

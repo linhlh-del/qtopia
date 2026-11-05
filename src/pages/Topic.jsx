@@ -43,7 +43,7 @@ export default function Topic() {
               </li>
             </ol>
           </nav>
-          <h1 className="section-title max-w-4xl text-[clamp(1.9rem,4.4vw,3.4rem)] text-white">{meta.h1}</h1>
+          <h1 className="section-title max-w-4xl text-[length:calc(clamp(1.9rem,4.4vw,3.4rem)*var(--type-scale))] text-white">{meta.h1}</h1>
           <div className="flex max-w-3xl flex-col gap-3">
             {meta.intro.map((p) => (
               <p key={p.slice(0, 24)} className="prose-lead m-0 text-white/85">

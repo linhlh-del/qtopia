@@ -44,7 +44,7 @@ function CallButton({ popup, where }) {
 function ZaloButton({ popup, where }) {
   const ready = isFilled(siteMeta.zalo)
   const label = ready ? 'Chat Zalo với tư vấn viên' : 'Nhận tư vấn qua Zalo'
-  const className = `${fab} relative isolate fab-cta-pulse fab-zalo-pulse bg-[#0068ff] font-display text-[0.72rem] font-bold tracking-tight`
+  const className = `${fab} relative isolate fab-cta-pulse fab-zalo-pulse bg-[#0068ff] font-display text-[length:calc(0.72rem*var(--type-scale))] font-bold tracking-tight`
   const content = (
     <>
       <FabRings />

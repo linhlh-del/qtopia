@@ -34,7 +34,7 @@ export default function Facts() {
             </div>
           ))}
         </dl>
-        <p className="mt-4 text-xs text-white/65 [@media(max-height:740px)]:mt-2 [@media(max-height:620px)]:mt-1 [@media(max-height:620px)]:text-[0.65rem] [@media(max-height:620px)]:leading-snug">Các mốc thời gian di chuyển là thông tin tham khảo trong brochure, phụ thuộc điểm xuất phát và điều kiện giao thông.</p>
+        <p className="mt-4 text-xs text-white/65 [@media(max-height:740px)]:mt-2 [@media(max-height:620px)]:mt-1 [@media(max-height:620px)]:text-[length:calc(0.65rem*var(--type-scale))] [@media(max-height:620px)]:leading-snug">Các mốc thời gian di chuyển là thông tin tham khảo trong brochure, phụ thuộc điểm xuất phát và điều kiện giao thông.</p>
       </Container>
     </section>
   )

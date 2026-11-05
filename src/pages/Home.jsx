@@ -1,12 +1,13 @@
+import { deferredSection } from "../components/DeferredSection";
 import Hero from "../sections/Hero";
 import Story from "../sections/Story";
 import Facts from "../sections/Facts";
-import Location from "../sections/Location";
-import MasterPlan from "../sections/MasterPlan";
-import FeaturedAmenities from "../sections/FeaturedAmenities";
-import Residences from "../sections/Residences";
+const Location = deferredSection("vi-tri", () => import("../sections/Location"));
+const MasterPlan = deferredSection("tien-ich", () => import("../sections/MasterPlan"));
+const FeaturedAmenities = deferredSection("tien-ich-noi-bat", () => import("../sections/FeaturedAmenities"));
+const Residences = deferredSection("mat-bang", () => import("../sections/Residences"));
 import SalesPolicy from "../sections/SalesPolicy";
-import News from "../sections/News";
+const News = deferredSection("tin-tuc", () => import("../sections/News"));
 import Legal from "../sections/Legal";
 import Faq from "../sections/Faq";
 import Register from "../sections/Register";

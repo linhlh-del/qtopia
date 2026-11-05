@@ -10,6 +10,7 @@ import { unitLayoutImages, unitTypeInfo } from '../data/project'
 import { FLOOR_VIEWBOX_H, FLOOR_VIEWBOX_W, q5q6FloorPlan } from '../data/qtopiaFloorPlan'
 import { track } from '../lib/analytics'
 import { useReveal } from '../hooks/useReveal'
+import { useNearViewport } from '../hooks/useNearViewport'
 
 const tower = q5q6FloorPlan
 const unitsByCode = Object.fromEntries(tower.units.map((unit) => [unit.code, unit]))
@@ -18,6 +19,7 @@ const q7Types = Object.entries(unitLayoutImages.q7).map(([id, layout]) => ({ ...
 
 export default function Residences({ showTopicLink = true }) {
   const ref = useReveal()
+  const [planRef, planVisible] = useNearViewport('300px')
   const popup = useContactPopup()
   const [activeCode, setActiveCode] = useState(null)
   const [pinned, setPinned] = useState(false)
@@ -98,7 +100,7 @@ export default function Residences({ showTopicLink = true }) {
         </div>
 
         <p className="mt-4 text-center text-sm text-q-muted lg:hidden [@media(max-height:740px)]:mt-2">Chạm “Phóng to” để xem toàn sơ đồ, hoặc vuốt ngang và chạm vào căn để xem chi tiết.</p>
-        <div data-floor-plan
+        <div ref={planRef} data-floor-plan
           className={fullscreen ? 'fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-q-navy' : 'relative mt-4 overflow-hidden rounded-[1.5rem] bg-white shadow-card sm:h-[min(540px,44svh)] xl:h-[min(600px,50svh)]'}
           onMouseLeave={() => { suppressHover.current = false; if (!pinned) setActiveCode(null) }}>
           <div className={fullscreen ? 'flex h-full w-full overflow-auto' : 'overflow-x-auto sm:flex sm:h-full sm:items-center'}
@@ -111,10 +113,11 @@ export default function Residences({ showTopicLink = true }) {
                 ratio={`${tower.imageWidth} / ${tower.imageHeight}`}
                 imgClassName="h-full w-full object-fill"
               />
-              <svg
+              {planVisible ? <svg
                 className="absolute inset-0 h-full w-full"
                 viewBox={`0 0 ${FLOOR_VIEWBOX_W} ${FLOOR_VIEWBOX_H}`}
                 preserveAspectRatio="none"
+                aria-label={`Sơ đồ tương tác ${tower.label}, chọn mã căn để xem diện tích`}
               >
                 {tower.units.map((unit) => {
                   const top = unit.labelY < 100
@@ -190,8 +193,8 @@ export default function Residences({ showTopicLink = true }) {
                     }}
                   />
                 ))}
-              </svg>
-              {tower.units.map((unit) => {
+              </svg> : null}
+              {planVisible ? tower.units.map((unit) => {
                 const isActive = activeCode === unit.code
                 return (
                   <button
@@ -206,12 +209,12 @@ export default function Residences({ showTopicLink = true }) {
                       top: `${(unit.labelY / FLOOR_VIEWBOX_H) * 100}%`,
                       background: unit.labelColor,
                     }}
-                    className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-1.5 py-0.5 font-display text-[10px] font-bold leading-none text-white shadow-sm transition-transform sm:text-xs ${isActive ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'}`}
+                    className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-1.5 py-0.5 font-display text-[length:calc(10px*var(--type-scale))] font-bold leading-none text-white shadow-sm transition-transform sm:text-xs ${isActive ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'}`}
                   >
                     {unit.code}
                   </button>
                 )
-              })}
+              }) : null}
             </div>
           </div>
 

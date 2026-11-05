@@ -35,7 +35,7 @@ export default function NewsDetail() {
               <p className="m-0 font-display text-xs font-bold uppercase tracking-[0.18em] text-q-lime-ink">
                 {article.category} <span className="px-2 text-q-navy/30">/</span> Bài viết mẫu
               </p>
-              <h1 className="section-title mt-4 text-[clamp(1.8rem,4vw,3rem)] text-q-navy">{article.title}</h1>
+              <h1 className="section-title mt-4 text-[length:calc(clamp(1.8rem,4vw,3rem)*var(--type-scale))] text-q-navy">{article.title}</h1>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-q-muted">{article.excerpt}</p>
             </div>
 
@@ -111,7 +111,7 @@ export default function NewsDetail() {
                   <MediaFrame src={item.image} alt={item.title} ratio="16 / 10" note="Khung ảnh demo" className="transition-transform duration-500 group-hover:scale-[1.03]" />
                 </Link>
                 <div className="p-5">
-                  <p className="m-0 text-[0.68rem] font-bold uppercase tracking-wider text-q-lime-ink">{item.category}</p>
+                  <p className="m-0 text-[length:calc(0.68rem*var(--type-scale))] font-bold uppercase tracking-wider text-q-lime-ink">{item.category}</p>
                   <h3 className="mt-2 font-display text-lg font-bold leading-snug text-q-navy">
                     <Link to={getNewsHref(item.id)} className="text-inherit no-underline hover:text-q-blue">{item.title}</Link>
                   </h3>

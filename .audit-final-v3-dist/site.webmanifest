@@ -1,0 +1,14 @@
+{
+  "name": "QTOPIA — Thành phố cuối tuần",
+  "short_name": "QTOPIA",
+  "description": "Entertainment Complex bên biển cách TP.HCM khoảng 90 phút.",
+  "lang": "vi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050a2e",
+  "theme_color": "#050a2e",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

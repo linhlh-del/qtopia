@@ -50,23 +50,25 @@ export const faq = [
 
 export const heroContent = {
   // Mỗi ảnh có một thông điệp; slide đầu là H1 mặc định trong HTML prerender.
+  // Dùng \n hoặc <br> trong h1 để khóa điểm xuống dòng; mỗi cụm được giữ liền nhau.
   images: [
     {
       src: "/images/renders/view-from-sea.webp",
       alt: "Phối cảnh dự án căn hộ QTOPIA nhìn từ biển",
-      h1: "QTOPIA — THÀNH PHỐ CUỐI TUẦN CỦA SIÊU ĐÔ THỊ TP.HCM",
+      h1: "QTOPIA — THÀNH PHỐ CUỐI TUẦN\nCỦA SIÊU ĐÔ THỊ TP.HCM",
       slogan: "Sở hữu rừng nguyên sinh, lưng tựa núi, mặt hướng biển",
     },
     {
       src: "/images/renders/ocean-galaxy.webp",
       alt: "Phối cảnh khu Ocean Galaxy về đêm với hồ bơi và sàn DJ tại QTOPIA",
-      h1: "Sở hữu nhà Sài Gòn có biển giá chỉ từ 1.195 tỷ",
-      slogan: "Căn Studio QTOPIA tại Phước Hải — trước biển, sau núi, gần rừng.",
+      h1: "Sở hữu nhà Sài Gòn có biển\ngiá chỉ từ 1.195 tỷ",
+      slogan:
+        "Căn Studio QTOPIA tại Phước Hải — trước biển, sau núi, gần rừng.",
     },
     {
       src: "/images/renders/aqua-funny-park-night.webp",
       alt: "Phối cảnh công viên nước Aqua Funny Park về đêm tại QTOPIA",
-      h1: "Thanh toán 10% đến khi nhận nhà",
+      h1: "Thanh toán 10% đến khi\nnhận nhà",
       slogan: "Khởi đầu từ 120 triệu · Hỗ trợ lãi suất 0% đến 24 tháng.",
     },
   ],
@@ -206,7 +208,7 @@ export const featuredAmenityGroups = [
 export const locationContent = {
   label: "Vị trí QTOPIA",
   lead: "Phía trước là biển, phía sau là núi và rừng. Brochure giới thiệu QTOPIA như điểm đến cuối tuần cách trung tâm TP.HCM khoảng 90 phút.",
-  mapImage: "/images/position-map.png",
+  mapImage: "/images/position-map.webp",
   highlights: [
     { label: "Trung tâm TP.HCM", value: "75" },
     { label: "Sân bay quốc tế Long Thành", value: "30" },
@@ -218,7 +220,7 @@ export const locationContent = {
 // Ảnh mặt bằng tiện ích được dùng trong section ba khu trải nghiệm.
 // Tên tiện ích dùng cho danh sách bên phải; vị trí nhãn nằm ở amenity-label-positions.js.
 export const masterPlan = {
-  image: "/images/matbangtienich.png",
+  image: "/images/matbangtienich.webp",
   zones: amenityCatalog,
 };
 

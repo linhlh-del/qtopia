@@ -1,14 +1,23 @@
 // Bản build SSR: dùng ở bước prerender (scripts/prerender.mjs) để ghi HTML tĩnh cho từng route.
-import { renderToString } from 'react-dom/server'
+import { renderToPipeableStream } from 'react-dom/server'
+import { PassThrough } from 'node:stream'
 import { StaticRouter } from 'react-router-dom'
 import App from './App.jsx'
 
 export function render(url) {
-  return renderToString(
+  return new Promise((resolve, reject) => {
+    const output = new PassThrough()
+    let html = ''
+    output.on('data', (chunk) => { html += chunk.toString() })
+    output.on('end', () => resolve(html))
+    output.on('error', reject)
+    const stream = renderToPipeableStream(
     <StaticRouter location={url}>
       <App />
     </StaticRouter>,
-  )
+    { onAllReady() { stream.pipe(output) }, onError: reject },
+    )
+  })
 }
 
 export { headTags, tagsToHtml } from './seo/head'

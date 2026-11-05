@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './fonts.css';
 
 @theme {
   /* Bảng màu thương hiệu QTOPIA (theo brand guideline) */
@@ -24,7 +25,27 @@
   --shadow-card: 0 24px 60px -24px rgba(5, 10, 46, 0.35);
 }
 
+
+/* Scale typography only: spacing, icons and the Hero keep their existing sizes. */
+@theme inline {
+  --text-xs: calc(.75rem * var(--type-scale));
+  --text-sm: calc(.875rem * var(--type-scale));
+  --text-base: calc(1rem * var(--type-scale));
+  --text-lg: calc(1.125rem * var(--type-scale));
+  --text-xl: calc(1.25rem * var(--type-scale));
+  --text-2xl: calc(1.5rem * var(--type-scale));
+  --text-3xl: calc(1.875rem * var(--type-scale));
+  --text-4xl: calc(2.25rem * var(--type-scale));
+  --text-5xl: calc(3rem * var(--type-scale));
+  --text-6xl: calc(3.75rem * var(--type-scale));
+  --text-7xl: calc(4.5rem * var(--type-scale));
+  --text-8xl: calc(6rem * var(--type-scale));
+  --text-9xl: calc(8rem * var(--type-scale));
+}
+
 :root {
+  --base-type-scale: 1.15;
+  --type-scale: var(--base-type-scale);
   /* Thời lượng & easing animation gom một chỗ (checklist v2 mục 11): xuất hiện 0.8–1.2s, hover/nút 0.25–0.35s */
   --dur-fast: 0.3s;
   --dur-base: 0.6s;
@@ -64,7 +85,16 @@ html {
   }
 }
 
+#top { --type-scale: 1; }
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  #main {
+    --type-scale: calc(var(--base-type-scale) * 0.9);
+  }
+}
+
 body {
+  font-size: calc(1rem * var(--type-scale));
   margin: 0;
   font-family: var(--font-body);
   background: var(--color-q-cream);
@@ -89,6 +119,10 @@ body {
       width: 78%;
       padding-inline: 0;
     }
+    .header-container { width: calc(100% - 4rem); }
+  }
+  @media (min-width: 1536px) {
+    .header-container { width: 78%; }
   }
 
   .section-y {
@@ -102,11 +136,11 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Section luôn gọn trong đúng 1 khung hình thiết bị: cao bằng màn hình (trừ header),
-       không cao hơn. Phần nội dung co giãn được (ảnh, sơ đồ) nhận min-h-0 + flex-1 để
-       tự thu lại khi màn hình thấp, thay vì đẩy section dài ra. */
-    height: calc(100svh - var(--header-h));
-    max-height: calc(100svh - var(--header-h));
+    /* Giữ tối thiểu một màn hình; cho phép giãn khi chữ lớn hơn hoặc màn hình hẹp,
+       tránh cắt nội dung / đè lên section tiếp theo. */
+    min-height: calc(100svh - var(--header-h));
+    height: auto;
+    max-height: none;
     padding-block: clamp(2.25rem, 5vh, 4rem);
     /* chừa chỗ cho thanh CTA cố định ở đáy (điện thoại/tablet) để không che mất nội dung */
     padding-bottom: calc(clamp(2.25rem, 5vh, 4rem) + var(--bar-h));
@@ -128,12 +162,12 @@ body {
       padding-bottom: calc(1.1rem + var(--bar-h));
     }
     .prose-lead {
-      font-size: 0.88rem;
+      font-size: calc(0.88rem * var(--type-scale));
       line-height: 1.5;
     }
     .btn-base {
       padding: 0.6rem 1.2rem;
-      font-size: 0.88rem;
+      font-size: calc(0.88rem * var(--type-scale));
     }
   }
   @media (max-height: 740px) and (min-width: 1024px) {
@@ -152,7 +186,7 @@ body {
       padding-bottom: calc(0.4rem + var(--bar-h));
     }
     .prose-lead {
-      font-size: 0.75rem;
+      font-size: calc(0.75rem * var(--type-scale));
       line-height: 1.35;
       /* Màn cực thấp: câu dẫn rút còn 3 dòng để section không bị đẩy dài ra;
          nội dung đầy đủ vẫn nằm trong trang chủ đề tương ứng. */
@@ -162,7 +196,7 @@ body {
       overflow: hidden;
     }
     .section-label {
-      font-size: 0.72rem;
+      font-size: calc(0.72rem * var(--type-scale));
     }
   }
   @media (max-height: 620px) and (min-width: 1024px) {
@@ -173,7 +207,7 @@ body {
 
   .section-eyebrow {
     font-family: var(--font-display);
-    font-size: 0.78rem;
+    font-size: calc(0.78rem * var(--type-scale));
     font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
@@ -183,7 +217,7 @@ body {
   .section-label {
     font-family: var(--font-display);
     margin: 0;
-    font-size: clamp(0.82rem, 1.1vw, 0.95rem);
+    font-size: calc(clamp(0.82rem, 1.1vw, 0.95rem) * var(--type-scale));
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -198,11 +232,11 @@ body {
     font-weight: 800;
     line-height: 1.08;
     letter-spacing: -0.01em;
-    font-size: clamp(1.9rem, 4.2vw, 3.25rem);
+    font-size: calc(clamp(1.9rem, 4.2vw, 3.25rem) * var(--type-scale));
   }
 
   .prose-lead {
-    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    font-size: calc(clamp(0.95rem, 1.1vw, 1.05rem) * var(--type-scale));
     line-height: 1.65;
   }
 
@@ -215,7 +249,7 @@ body {
     border-radius: 9999px;
     padding: 0.8rem 1.55rem;
     font-family: var(--font-display);
-    font-size: 0.95rem;
+    font-size: calc(0.95rem * var(--type-scale));
     font-weight: 600;
     letter-spacing: -0.01em;
     min-height: 3rem; /* vùng chạm ≥ 48px */
@@ -270,6 +304,7 @@ body {
     background: linear-gradient(105deg, transparent 38%, var(--cta-shine) 50%, transparent 62%);
     transform: translate3d(-110%, 0, 0);
     pointer-events: none;
+    animation: btnShine 3.6s ease-in-out infinite;
   }
   .btn-primary:hover::after,
   .btn-primary:focus-visible::after,
@@ -277,7 +312,7 @@ body {
   .cta-fx:focus-visible::after,
   button[type='submit'].btn-base:hover::after,
   button[type='submit'].btn-base:focus-visible::after {
-    animation: btnShine 1.2s ease-in-out 1;
+    animation-duration: 1.8s;
   }
   .btn-primary::before,
   .cta-fx::before,
@@ -290,6 +325,7 @@ body {
     opacity: 0;
     transition: opacity var(--dur-fast) ease;
     pointer-events: none;
+    animation: btnGlow 3.6s ease-in-out infinite;
   }
   .btn-primary:hover::before,
   .cta-fx:hover::before,
@@ -300,7 +336,8 @@ body {
   .cta-fx:hover {
     box-shadow: 0 14px 34px -8px rgba(200, 16, 79, 0.65), 0 0 22px -4px rgba(255, 95, 0, 0.55);
   }
-  .btn-base:disabled::after {
+  .btn-base:disabled::after,
+  .btn-base:disabled::before {
     animation: none;
     opacity: 0;
   }
@@ -313,10 +350,17 @@ body {
       transform: translate3d(110%, 0, 0);
     }
   }
+  @keyframes btnGlow {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.75; }
+  }
   @media (prefers-reduced-motion: reduce) {
     .btn-primary::after,
+    .btn-primary::before,
     .cta-fx::after,
-    button[type='submit'].btn-base::after {
+    .cta-fx::before,
+    button[type='submit'].btn-base::after,
+    button[type='submit'].btn-base::before {
       display: none;
     }
   }
@@ -460,6 +504,13 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+.hero-image-enter {
+  animation: hero-image-in 1.2s var(--ease-out) both;
+}
+@keyframes hero-image-in {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
 }
 .hero-copy-enter {
   animation: hero-copy-in 0.7s var(--ease-out) both;
@@ -643,18 +694,34 @@ html.js-ready img[data-img-fade][data-loaded] {
 #vi-tri:not([data-motion-active]) .qtopia-route-center,
 #vi-tri:not([data-motion-active]) .qtopia-additional-line,
 #vi-tri:not([data-motion-active]) .qtopia-pulse,
-#tien-ich:not([data-motion-active]) .amenity-zone-runner,
-html[data-motion-scrolling] #vi-tri .qtopia-route,
-html[data-motion-scrolling] #vi-tri .qtopia-route-center,
-html[data-motion-scrolling] #vi-tri .qtopia-additional-line,
-html[data-motion-scrolling] #vi-tri .qtopia-pulse,
-html[data-motion-scrolling] #tien-ich .amenity-zone-runner {
+#tien-ich:not([data-motion-active]) .amenity-zone-runner {
   animation-play-state: paused;
 }
 .amenity-number {
   left: var(--amenity-left-cropped);
   scale: 1;
   transition: scale 220ms ease, box-shadow 220ms ease;
+}
+.amenity-number::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid white;
+  border-radius: 9999px;
+  background: var(--amenity-marker-color);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 35%);
+  content: '';
+  transform: translate(-50%, -50%);
+}
+.amenity-number > span {
+  position: relative;
+}
+.amenity-number:focus-visible {
+  outline: 3px solid white;
+  outline-offset: -2px;
+  box-shadow: 0 0 0 2px var(--color-q-navy);
 }
 @media (min-width: 1024px) {
   .amenity-number { left: var(--amenity-left-full); }
@@ -722,3 +789,91 @@ html[data-motion-scrolling] #tien-ich .amenity-zone-runner {
   }
   .amenity-zone-runner { stroke-dasharray: none; }
 }
+
+/* Render offscreen sections only when needed, preserving their layout space. */
+main > section:not(#top) { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+#mat-bang:not([data-motion-active]) .amenity-zone-runner { animation-play-state: paused; }
+
+/* Tablet, including landscape: reduced 20% from 2.07 (2.07 × 0.8 = 1.656).
+   Hero retains its own scale. Desktop and phone layouts are unchanged. */
+@media (768px <= width < 1280px) {
+  :root {
+    --type-scale: 1.656;
+    --bar-h: 86px;
+    --header-h: 80px;
+  }
+  .container-page,
+  .content-container {
+    width: 100%;
+    padding-inline: 2rem;
+  }
+  .fab-cta-pulse { width: 4rem; height: 4rem; }
+
+  /* Copy uses the full first row; four travel times sit side by side. */
+  .location-layout { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .location-copy, .location-map-row { height: auto; }
+  .location-copy .prose-lead { max-width: none; }
+  #tien-ich .prose-lead { max-width: none; }
+  .location-highlights {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .location-highlights > li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-block: 0.75rem;
+    border: 0;
+  }
+  .location-highlights > li > span:first-child { width: auto; white-space: nowrap; }
+
+  /* Full map on the first row, a full-width legend on the second row. */
+  .amenity-layout { display: flex; flex-direction: column; gap: 1rem; }
+  .amenity-layout .amenity-map {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1672 / 941;
+    border-radius: 1.6rem;
+  }
+  .amenity-layout .amenity-map > img,
+  .amenity-layout .amenity-map > svg { width: 100%; }
+  .amenity-layout .amenity-number { left: var(--amenity-left-full); }
+  .amenity-number::before { width: 2.25rem; height: 2.25rem; }
+  .amenity-layout .amenity-legend-row { display: block; min-width: 0; width: 100%; }
+  .amenity-legend-row > aside { position: static; border-radius: 1.6rem; }
+  .amenity-legend-row .amenity-panel-groups {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .amenity-legend-row .amenity-panel-groups > div { display: contents; }
+  .amenity-legend-row .amenity-panel-groups > div > button {
+    grid-row: 1;
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid rgb(5 10 46 / 15%);
+    border-radius: 1rem;
+    background: white;
+  }
+  .amenity-legend-row .amenity-panel-groups > div > button[aria-expanded='true'] {
+    background: var(--color-q-navy);
+    color: white;
+  }
+  .amenity-legend-row .amenity-panel-groups > div > div {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 1rem 0;
+  }
+  .amenity-legend-row .amenity-panel-groups > div > div > button { padding: 0.5rem; }
+  .amenity-legend-row .amenity-panel-groups > div > div > button > span {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  .amenity-mobile-legend { display: none; }
+  .amenity-layout .floorplan-drawer { display: none; }
+}
+

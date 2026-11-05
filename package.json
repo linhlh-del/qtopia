@@ -6,24 +6,29 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && vite build --ssr src/entry-server.jsx --outDir .ssr && node scripts/prerender.mjs",
-    "lint": "oxlint",
+    "lint": "oxlint src scripts",
     "preview": "vite preview",
     "build:spa": "vite build",
     "seo:check": "node scripts/seo-check.mjs",
-    "serve": "node scripts/serve-dist.mjs"
+    "serve": "node scripts/serve-dist.mjs",
+    "images:optimize": "node scripts/optimize-images.mjs",
+    "fonts:download": "node scripts/download-fonts.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router-dom": "^7.18.5",
-    "swiper": "^14.3.0"
+    "swiper": "^14.3.0",
+    "web-vitals": "^6.2.3"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "lighthouse": "^13.6.0",
     "oxlint": "^1.89.0",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.5"
   }

@@ -13,10 +13,10 @@ import { loadEnv } from 'vite'
 
 process.env.NODE_ENV = 'production'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const dist = join(root, 'dist')
+const dist = join(root, process.env.QTOPIA_BUILD_DIR || 'dist')
 const env = { ...loadEnv('production', root, ''), ...process.env }
 
-const ssr = await import(pathToFileURL(join(root, '.ssr/entry-server.js')).href)
+const ssr = await import(pathToFileURL(join(root, process.env.QTOPIA_SSR_DIR || '.ssr', 'entry-server.js')).href)
 const { render, headTags, tagsToHtml, routes, hiddenPages, SITE_URL, SITE_URL_PLACEHOLDER, absUrl } = ssr
 
 if (SITE_URL === SITE_URL_PLACEHOLDER) {
@@ -38,19 +38,20 @@ const write = (rel, content) => {
 const template = readFileSync(join(dist, 'index.html'), 'utf8')
 const gtmPreconnect = env.VITE_GTM_ID ? '<link rel="preconnect" href="https://www.googletagmanager.com" />\n    ' : ''
 
-const page = (path) => {
+const page = async (path) => {
   const head = headTags(path)
+  const body = await render(path === '/404' ? '/__404__' : path)
   return template
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${head.title.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</title>`)
     .replace(/\s*<(?:meta|link)\b[^>]*data-seo="fallback"[^>]*\/?>(?:\r?\n)?/g, '')
     .replace('</head>', `    ${gtmPreconnect}${tagsToHtml(head.tags)}\n  </head>`)
-    .replace('<div id="root"></div>', `<div id="root">${render(path === '/404' ? '/__404__' : path)}</div>`)
+    .replace('<div id="root"></div>', `<div id="root">${body}</div>`)
 }
 const fileOf = (path) => (path === '/' ? 'index.html' : `${path.slice(1)}/index.html`)
 
 console.log('Prerender:')
-for (const r of routes) write(fileOf(r), page(r))
-write('404.html', page('/404'))
+for (const r of routes) write(fileOf(r), await page(r))
+write('404.html', await page('/404'))
 
 /* ---------- sitemap.xml + robots.txt ---------- */
 const lastmod = new Date().toISOString().slice(0, 10)
