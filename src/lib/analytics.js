@@ -4,6 +4,9 @@
    Sự kiện: page_view (đổi route) · generate_lead · click_call · click_zalo · click_cta · scroll_depth · section_view · view_floorplan */
 
 const GTM_ID = import.meta.env?.VITE_GTM_ID || ''
+export const GA4_ID = 'G-Y9NFTDSE57'
+// gtag.js đã được nhúng trực tiếp trong <head> (index.html) → không nạp lại lần 2.
+const gtagInHead = () => typeof document !== 'undefined' && Boolean(document.querySelector(`script[src*="gtag/js?id=${GA4_ID}"]`))
 
 export function track(event, params = {}) {
   if (typeof window === 'undefined') return
@@ -16,11 +19,12 @@ export function track(event, params = {}) {
 export function loadGtm() {
   if (typeof window === 'undefined' || window.__qtopiaAnalytics) return
   window.__qtopiaAnalytics = true
+  if (!GTM_ID && gtagInHead()) return // gtag trong <head> đã tự cấu hình GA4 và gửi page_view đầu tiên
   window.dataLayer = window.dataLayer || []
   if (!GTM_ID) {
     window.gtag = function () { window.dataLayer.push(arguments) }
     window.gtag('js', new Date())
-    window.gtag('config', 'G-6LEMBK6FTP', { send_page_view: false })
+    window.gtag('config', GA4_ID, { send_page_view: false })
   }
   let loaded = false
   const run = () => {
@@ -33,7 +37,7 @@ export function loadGtm() {
     if (GTM_ID) window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' })
     s.src = GTM_ID
       ? `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(GTM_ID)}`
-      : 'https://www.googletagmanager.com/gtag/js?id=G-6LEMBK6FTP'
+      : `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`
     document.head.appendChild(s)
   }
   for (const event of ['pointerdown', 'keydown', 'scroll']) window.addEventListener(event, run, { once: true, passive: true })
@@ -42,6 +46,15 @@ export function loadGtm() {
   const schedule = () => window.setTimeout(run, 10000)
   if (document.readyState === 'complete') schedule()
   else window.addEventListener('load', schedule, { once: true })
+}
+
+/* page_view cho SPA: gtag trong <head> đã gửi page_view của lần tải đầu → bỏ qua lần đầu để không đếm trùng,
+   chỉ gửi khi khách chuyển trang trong ứng dụng. */
+let firstPageView = true
+export function trackPageView(params) {
+  const skip = firstPageView && !GTM_ID && gtagInHead()
+  firstPageView = false
+  if (!skip) track('page_view', params)
 }
 
 export function trackWebVitals() {

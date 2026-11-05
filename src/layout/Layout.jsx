@@ -6,7 +6,7 @@ import ValueNav from './ValueNav'
 import FloatingButtons from './FloatingButtons'
 import Seo from '../components/Seo'
 import { ContactPopupProvider } from '../components/ContactPopup'
-import { initDelegatedTracking, loadGtm, track, trackScrollDepth, trackSectionViews, trackWebVitals } from '../lib/analytics'
+import { initDelegatedTracking, loadGtm, trackPageView, trackScrollDepth, trackSectionViews, trackWebVitals } from '../lib/analytics'
 import { captureFirstTouch } from '../lib/utm'
 import { pauseOffscreenMotion } from '../lib/motion'
 
@@ -46,7 +46,7 @@ export default function Layout() {
 
   // mỗi route: page_view (SPA), scroll_depth, section_view
   useEffect(() => {
-    track('page_view', { page_path: pathname, page_title: document.title })
+    trackPageView({ page_path: pathname, page_title: document.title })
     const stopScroll = trackScrollDepth()
     const stopSections = trackSectionViews()
     const stopMotion = pauseOffscreenMotion()
