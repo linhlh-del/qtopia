@@ -25,6 +25,7 @@ dist-ssr
 
 # SSR build (prerender)
 .ssr
+.ssr-*
 
 dist-perf
 .ssr-perf

@@ -49,7 +49,7 @@ try {
   }
   const commit = spawnSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: root, encoding: 'utf8' }).stdout?.trim()
   log(`build → ${out}`)
-  const env = { QTOPIA_BUILD_DIR: out, QTOPIA_SSR_DIR: join(base, '.ssr-release'), QTOPIA_RELEASE: id, GIT_COMMIT: commit || '' }
+  const env = { QTOPIA_BUILD_DIR: out, QTOPIA_SSR_DIR: join(root, '.ssr-release') /* phải nằm trong mã nguồn để Node tìm thấy node_modules */, QTOPIA_RELEASE: id, GIT_COMMIT: commit || '' }
   run(process.execPath, [join(root, 'scripts/build.mjs')], env)
   log('kiểm tra SEO bản build')
   run(process.execPath, [join(root, 'scripts/seo-check.mjs')], env)
