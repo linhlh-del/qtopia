@@ -60,14 +60,14 @@ export const heroContent = {
     {
       src: "/images/renders/ocean-galaxy.webp",
       alt: "Phối cảnh khu Ocean Galaxy về đêm với hồ bơi và sàn DJ tại QTOPIA",
-      h1: "OCEAN GALAXY — NHỊP VUI KHÔNG NGỦ BÊN BIỂN",
-      slogan: "Âm nhạc, ánh sáng và những trải nghiệm giải trí nối dài đến đêm.",
+      h1: "Sở hữu nhà Sài Gòn có biển giá chỉ từ 1.195 tỷ",
+      slogan: "Căn Studio QTOPIA tại Phước Hải — trước biển, sau núi, gần rừng.",
     },
     {
       src: "/images/renders/aqua-funny-park-night.webp",
       alt: "Phối cảnh công viên nước Aqua Funny Park về đêm tại QTOPIA",
-      h1: "AQUA FUNNY PARK — SẮC MÀU BÊN BIỂN",
-      slogan: "Chạm vào nhịp vui rực rỡ của khu vui chơi nước QTOPIA.",
+      h1: "Thanh toán 10% đến khi nhận nhà",
+      slogan: "Khởi đầu từ 120 triệu · Hỗ trợ lãi suất 0% đến 24 tháng.",
     },
   ],
   ctaPrimary: "Nhận thông tin dự án",

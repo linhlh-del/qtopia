@@ -54,7 +54,7 @@ export default function Header() {
             onClick={() => popup.open("header")}
             data-cta-name="header_consult"
             data-cta-location="header"
-            className="btn-base btn-primary w-[6.6rem] shrink-0 !px-5 text-[1.045rem] leading-[1.1] lg:w-40"
+            className="btn-base btn-primary w-[6.6rem] shrink-0 !px-5 text-[1.045rem] leading-[1.1] md:max-lg:w-[5.346rem] lg:w-40"
           >
             TƯ VẤN
           </button>
