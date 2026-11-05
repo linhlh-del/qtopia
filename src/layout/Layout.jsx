@@ -9,6 +9,7 @@ import { ContactPopupProvider } from '../components/ContactPopup'
 import { initDelegatedTracking, loadGtm, trackPageView, trackScrollDepth, trackSectionViews, trackWebVitals } from '../lib/analytics'
 import { captureFirstTouch } from '../lib/utm'
 import { pauseOffscreenMotion } from '../lib/motion'
+import { cmsPageView, initCmsTracker } from '../cms/tracker'
 
 /* Cuộn tới section khi URL có #id; chỉ cuộn một lần để không giành quyền cuộn của người dùng.
    scroll-padding-top của <html> đã tính chiều cao header. */
@@ -36,6 +37,13 @@ export default function Layout() {
   useEffect(() => {
     captureFirstTouch()
     loadGtm()
+    // Dashboard CMS (online, lượt xem, click, lead): tracker nhẹ, gửi theo lô bằng sendBeacon; lỗi thì bỏ qua.
+    try {
+      initCmsTracker({ clicks: true })
+      cmsPageView(window.location.pathname)
+    } catch {
+      /* tracker lỗi không ảnh hưởng trang */
+    }
     const stopWebVitals = trackWebVitals()
     const stopTracking = initDelegatedTracking()
     return () => {
@@ -47,6 +55,7 @@ export default function Layout() {
   // mỗi route: page_view (SPA), scroll_depth, section_view
   useEffect(() => {
     trackPageView({ page_path: pathname, page_title: document.title })
+    cmsPageView(pathname)
     const stopScroll = trackScrollDepth()
     const stopSections = trackSectionViews()
     const stopMotion = pauseOffscreenMotion()
