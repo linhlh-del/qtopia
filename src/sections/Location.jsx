@@ -396,6 +396,20 @@ function LocationMap() {
    LOCATION SECTION
 ========================================= */
 
+function LocationBackdrop() {
+  return (
+    <div className="location-galaxy-art" aria-hidden="true">
+      <Img src="/images/location/mascot-octopus.webp" alt="" fade={false} className="location-art location-art-mascot" />
+      <Img src="/images/location/paraglider.webp" alt="" fade={false} className="location-art location-art-paraglider" />
+      <Img src="/images/location/paraglider.webp" alt="" fade={false} className="location-art location-art-paraglider location-art-paraglider-small" />
+      <Img src="/images/location/crystal.webp" alt="" fade={false} className="location-art location-art-crystal" />
+      <Img src="/images/location/crystal.webp" alt="" fade={false} className="location-art location-art-crystal location-art-crystal-small" />
+      <Img src="/images/location/orb.webp" alt="" fade={false} className="location-art location-art-orb" />
+      <Img src="/images/location/orb.webp" alt="" fade={false} className="location-art location-art-orb location-art-orb-small" />
+    </div>
+  );
+}
+
 export default function Location({ showTopicLink = true }) {
   const ref = useReveal();
 
@@ -403,17 +417,11 @@ export default function Location({ showTopicLink = true }) {
     <section
       id="vi-tri"
       data-snap-section
-      className="section-screen relative min-h-[calc(100svh-var(--header-h))] h-auto max-h-none overflow-hidden bg-q-navy text-white"
+      className="location-galaxy section-screen relative min-h-[calc(100svh-var(--header-h))] h-auto max-h-none overflow-hidden text-white"
     >
-      <div
-        className="orbit-bg opacity-60"
-        style={{
-          "--orbit-x": "90%",
-          "--orbit-y": "10%",
-        }}
-      />
+      <LocationBackdrop />
 
-      <Container className="relative flex min-h-0 flex-1 flex-col">
+      <Container className="relative z-10 flex min-h-0 flex-1 flex-col">
         <div
           ref={ref}
           className="mt-3 grid min-h-0 flex-1 grid-cols-1 gap-5 lg:mt-7 lg:grid-cols-[minmax(0,7fr)_minmax(0,13fr)] lg:items-stretch lg:gap-8 [@media(max-height:740px)]:mt-2"

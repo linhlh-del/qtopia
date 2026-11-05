@@ -359,6 +359,88 @@ body {
   );
 }
 
+/* Nền xanh đậm cho section Vị trí, điểm sáng đến từ các icon QTOPIA. */
+.location-galaxy {
+  background:
+    radial-gradient(ellipse at 75% 18%, rgb(30 79 171 / 38%), transparent 48%),
+    radial-gradient(ellipse at 18% 82%, rgb(52 35 123 / 38%), transparent 45%),
+    linear-gradient(130deg, #050a2e 0%, #0b205d 52%, #060d35 100%);
+}
+.location-galaxy-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.location-art {
+  position: absolute;
+  height: auto;
+  user-select: none;
+}
+.location-art-mascot {
+  bottom: 0;
+  left: 1%;
+  width: clamp(180px, 17vw, 250px);
+  opacity: 0.76;
+  filter: drop-shadow(0 0 25px rgb(132 72 255 / 38%));
+  transform: rotate(-7deg);
+}
+.location-art-paraglider {
+  top: 2%;
+  right: 5%;
+  width: clamp(70px, 7vw, 120px);
+  opacity: 0.95;
+  filter: drop-shadow(0 0 17px rgb(129 144 255 / 48%));
+  transform: rotate(8deg);
+}
+.location-art-paraglider-small {
+  top: 46%;
+  right: 3%;
+  left: auto;
+  width: 52px;
+  opacity: 0.72;
+  transform: rotate(-13deg);
+}
+.location-art-crystal {
+  top: 5%;
+  left: 3%;
+  width: clamp(64px, 7vw, 110px);
+  opacity: 0.95;
+  filter: drop-shadow(0 0 20px rgb(179 91 255 / 52%));
+}
+.location-art-crystal-small {
+  top: auto;
+  bottom: 4%;
+  left: auto;
+  right: 24%;
+  width: 68px;
+  opacity: 0.78;
+}
+.location-art-orb {
+  bottom: 9%;
+  left: 38%;
+  width: clamp(56px, 6vw, 95px);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 18px rgb(93 176 255 / 50%));
+}
+.location-art-orb-small {
+  top: 28%;
+  bottom: auto;
+  left: auto;
+  right: 2%;
+  width: 50px;
+  opacity: 0.75;
+}
+@media (max-width: 1023px) {
+  .location-art-mascot { left: -2%; bottom: 0; width: 170px; opacity: 0.6; }
+  .location-art-paraglider { top: 1%; right: 5%; width: 80px; }
+  .location-art-crystal { top: 0; left: 3%; width: 52px; opacity: 0.85; }
+  .location-art-orb { bottom: 5%; left: auto; right: 5%; width: 70px; opacity: 0.85; }
+  .location-art-paraglider-small,
+  .location-art-crystal-small,
+  .location-art-orb-small { display: none; }
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -368,6 +450,19 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+@keyframes hero-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-copy-enter {
+  animation: hero-copy-in 0.7s var(--ease-out) both;
 }
 /* Reveal theo data-attribute (hook useReveal). Chưa có JS → không có data-reveal → nội dung hiển thị bình thường. */
 [data-reveal='pending'] {

@@ -49,21 +49,25 @@ export const faq = [
 ];
 
 export const heroContent = {
-  // H1 chứa từ khoá chính; slogan hiển thị ở <p> bên dưới (checklist SEO: không đặt slogan vào heading)
-  h1: "QTOPIA — THÀNH PHỐ CUỐI TUẦN CỦA SIÊU ĐÔ THỊ TP.HCM",
-  slogan: "Sở hữu rừng nguyên sinh, lưng tựa núi, mặt hướng biển",
+  // Mỗi ảnh có một thông điệp; slide đầu là H1 mặc định trong HTML prerender.
   images: [
     {
       src: "/images/renders/view-from-sea.webp",
       alt: "Phối cảnh dự án căn hộ QTOPIA nhìn từ biển",
+      h1: "QTOPIA — THÀNH PHỐ CUỐI TUẦN CỦA SIÊU ĐÔ THỊ TP.HCM",
+      slogan: "Sở hữu rừng nguyên sinh, lưng tựa núi, mặt hướng biển",
     },
     {
       src: "/images/renders/ocean-galaxy.webp",
       alt: "Phối cảnh khu Ocean Galaxy về đêm với hồ bơi và sàn DJ tại QTOPIA",
+      h1: "OCEAN GALAXY — NHỊP VUI KHÔNG NGỦ BÊN BIỂN",
+      slogan: "Âm nhạc, ánh sáng và những trải nghiệm giải trí nối dài đến đêm.",
     },
     {
       src: "/images/renders/aqua-funny-park-night.webp",
       alt: "Phối cảnh công viên nước Aqua Funny Park về đêm tại QTOPIA",
+      h1: "AQUA FUNNY PARK — SẮC MÀU BÊN BIỂN",
+      slogan: "Chạm vào nhịp vui rực rỡ của khu vui chơi nước QTOPIA.",
     },
   ],
   ctaPrimary: "Nhận thông tin dự án",

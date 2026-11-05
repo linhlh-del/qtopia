@@ -171,7 +171,7 @@ export default function SalesPolicy() {
     <section
       id="chinh-sach"
       data-snap-section
-      className="section-screen relative !h-auto !max-h-none min-h-[calc(100svh-var(--header-h))] overflow-hidden bg-q-navy text-white"
+      className="section-screen relative !h-auto !max-h-none !justify-start min-h-[calc(100svh-var(--header-h))] overflow-hidden bg-q-navy text-white"
     >
       <Img src="/images/renders/aqua-funny-park-night.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-q-navy/95 via-q-navy/85 to-q-navy/95" />
@@ -229,7 +229,6 @@ export default function SalesPolicy() {
 
           {/* Panel phương thức đang chọn */}
           <div
-            key={active.id}
             id={`csbh-panel-${active.id}`}
             role="tabpanel"
             aria-labelledby={`csbh-tab-${active.id}`}

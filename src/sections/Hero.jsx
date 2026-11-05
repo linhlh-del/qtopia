@@ -8,12 +8,13 @@ import { heroContent } from '../data/project'
 export default function Hero() {
   const [active, setActive] = useState(0)
   const popup = useContactPopup()
+  const slide = heroContent.images[active]
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
-    const id = window.setInterval(() => setActive((i) => (i + 1) % heroContent.images.length), 6500)
-    return () => window.clearInterval(id)
-  }, [])
+    const id = window.setTimeout(() => setActive((i) => (i + 1) % heroContent.images.length), 6500)
+    return () => window.clearTimeout(id)
+  }, [active])
 
   return (
     <section
@@ -39,10 +40,12 @@ export default function Hero() {
 
       <Container className="relative z-10 pb-[calc(1.5rem+var(--bar-h))] pt-20 lg:pb-10 lg:pr-24">
         <div className="flex max-w-lg flex-col items-start gap-3">
-          <h1 className="m-0 font-display text-[clamp(1.35rem,3.1vw,2.1rem)] font-extrabold leading-[1.15] tracking-tight text-white">
-            {heroContent.h1}
-          </h1>
-          <p className="m-0 font-display text-sm font-semibold text-q-lime sm:text-base">{heroContent.slogan}</p>
+          <div key={slide.src} className="hero-copy-enter flex flex-col gap-3">
+            <h1 className="m-0 font-display text-[clamp(1.35rem,3.1vw,2.1rem)] font-extrabold leading-[1.15] tracking-tight text-white">
+              {slide.h1}
+            </h1>
+            <p className="m-0 font-display text-sm font-semibold text-q-lime sm:text-base">{slide.slogan}</p>
+          </div>
           <button
             type="button"
             onClick={() => popup.open('hero')}
