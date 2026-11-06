@@ -360,9 +360,9 @@ export default function Residences({ showTopicLink = true }) {
               aria-label={`Chọn tháp, đang xem ${tower.label}`}
               className="inline-flex min-w-[9.5rem] shrink-0 cursor-pointer items-center justify-between gap-2.5 whitespace-nowrap rounded-full border-0 bg-q-blue px-4 py-2 font-display text-sm font-bold text-white shadow-soft [@media(max-height:740px)]:py-1">
               {tower.label}
-              <span aria-hidden="true" className="grid size-4 place-items-center rounded-full bg-white transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none"
+              <span aria-hidden="true" className="grid size-4 place-items-center transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none"
                 style={{ transform: towerMenu ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-                <img src="/images/arrow-sm.webp" alt="" aria-hidden="true" width="96" height="56" decoding="async" className="block h-auto w-[10px]" />
+                <img src="/images/arrow-sm.webp" alt="" aria-hidden="true" width="96" height="56" decoding="async" className="block h-auto w-[14px]" />
               </span>
             </button>
             {towerMenu ? (
