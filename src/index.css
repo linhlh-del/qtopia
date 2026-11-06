@@ -1098,3 +1098,16 @@ main > section:not(#top) {
   text-box: trim-both cap alphabetic;
   white-space: nowrap;
 }
+
+/* Popup thông tin căn (Mặt bằng): nền mờ hiện dần, khung trượt lên (mobile) / trượt từ phải (desktop) */
+.fp-drawer-backdrop { animation: fp-fade-in 0.25s ease-out both; }
+.fp-drawer { animation: fp-slide-up 0.35s var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)) both; }
+@media (min-width: 640px) {
+  .fp-drawer { animation-name: fp-slide-left; }
+}
+@keyframes fp-fade-in { from { opacity: 0; } }
+@keyframes fp-slide-up { from { transform: translateY(100%); } }
+@keyframes fp-slide-left { from { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .fp-drawer, .fp-drawer-backdrop { animation: none; }
+}

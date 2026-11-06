@@ -32,11 +32,10 @@ export default function Residences({ showTopicLink = true }) {
   const ref = useReveal()
   const [planRef, planVisible] = useNearViewport('300px')
   const popup = useContactPopup()
-  const [activeCode, setActiveCode] = useState(null)
-  const [pinned, setPinned] = useState(false)
+  const [activeCode, setActiveCode] = useState(null) // căn đang mở popup (bấm)
+  const [hoverCode, setHoverCode] = useState(null) // căn đang rê chuột (chỉ làm nổi bật)
   const [fullscreen, setFullscreen] = useState(false)
   const [zoom, setZoom] = useState(1)
-  const suppressHover = useRef(false)
   const [runIndex, setRunIndex] = useState(0)
   const [runnerResting, setRunnerResting] = useState(false)
   const restTimer = useRef(0)
@@ -57,25 +56,11 @@ export default function Residences({ showTopicLink = true }) {
   const activeType = activeUnit ? unitTypeInfo[activeUnit.type] : null
   const activeLayout = activeUnit ? unitLayoutImages[tower.id]?.[activeUnit.type] : null
 
-  const clear = () => {
-    setActiveCode(null)
-    setPinned(false)
-  }
-
-  const hoverUnit = (code) => {
-    if (!pinned && !suppressHover.current) setActiveCode(code)
-  }
-
-  const closePanel = () => {
-    suppressHover.current = true
-    clear()
-  }
+  const closePanel = () => setActiveCode(null)
 
   const selectUnit = (unit) => (event) => {
     event.stopPropagation()
-    if (pinned && activeCode === unit.code) return clear()
     setActiveCode(unit.code)
-    setPinned(true)
     track('view_floorplan', { tower: tower.id, unit_code: unit.code, unit_type: unit.type })
   }
 
@@ -94,26 +79,28 @@ export default function Residences({ showTopicLink = true }) {
     }
   }, [fullscreen])
 
+  // Popup thông tin căn: khoá cuộn trang, Esc để đóng (Esc ưu tiên đóng popup trước khi thoát Phóng to)
   useEffect(() => {
-    if (!pinned) return undefined
-    const onDoc = (event) => {
-      if (!event.target.closest?.('[data-floor-plan]')) clear()
-    }
+    if (!activeCode) return undefined
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     const onKey = (event) => {
-      if (event.key === 'Escape') clear()
+      if (event.key === 'Escape') {
+        event.stopImmediatePropagation()
+        setActiveCode(null)
+      }
     }
-    document.addEventListener('click', onDoc)
-    document.addEventListener('keydown', onKey)
+    window.addEventListener('keydown', onKey, true)
     return () => {
-      document.removeEventListener('click', onDoc)
-      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKey, true)
     }
-  }, [pinned])
+  }, [activeCode])
 
   const planBlock = (
       <div ref={planRef} data-floor-plan
         className={fullscreen ? 'fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-q-navy' : 'relative mt-4 overflow-hidden rounded-[1.5rem] bg-white shadow-card sm:h-[min(540px,44svh)] xl:h-[min(600px,50svh)]'}
-        onMouseLeave={() => { suppressHover.current = false; if (!pinned) setActiveCode(null) }}>
+        onMouseLeave={() => setHoverCode(null)}>
         <div className={fullscreen ? 'flex h-full w-full overflow-auto' : 'overflow-x-auto sm:flex sm:h-full sm:items-center'}
           style={fullscreen ? { justifyContent: 'safe center', alignItems: 'safe center' } : undefined}>
           <div className={fullscreen ? 'floorplan-fullscreen relative shrink-0' : 'relative w-full min-w-[min(1000px,calc(38svh*3.165))] lg:min-w-0'}
@@ -147,7 +134,7 @@ export default function Residences({ showTopicLink = true }) {
                 )
               })}
               {tower.units.map((unit) => {
-                const isActive = activeCode === unit.code
+                const isActive = activeCode === unit.code || hoverCode === unit.code
                 return (
                   <polygon
                     key={unit.code}
@@ -155,8 +142,8 @@ export default function Residences({ showTopicLink = true }) {
                     role="button"
                     tabIndex={0}
                     aria-label={`Căn ${unit.code} — ${unitTypeInfo[unit.type].name} ${unitTypeInfo[unit.type].subtitle}, diện tích sử dụng ${unit.usableArea} mét vuông`}
-                    onMouseEnter={() => hoverUnit(unit.code)}
-                    onFocus={() => hoverUnit(unit.code)}
+                    onMouseEnter={() => setHoverCode(unit.code)}
+                    onFocus={() => setHoverCode(unit.code)}
                     onClick={selectUnit(unit)}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter' || event.key === ' ') {
@@ -207,14 +194,14 @@ export default function Residences({ showTopicLink = true }) {
               ) : null}
             </svg> : null}
             {planVisible ? tower.units.map((unit) => {
-              const isActive = activeCode === unit.code
+              const isActive = activeCode === unit.code || hoverCode === unit.code
               return (
                 <button
                   key={`label-${unit.code}`}
                   type="button"
                   tabIndex={-1}
                   aria-hidden="true"
-                  onMouseEnter={() => hoverUnit(unit.code)}
+                  onMouseEnter={() => setHoverCode(unit.code)}
                   onClick={selectUnit(unit)}
                   style={{
                     left: `${(unit.labelX / FLOOR_VIEWBOX_W) * 100}%`,
@@ -230,40 +217,6 @@ export default function Residences({ showTopicLink = true }) {
           </div>
         </div>
 
-        {activeUnit ? (
-          <aside
-            key={activeUnit.code}
-            onClick={(event) => event.stopPropagation()}
-            className={`floorplan-drawer absolute inset-x-0 bottom-0 z-30 overflow-y-auto rounded-t-[1.5rem] bg-white/95 shadow-card backdrop-blur-xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-80 sm:rounded-l-[1.5rem] sm:rounded-tr-none ${fullscreen ? 'max-h-[48%]' : 'max-h-[94%]'}`}
-          >
-            <div className="relative">
-              {activeLayout ? (
-                <MediaFrame
-                  src={activeLayout.image}
-                  alt={`Mặt bằng tham khảo loại ${activeType.name} ${activeType.subtitle} tại ${tower.label}`}
-                  ratio="16 / 9"
-                  className="h-28 w-full sm:h-44"
-                  imgClassName="h-full w-full object-contain"
-                />
-              ) : null}
-              <button type="button" onClick={closePanel} aria-label="Đóng thông tin căn hộ" className="absolute right-2 top-2 grid h-11 w-11 place-items-center rounded-full bg-q-navy/80 text-xl text-white hover:bg-q-navy">
-                ×
-              </button>
-            </div>
-            <div className="flex flex-col gap-3 p-4 sm:p-5">
-              <p className="m-0 text-xs font-semibold uppercase tracking-wide" style={{ color: activeUnit.labelColor }}>{tower.label} · {tower.floorRange}</p>
-              <h3 className="m-0 font-display text-xl font-bold text-q-navy">Căn {activeUnit.code} · {activeType.name} {activeType.subtitle}</h3>
-              <dl className="grid grid-cols-2 gap-3 rounded-xl bg-q-sand/70 p-3 text-sm">
-                <div><dt className="text-q-muted">Diện tích sử dụng</dt><dd className="m-0 font-bold text-q-navy">{activeUnit.usableArea} m²</dd></div>
-                <div><dt className="text-q-muted">Diện tích tim tường</dt><dd className="m-0 font-bold text-q-navy">{activeUnit.grossArea} m²</dd></div>
-              </dl>
-              <p className="m-0 text-xs text-q-muted">Ảnh layout minh họa theo loại căn; diện tích lấy theo mã căn trên sơ đồ.</p>
-              <button type="button" onClick={() => popup.open('mat-bang')} data-cta-name="floorplan_quote" className="btn-base btn-primary w-full">
-                Nhận báo giá căn {activeUnit.code}
-              </button>
-            </div>
-          </aside>
-        ) : null}
 
         {/* Điện thoại: nút nằm ở hành lang giữa hai dãy căn để không che mã căn ở góc trên */}
         <div className={'absolute right-3 top-3 z-40 flex items-center gap-2' + (fullscreen ? ' pt-[env(safe-area-inset-top)]' : ' max-lg:top-1/2 max-lg:-translate-y-1/2')}>
@@ -290,8 +243,66 @@ export default function Residences({ showTopicLink = true }) {
       </div>
   )
 
+  // Popup thông tin căn: render ra <body> (nằm trên mọi thứ, kể cả chế độ Phóng to), nền mờ như popup nhận thông tin.
+  // Desktop: trượt ra từ mép phải; điện thoại: trượt lên từ đáy.
+  const unitDrawer = activeUnit && typeof document !== 'undefined' ? createPortal(
+    <div className="fixed inset-0 z-[120] flex items-end sm:items-stretch sm:justify-end" role="dialog" aria-modal="true" aria-labelledby="unit-drawer-title">
+      <button type="button" aria-label="Đóng thông tin căn hộ" onClick={closePanel}
+        className="fp-drawer-backdrop absolute inset-0 cursor-default border-0 bg-q-navy/70 p-0 backdrop-blur-sm" />
+      <aside key={activeUnit.code}
+        className="fp-drawer relative flex max-h-[88svh] w-full flex-col overflow-hidden rounded-t-[1.5rem] bg-white shadow-card sm:max-h-none sm:w-[min(440px,92vw)] sm:rounded-l-[1.5rem] sm:rounded-tr-none">
+        <header className="flex items-start gap-3 border-b border-q-navy/10 px-5 pb-4 pt-5 sm:px-6 sm:pt-6">
+          <div className="min-w-0 flex-1">
+            <p className="m-0 font-display text-xs font-bold uppercase tracking-[0.14em]" style={{ color: activeUnit.labelColor }}>
+              {tower.label} · {tower.floorRange}
+            </p>
+            <h3 id="unit-drawer-title" className="m-0 mt-1 font-display text-2xl font-extrabold leading-tight text-q-navy">
+              Căn {activeUnit.code}
+            </h3>
+            <p className="m-0 mt-1 text-sm font-semibold text-q-muted">{activeType.name} · {activeType.subtitle}</p>
+          </div>
+          <button type="button" onClick={closePanel} aria-label="Đóng thông tin căn hộ"
+            className="grid size-11 shrink-0 place-items-center rounded-full bg-q-sand text-2xl leading-none text-q-navy transition-colors hover:bg-q-navy hover:text-white">
+            ×
+          </button>
+        </header>
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
+          {activeLayout ? (
+            <div className="overflow-hidden rounded-2xl bg-q-sand/60 p-3">
+              <MediaFrame
+                src={activeLayout.image}
+                alt={`Mặt bằng tham khảo loại ${activeType.name} ${activeType.subtitle} tại ${tower.label}`}
+                ratio="4 / 3"
+                className="w-full"
+                imgClassName="h-full w-full object-contain"
+              />
+            </div>
+          ) : null}
+          <dl className="m-0 mt-4 grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-q-sand/70 p-3">
+              <dt className="text-xs text-q-muted">Diện tích sử dụng</dt>
+              <dd className="m-0 mt-0.5 font-display text-xl font-bold text-q-navy">{activeUnit.usableArea} m²</dd>
+            </div>
+            <div className="rounded-xl bg-q-sand/70 p-3">
+              <dt className="text-xs text-q-muted">Diện tích tim tường</dt>
+              <dd className="m-0 mt-0.5 font-display text-xl font-bold text-q-navy">{activeUnit.grossArea} m²</dd>
+            </div>
+          </dl>
+          <p className="m-0 mt-3 text-xs leading-relaxed text-q-muted">Ảnh layout minh họa theo loại căn; diện tích lấy theo mã căn trên sơ đồ.</p>
+        </div>
+        <div className="border-t border-q-navy/10 px-5 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 sm:px-6">
+          <button type="button" onClick={() => popup.open('mat-bang')} data-cta-name="floorplan_quote" className="btn-base btn-primary w-full">
+            Nhận báo giá căn {activeUnit.code}
+          </button>
+        </div>
+      </aside>
+    </div>,
+    document.body,
+  ) : null
+
   return (
     <section id="mat-bang" data-snap-section className="section-screen bg-q-cream">
+      {unitDrawer}
       <Container>
         <div ref={ref}>
           <SectionHeading label="Mặt bằng căn hộ Q5 & Q6" lead={`${tower.floorRange} · ${tower.units.length} căn trên sơ đồ · ${legend.length} loại căn`} />
