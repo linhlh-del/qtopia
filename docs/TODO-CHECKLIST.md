@@ -2,7 +2,7 @@
 
 Đánh dấu `[x]` khi xong. Thông tin hệ thống nằm ở [KNOWLEDGE-BASE.md](KNOWLEDGE-BASE.md), lệnh chi tiết ở [deploy/DEPLOY.md](../deploy/DEPLOY.md).
 
-Cập nhật lần cuối: 06/11/2026.
+Cập nhật lần cuối: 06/11/2026 (bản 2).
 
 ## Đã xong
 - [x] Landing chạy trên VPS qua Cloudflare Tunnel: `https://qtopia.rever.io.vn`
@@ -13,9 +13,16 @@ Cập nhật lần cuối: 06/11/2026.
 - [x] Deploy hook trên VPS (service `qtopia-deploy-hook`) + 2 secret trên Supabase
 - [x] Tracker dashboard CMS trên landing (online, lượt xem, click, lead)
 - [x] Mã nguồn lead Worker (`lead-worker/`), 11/11 test đạt
+- [x] Menu header cuộn đúng tới section (không còn đứng im)
+- [x] Responsive: section vừa 1 màn hình trên ~100 thiết bị (xem `RESPONSIVE-DEVICES.md`), sửa lỗi thu nhỏ trang trên iOS cũ
+- [x] Lướt qua 1/4 màn hình tự kéo section kế tiếp (trang chủ)
+- [x] Sửa "Phóng to" Tiện ích / Mặt bằng / lightbox trên iPhone (portal)
+- [x] Tấm nền chữ section Story, nội dung thuần Việt
+- [x] Favicon mới (`favicon.ico` + `public/icons/`); trang chủ đã được Google index
 
 ## Việc ngay (tuần này)
-- [ ] **Deploy code mới lên VPS** (tracker, payload lead):
+- [ ] **Thêm `'qtopia'` vào `PROJECTS` của Edge Function `collect`** (Supabase dashboard) — nếu dashboard CMS vẫn trống. Kiểm tra bằng lệnh `curl` collect trong KNOWLEDGE-BASE mục 12.
+- [x] **Deploy code mới lên VPS** (tracker, payload lead):
       `cd /var/www/qtopia/src && git pull && npm ci && npm run build:release`.
       Sau đó mở website, chờ khoảng 1 phút, xem **CMS → Dashboard**: phải có ít nhất 1 người online.
 - [ ] **Deploy Lead Worker**, làm theo `lead-worker/readme.md`:
@@ -28,6 +35,9 @@ Cập nhật lần cuối: 06/11/2026.
 - [ ] **Đổi token deploy hook.** Token cũ đã lộ trong chat. Tạo token mới trên VPS, sửa `/etc/qtopia-deploy-hook.env`, restart service, cập nhật 2 secret trên Supabase, bấm Đăng thử.
 - [ ] **Bấm Đăng thử trên CMS**: trang Đăng phải chuyển *Đang build* rồi *Sẵn sàng*, và `cms-status.json` có `release` mới.
 - [ ] **Search Console:** Verify, chỉ gửi `sitemap.xml`, Request indexing 7 URL chính, liên kết GA4. Thêm Bing Webmaster (Import from GSC).
+- [ ] **Search Console → Sitemaps:** xoá mọi dòng gửi nhầm (`/mat-bang`, `/tien-ich-xung-quanh`…), chỉ giữ `/sitemap.xml` (Success, 7 trang).
+- [ ] **Kiểm tra snippet:** Rich Results Test cho `/` (FAQ, không lỗi) và một trang con (Breadcrumb); sau 1–2 tuần kiểm tra `site:qtopia.rever.io.vn`, logo trên kết quả.
+- [ ] **Thử lại trên máy thật** (iPhone 12 Pro Max, iPhone 7/8 Plus, Android, iPad dọc/ngang): lướt qua mọi section, Phóng to sơ đồ, độ nhạy tự kéo 1/4.
 
 ## Bảo mật và vận hành
 - [ ] Cloudflare → Configuration Rule cho riêng `qtopia.rever.io.vn`: SSL **Full (strict)**
@@ -36,7 +46,7 @@ Cập nhật lần cuối: 06/11/2026.
 - [ ] Theo dõi uptime (UptimeRobot hoặc Better Stack) cho `https://qtopia.rever.io.vn` và `/cms-status.json`
 - [ ] Sao lưu: export bảng `cms_content` và `cms_leads` định kỳ; sao lưu `/etc/qtopia-deploy-hook.env` và `/etc/cloudflared/config.yml`
 - [ ] Khi nâng Node bằng nvm: sửa đường dẫn `v24.14.1` trong `qtopia-deploy-hook.service`, rồi `systemctl daemon-reload && systemctl restart qtopia-deploy-hook`
-- [ ] Xoá thư mục `dist/` và `.ssr/` bị khoá quyền trên máy Windows (PowerShell Admin)
+- [ ] Xoá thư mục `dist/`, `.ssr/` và các icon cũ không còn dùng ở gốc `public/` (`favicon-32.png`, `favicon-48.png`, `favicon-96.png`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`) bị khoá quyền trên máy Windows (PowerShell Admin)
 - [ ] Gỡ thẻ `google-site-verification` cũ (`X-aD_…`) nếu property `qtopia-tau.vercel.app` không dùng nữa
 
 ## Nội dung và pháp lý (cần chủ đầu tư / bộ phận pháp lý xác nhận)

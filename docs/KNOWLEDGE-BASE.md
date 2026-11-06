@@ -2,7 +2,9 @@
 
 Tài liệu tổng hợp toàn bộ hệ thống landing page QTOPIA: hạ tầng, frontend, CMS, backend, lead, analytics, vận hành và các lỗi đã gặp. Việc còn phải làm nằm ở [TODO-CHECKLIST.md](TODO-CHECKLIST.md). Hướng dẫn cài đặt chi tiết từng bước nằm ở [deploy/DEPLOY.md](../deploy/DEPLOY.md).
 
-Cập nhật lần cuối: 06/11/2026.
+Cập nhật lần cuối: 06/11/2026 (bản 2: responsive, tự kéo section, sửa lỗi phóng to trên iOS, favicon).
+
+Tài liệu liên quan: [RESPONSIVE-DEVICES.md](RESPONSIVE-DEVICES.md) (100 thiết bị, kết quả đo) · [TODO-CHECKLIST.md](TODO-CHECKLIST.md) · [deploy/DEPLOY.md](../deploy/DEPLOY.md) · [lead-worker/readme.md](../lead-worker/readme.md)
 
 ---
 
@@ -48,7 +50,8 @@ GA4 G-Y9NFTDSE57 (gtag trong <head>) · Google Search Console (meta xác minh tr
 | Backend CMS | Supabase project **`palm-river-db`** (ref `ocbsfqgqukhaixskzwdz`), **dùng chung** với Norton Park, Sensa Park và 2 site Palm River. Mã nguồn backend: `landing-page/cms-supabase/` (chưa có git riêng) |
 | Lead Worker | Cloudflare Worker `qtopia-lead-worker`, mã nguồn `qtopia-landing/lead-worker/` |
 | GA4 | `G-Y9NFTDSE57` (gtag trong `index.html`) |
-| Search Console | Property URL prefix `https://qtopia.rever.io.vn/`, meta `google-site-verification` = `xbjr4…L0` trong `index.html` |
+| Search Console | Property URL prefix `https://qtopia.rever.io.vn/`, meta `google-site-verification` = `xbjr4…L0` trong `index.html` (còn giữ thẻ cũ `X-aD_…` của property Vercel). Trang chủ **đã được Google index** |
+| Favicon | `public/favicon.ico` (32×32, do chủ dự án tự thay) + bộ PNG trong `public/icons/` (32/48/96/192/512, logo phủ kín khung, nền trong suốt) + `icons/apple-touch-icon.png` (nền navy). Các file icon cũ ở gốc `public/` (`favicon-32.png`, `icon-192.png`…) **không còn dùng** — bị khoá ghi trên máy dev nên chưa xoá |
 | Admin CMS (owner) | linhlh@rever.vn, gianghoa@rever.vn, minhdh1@rever.vn, hoangdnk@rever.vn |
 
 > **Bí mật không bao giờ commit hoặc dán vào chat:** Supabase `service_role` key, token deploy hook, `GOOGLE_SHEET_URL`, private key chứng chỉ Origin. Anon key của Supabase là khoá công khai (chỉ đọc được bản đã đăng).
@@ -94,7 +97,10 @@ src/
 ├─ pages/                 # Home, Topic (trang con), NewsPage, NewsDetail, NotFound
 ├─ layout/                # Header, Footer, ValueNav (thanh đáy mobile + dock trái), FloatingButtons, Layout
 ├─ lib/analytics.js       # GA4 (gtag trong <head>) + sự kiện click_cta, scroll_depth, section_view, web vitals
-└─ lib/lead.js            # gửi form → VITE_LEAD_ENDPOINT (hoặc endpoint cấu hình trong CMS)
+├─ lib/lead.js            # gửi form → VITE_LEAD_ENDPOINT (hoặc endpoint cấu hình trong CMS)
+├─ lib/fit-sections.js    # tự co nội dung section (CSS zoom ≥ 80%) để vừa 1 màn hình
+├─ lib/section-snap.js    # lướt qua 1/4 màn hình → tự kéo section kế tiếp lên (chỉ trang chủ)
+└─ components/DeferredSection.jsx # section tải JS chậm (gần khung nhìn) + preload khi prerender
 scripts/
 ├─ build.mjs              # fetch-cms → vite build → SSR build → prerender
 ├─ fetch-cms.mjs          # lấy bản đã đăng (RPC cms_get_published_content) + tải ảnh về public/assets/cms
@@ -108,7 +114,8 @@ lead-worker/               # Cloudflare Worker nhận lead
 ```
 
 ### Route và trang
-- `/` là trang chủ, gồm các section theo thứ tự: Hero, Tổng quan, Số liệu, Nightlife, Vị trí, Tiện ích, Tiện ích nổi bật, Mặt bằng, Chính sách bán hàng, Tin tức, Pháp lý, FAQ, Liên hệ.
+- `/` là trang chủ, gồm các section theo thứ tự: Hero, Tổng quan, Số liệu, Nightlife, Vị trí, Tiện ích, Tiện ích nổi bật, Mặt bằng, Chính sách bán hàng, Tin tức (**luôn hiện**, kể cả khi còn bài mẫu), Pháp lý, FAQ, Liên hệ.
+- Menu header dùng link `/#id`. Link tới section **trên cùng trang** được cuộn thẳng (không qua React Router), vì router chờ các section tải chậm sẽ làm trang đứng im (`useSamePageHashLinks` trong `Layout.jsx`).
 - **5 trang sitelinks:** `/tong-quan`, `/vi-tri`, `/tien-ich`, `/chinh-sach-ban-hang`, `/tien-ich-xung-quanh`. Thêm `/mat-bang`.
 - `/tin-tuc` và `/tin-tuc/<id>`: bài còn chữ mẫu thì `noindex` và không vào sitemap. Khi có ít nhất 1 bài thật, `/tin-tuc` tự được index.
 - Thêm trang con mới: thêm vào `pages` + `topicPaths` (`site-meta.js`) và `BODY` (`pages/Topic.jsx`).
@@ -117,6 +124,7 @@ lead-worker/               # Cloudflare Worker nhận lead
 - Mỗi object trong `data/project.js` và `data/news.js` đều được gọi `registerCms(name, obj)`. CMS sửa theo khoá đường dẫn, ví dụ `salesPolicy.methods.2.title` hoặc `newsItems.0.image`. Danh sách trong CMS có **số phần tử cố định**: không thêm hay bớt dòng trên CMS được, muốn thêm thì sửa code.
 - SEO từng trang (title, description, ảnh OG) sửa được trong CMS → trang SEO.
 - Thông tin đã chốt: thời gian tới trung tâm TP.HCM là **75 phút**. Địa chỉ: "Thửa đất số 08, tờ bản đồ số 38, xã Phước Hải, TP. Hồ Chí Minh" (lấy từ phaply.qtopia.vn). Giá Studio từ **1.195 tỷ**.
+- **Quy ước nội dung:** viết thuần Việt, câu ngắn. Giữ nguyên **tên riêng trong brochure** (Quậy Station, Ocean Galaxy, Oasis Resort, Aqua Funny Park, DJ Ocean, AMA/MIRA/VITA/ARIA, Aqua Home, Galaxy Dome…). Dịch các từ tiếng Anh chung: Entertainment Complex → *khu giải trí phức hợp*, Nightlife Hub → *khu giải trí đêm*, Resort City / wellness → *thành phố nghỉ dưỡng / chăm sóc sức khoẻ*, rooftop / tầng mái → *sân thượng*, Beach club → *câu lạc bộ bãi biển*, Locker → *tủ đồ cá nhân*, Infinity → *hồ bơi vô cực*, check-in → *chụp ảnh*.
 
 ### Hiệu năng (PageSpeed mobile 97 trên bản Vercel cũ)
 - Ảnh WebP nhiều kích thước, có `srcset`/`sizes`. Ảnh hero `fetchpriority=high`; các ảnh khác lazy.
@@ -124,9 +132,18 @@ lead-worker/               # Cloudflare Worker nhận lead
 - Font tự host (subset tiếng Việt). Có `content-visibility: auto` cho các section.
 - GA4 hiện nằm trong `<head>` theo yêu cầu, nên điểm mobile có thể thấp hơn một chút so với lúc trì hoãn tải GA.
 
-### UI / responsive
-- Mỗi section cao tối thiểu `100svh − header`. Desktop: 12/12 section vừa đúng một màn hình. Mobile nhỏ (360×640): một số section dài hơn một chút và cuộn tự nhiên.
-- Mobile: nút ↑ chỉ hiện khi khách cuộn ngược lên; chú thích tuyến giao thông ở section Vị trí thu gọn lại; sơ đồ tiện ích chỉ hiện chấm màu kèm danh sách theo khu; CSBH dùng timeline dọc mỗi mốc một dòng; FAQ hiện 5 câu kèm nút "Xem thêm"; Pháp lý đóng sẵn tất cả mục.
+### UI / responsive (chi tiết: [RESPONSIVE-DEVICES.md](RESPONSIVE-DEVICES.md))
+- **Mục tiêu:** mỗi section cao đúng `100svh − header` (svh = vùng nhìn thấy khi thanh trình duyệt đang hiện). Có phương án dự phòng `vh` cho Safari < 15.4.
+- **3 tầng để vừa 1 màn hình:**
+  1. CSS mobile first + breakpoint theo chiều cao (`max-height: 760 / 740 / 620`). Màn thấp thì sắp xếp lại: Vị trí 2×2, Tin tức ảnh 2:1 và tóm tắt 1 dòng, CSBH câu dẫn 2 dòng.
+  2. `fit-sections.js`: section nào vẫn cao hơn màn hình thì thu nhỏ đều nội dung bằng CSS `zoom`, **tối thiểu 80%** (`data-fit` trên section cho biết mức đang dùng). Không áp dụng cho hero và điện thoại xoay ngang.
+  3. Section vẫn dư thì cuộn tự nhiên (chỉ còn ở iPhone SE đời 1 và vài section ở iPhone 7/8 dư 12–37px).
+- **Tablet:** cỡ chữ ×1,656 và bố cục 1 cột **chỉ khi dọc** (`(768px <= width < 1280px) and (orientation: portrait)`). Tablet ngang dùng bố cục 2 cột của desktop.
+- **Tự kéo section (`section-snap.js`, chỉ trang chủ):** khi khách ngừng cuộn, lướt ≥ 25% màn hình thì section kế tiếp/phía trên kéo lên sát header, chưa tới 25% thì trở về. Cuộn tự do trong section cao hơn màn hình, trong footer, khi popup mở, khi điện thoại ngang. Đổi độ nhạy bằng hằng `THRESHOLD`.
+- **Chữ trên ảnh:** section Story có tấm nền `.text-panel` (navy 58% + làm mờ ảnh + bóng chữ); Hero có bóng chữ.
+- **Lớp phủ toàn màn hình** (Phóng to sơ đồ Tiện ích, Phóng to Mặt bằng, lightbox ảnh tiện ích) được render qua **React Portal vào `<body>`**. Không đặt `position: fixed` bên trong section: `content-visibility`, `transform` (hiệu ứng xuất hiện) và `zoom` làm nó bị neo vào section.
+- Mobile khác: nút ↑ chỉ hiện khi khách cuộn ngược lên; chú thích tuyến giao thông thu gọn; sơ đồ tiện ích chỉ hiện chấm màu kèm danh sách theo khu; CSBH timeline dọc mỗi mốc một dòng; FAQ hiện 5 câu + "Xem thêm"; Pháp lý đóng sẵn trên mobile; Mặt bằng phóng to có gợi ý xoay ngang máy.
+- **Không thêm phần tử `position: absolute` (vd. `.sr-only`) bên trong carousel/khung cuộn mà không có cha `relative`**: nó thoát khỏi khung, làm trang rộng ra và Safari iOS cũ thu nhỏ cả trang. `body` có `overflow-x: clip` làm lưới an toàn.
 
 ---
 
@@ -168,7 +185,8 @@ URL `collect` của tracker được **tự suy ra** từ `CMS_SUPABASE_URL` tro
 - **Edge Functions:**
   - `cms-admin`: đăng, rollback, trạng thái deploy, lead thử.
   - `collect`: nhận sự kiện từ tracker, không cần JWT, kiểm origin bằng `cms_projects.site_url`.
-  - Cả hai chỉ chấp nhận project nằm trong mảng `PROJECTS` (`_shared/util.ts`), danh sách này **phải có `'qtopia'`**.
+  - Cả hai chỉ chấp nhận project nằm trong mảng `PROJECTS` (`_shared/util.ts`), danh sách này **phải có `'qtopia'` ở CẢ HAI function**. Sửa trên dashboard: Edge Functions → *tên function* → Code → `_shared/util.ts` → Deploy. Thiếu ở `collect` thì dashboard CMS trống; kiểm tra bằng lệnh `curl` ở mục 12 (kết quả đúng `{"ok":true,"stored":0}`, sai là `{"error":"project"}`).
+  - Bản `cms-admin` đang chạy trên Supabase **cũ hơn** repo `cms-supabase`: gọi deploy hook bằng POST rỗng, không gửi header token. Vì vậy token nằm trong URL `DEPLOY_HOOK_QTOPIA`.
 - **Secrets** (Edge Functions → Secrets):
   - `CMS_ORIGINS` = `https://norton-park-cms.vercel.app,https://palm-river-mkt-cms.vercel.app,https://palm-river-no-rever-cms.vercel.app,https://sensa-park-cms.vercel.app,https://qtopia-cms.vercel.app`. Đổi giá trị là **thay cả danh sách**, nên phải giữ đủ mọi CMS.
   - `DEPLOY_HOOK_QTOPIA` = `https://qtopia.rever.io.vn/cms-deploy?project=qtopia&token=<token>`
@@ -197,7 +215,8 @@ Form (Hero popup / Liên hệ / nút nổi…) → src/lib/lead.js → POST VITE
 |---|---|
 | GA4 `G-Y9NFTDSE57` | `page_view` (lần tải đầu do gtag tự gửi, các lần đổi route do code gửi, không trùng), `generate_lead`, `click_cta`, `click_call`, `click_zalo`, `scroll_depth`, `section_view`, `view_floorplan`, `select_payment_method`, `web_vital` |
 | Dashboard CMS | tracker (`src/cms/tracker.js`) gửi `pageview`, `heartbeat` 30 giây một lần (số người online), `section_view`, `cta_click` (theo `data-cta-name@data-cta-location`), `lead`, `leave` → `collect` → `cms_events`. Chỉ dùng id ngẫu nhiên, không có PII |
-| Search Console | Chỉ gửi **`sitemap.xml`** trong mục Sitemaps. Từng URL thì dùng ô **URL Inspection** → Request indexing |
+| Search Console | Chỉ gửi **`sitemap.xml`** trong mục Sitemaps (gửi URL trang vào đây sẽ báo lỗi "Sitemap is HTML"). Từng URL thì dùng ô **URL Inspection** trên cùng → Request indexing. Kiểm tra dữ liệu có cấu trúc: search.google.com/test/rich-results và validator.schema.org. Sitelinks, logo và tên site trên kết quả do Google tự quyết, cập nhật sau vài ngày đến vài tuần |
+| Cloudflare Web Analytics | Cloudflare tự chèn `static.cloudflareinsights.com` → đã cho phép trong CSP |
 
 ---
 
@@ -205,7 +224,8 @@ Form (Hero popup / Liên hệ / nút nổi…) → src/lib/lead.js → POST VITE
 
 - Header (nginx + `vercel.json`): CSP, HSTS, X-Frame-Options SAMEORIGIN, nosniff, Referrer-Policy, COOP, Permissions-Policy.
 - CSP cho phép `'unsafe-inline'` cho script. Lý do: React 19 chèn script `$RC` nhỏ cho các section lớn đã prerender, và gtag nằm inline.
-- `connect-src` cho phép GA, `*.supabase.co`, `*.workers.dev`. Nếu Worker dùng domain riêng, phải thêm domain đó vào CSP.
+- `script-src` cho phép GTM và `static.cloudflareinsights.com`; `connect-src` cho phép GA, `cloudflareinsights.com`, `*.supabase.co`, `*.workers.dev`. Nếu Worker dùng domain riêng, phải thêm domain đó vào CSP (cả `vercel.json` lẫn nginx trên VPS).
+- File nginx trên VPS đã sửa tay (http2 cho nginx 1.24, CSP, `/site.webmanifest`), nên **không chép đè** `deploy/nginx-qtopia.conf` lên VPS; sửa từng dòng bằng `sed` rồi `nginx -t`.
 - Deploy hook chỉ nghe `127.0.0.1`, bắt buộc token, thư mục build và lệnh build cố định. nginx tắt access log cho `/cms-deploy`, vì token có thể nằm trong URL.
 - nginx chặn file ẩn (`.env`, `.git`).
 
@@ -227,6 +247,13 @@ Form (Hero popup / Liên hệ / nút nổi…) → src/lib/lead.js → POST VITE
 | `supabase migration list` báo kết nối `127.0.0.1:54322` | CLI 3.x mặc định nhắm DB local | Dùng `npx supabase@2.122.0` hoặc dashboard |
 | SQL báo lỗi `supabase_migrations.schema_migrations does not exist` | Project chưa từng dùng CLI để chạy migration | Bỏ phần ghi lịch sử, chạy lại (cả khối SQL chạy trong một transaction) |
 | Prerender sinh script inline `$RC` | Tính năng outline Suspense boundary lớn của React 19.2 | Hành vi bình thường. CSP cho phép inline |
+| Bấm menu header, URL đổi `/#vi-tri` nhưng trang đứng im | Router chuyển trang trong transition; section tải chậm chờ cuộn tới → chờ nhau mãi | Link cùng trang cuộn thẳng; section tải chậm tải ngay khi chuyển trang; căn lại vị trí 2,5 giây |
+| Dashboard CMS trống dù đã có tracker | `collect` trên Supabase chưa có `'qtopia'` trong `PROJECTS` | Sửa `_shared/util.ts` của function `collect` rồi Deploy |
+| iPhone 7 Plus / iOS cũ: cả trang bị thu nhỏ, section sai chiều cao | Chữ `.sr-only` trong thẻ Tin tức thoát khỏi carousel (trang rộng 2.800px); Safari ≤ 17 không có `content-visibility` nên không che được | Thêm `relative` cho link; `body { overflow-x: clip }` |
+| iPhone: bấm "Phóng to" Tiện ích/Mặt bằng → màn hình trống, không lướt được, không bấm được căn | Lớp phủ `position: fixed` bị neo vào section (content-visibility/transform/zoom), nằm ngoài màn hình; trang đã khoá cuộn | Render lớp phủ qua React Portal vào `<body>` |
+| Tablet ngang: Vị trí/Tiện ích cao gấp rưỡi màn hình | Khối CSS tablet (chữ ×1,656, 1 cột) áp cả khi xoay ngang | Chỉ áp khi `orientation: portrait` |
+| Google hiện icon quả địa cầu thay vì logo | Mới index; thiếu `/favicon.ico`; logo trong icon nhỏ | Thêm `favicon.ico` + bộ `public/icons/`; Request indexing trang chủ; chờ vài ngày–vài tuần |
+| Không ghi đè được file trong `public/` trên máy Windows (`Invalid argument` / `EPERM`) | File do sandbox khác tạo, khoá quyền ghi | Ghi file mới với tên/thư mục khác, hoặc xoá bằng PowerShell Admin |
 
 ---
 
@@ -243,6 +270,13 @@ cd /var/www/qtopia && ls releases && ln -sfn releases/<id> current.tmp && mv -T 
 # VPS — deploy hook
 systemctl status qtopia-deploy-hook ; journalctl -u qtopia-deploy-hook -f
 cp /var/www/qtopia/src/deploy/cms-deploy-hook/server.mjs /opt/qtopia-deploy-hook/ && systemctl restart qtopia-deploy-hook
+
+# Kiểm tra Edge Function collect đã nhận project qtopia (không ghi dữ liệu)
+curl -s -X POST -H "Origin: https://qtopia.rever.io.vn" -d '{"project":"qtopia","visitor_id":"t","session_id":"t","events":[]}' https://ocbsfqgqukhaixskzwdz.supabase.co/functions/v1/collect
+
+# Kiểm tra favicon / sitemap trên site thật
+curl -s -o /dev/null -w "%{http_code} %{content_type}\n" https://qtopia.rever.io.vn/favicon.ico
+curl -s https://qtopia.rever.io.vn/sitemap.xml | grep -c "<loc>"
 
 # VPS — tunnel / nginx
 cloudflared tunnel --config /etc/cloudflared/config.yml ingress validate && systemctl restart cloudflared
