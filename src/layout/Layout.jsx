@@ -11,6 +11,7 @@ import { captureFirstTouch } from '../lib/utm'
 import { pauseOffscreenMotion } from '../lib/motion'
 import { cmsPageView, initCmsTracker } from '../cms/tracker'
 import { fitSections } from '../lib/fit-sections'
+import { sectionSnap } from '../lib/section-snap'
 
 /* Cuộn tới section khi URL có #id; chỉ cuộn một lần để không giành quyền cuộn của người dùng.
    scroll-padding-top của <html> đã tính chiều cao header. */
@@ -119,8 +120,11 @@ export default function Layout() {
     const stopSections = trackSectionViews()
     const stopMotion = pauseOffscreenMotion()
     const stopFit = fitSections()
+    // Trang chủ: lướt qua 1/4 màn hình → tự kéo section kế tiếp lên chiếm trọn khung hình
+    const stopSnap = pathname === '/' ? sectionSnap() : () => {}
     return () => {
       stopFit()
+      stopSnap()
       stopScroll()
       stopSections()
       stopMotion()
