@@ -51,6 +51,8 @@ const fileOf = (path) => (path === '/' ? 'index.html' : `${path.slice(1)}/index.
 
 console.log('Prerender:')
 for (const r of routes) write(fileOf(r), await page(r))
+// Trang ẩn (noindex, không vào sitemap) nhưng vẫn cần file HTML để tải trực tiếp được, vd. /cam-on
+for (const r of Object.keys(hiddenPages).filter((p) => p !== '/404')) write(fileOf(r), await page(r))
 write('404.html', await page('/404'))
 
 /* ---------- sitemap.xml + robots.txt ---------- */
@@ -65,4 +67,3 @@ write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml
 write('cms-schema.json', JSON.stringify(buildCmsSchema({ pageDefaults, routes, siteUrl: SITE_URL, leadEndpoint: env.VITE_LEAD_ENDPOINT || '' }), null, 2) + '\n')
 
 console.log(`Xong: ${routes.length} trang + 404 · domain ${SITE_URL}`)
-void hiddenPages

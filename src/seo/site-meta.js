@@ -148,7 +148,7 @@ export const pages = {
   '/tin-tuc': {
     title: 'Tin tức QTOPIA — Cập nhật thông tin dự án',
     description:
-      'Theo dõi tin tức và sự kiện QTOPIA, tìm hiểu thông tin dự án, tiện ích và không gian sống qua các bài viết cập nhật. Nội dung mẫu sẽ được thay thế. Xem thêm.',
+      'Tin tức QTOPIA Phước Hải: cập nhật tiến độ, tổng quan dự án, tiện ích và những thông tin cần kiểm tra trước khi tìm mua căn hộ du lịch ven biển. Đọc ngay.',
     breadcrumb: 'Tin tức & sự kiện',
     h1: 'Tin tức & sự kiện QTOPIA',
     intro: ['Cập nhật thông tin và những câu chuyện xoay quanh QTOPIA.'],
@@ -164,7 +164,7 @@ export const pages = {
       const sample = isSampleNews(item)
       let description = sample
         ? `${item.excerpt} Bài viết mẫu về ${item.category.toLowerCase()} tại QTOPIA.`
-        : `${item.excerpt} ${item.category} QTOPIA — đọc chi tiết bài viết.`
+        : item.metaDescription || `${item.excerpt} ${item.category} QTOPIA — đọc chi tiết bài viết.`
       if (sample) while (description.length < 150) description += ' Lorem ipsum dolor sit amet.'
       if (description.length > 160) {
         description = description.slice(0, description.lastIndexOf(' ', 157)) + '…'
@@ -174,13 +174,15 @@ export const pages = {
       return [
         path,
         {
-          title: `${item.title} — Tin tức QTOPIA`,
+          title: item.seoTitle || `${item.title} — Tin tức QTOPIA`,
           description,
           breadcrumb: item.category,
           changefreq: 'monthly',
           priority: 0.5,
           ogImage: item.image || '/images/og-qtopia-trang-chu.webp',
-          ogImageAlt: sample ? 'Bài viết mẫu về dự án QTOPIA' : item.title,
+          ogImageAlt: sample ? 'Bài viết mẫu về dự án QTOPIA' : item.imageAlt || item.title,
+          // Bài viết thật: thêm JSON-LD NewsArticle + breadcrumb 3 cấp (Trang chủ › Tin tức › bài)
+          article: sample ? undefined : { headline: item.title, datePublished: item.date, image: item.image },
           menu: item.title,
           // Bài mẫu (chưa có nội dung thật) không được index và không vào sitemap.
           noindex: sample,
@@ -213,6 +215,12 @@ export const sitelinkPaths = ['/tong-quan', '/vi-tri', '/tien-ich', '/chinh-sach
 
 /** Trang không đưa vào sitemap, noindex */
 export const hiddenPages = {
+  // Trang cảm ơn sau khi gửi form: được prerender (có file HTML) nhưng noindex, không vào sitemap.
+  '/cam-on': {
+    title: 'Cảm ơn bạn đã đăng ký — QTOPIA',
+    description: 'Cảm ơn bạn đã để lại thông tin. Chuyên viên tư vấn QTOPIA sẽ liên hệ trong thời gian sớm nhất.',
+    breadcrumb: 'Cảm ơn',
+  },
   '/404': {
     title: 'Không tìm thấy trang — QTOPIA',
     description: 'Trang bạn tìm không tồn tại. Quay về trang chủ QTOPIA để xem tổng quan dự án, vị trí, tiện ích và mặt bằng.',

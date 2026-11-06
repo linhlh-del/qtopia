@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom'
 import Container from '../components/ui/Container'
 import MediaFrame from '../components/ui/MediaFrame'
-import { getNewsHref, newsItems } from '../data/news'
+import { formatNewsDate, getNewsHref, hasRealNews, isSampleNews, newsItems } from '../data/news'
 
 function NewsImage({ item, className = '' }) {
   return (
     <MediaFrame
       src={item.image}
-      alt={item.title}
+      alt={item.imageAlt || item.title}
       ratio="16 / 10"
-      note="Khung ảnh demo"
+      note={isSampleNews(item) ? 'Khung ảnh demo' : 'Ảnh sẽ được cập nhật'}
       className={className}
     />
   )
@@ -19,7 +19,7 @@ function NewsMeta({ item }) {
   return (
     <div className="flex items-center justify-between gap-3 text-[length:calc(0.7rem*var(--type-scale))] font-semibold uppercase tracking-wider text-q-muted">
       <span><span className="mr-1 text-q-lime-ink">#</span>{item.category}</span>
-      <span>Bài viết mẫu</span>
+      {isSampleNews(item) ? <span>Bài viết mẫu</span> : item.date ? <time dateTime={item.date}>{formatNewsDate(item.date)}</time> : null}
     </div>
   )
 }
@@ -96,16 +96,18 @@ export default function NewsPage() {
             </aside>
           </div>
 
+          {articles.length > highlights.length ? (
           <div className="mt-12 sm:mt-16">
             <div className="mb-5 text-center">
               <p className="m-0 font-display text-xs font-bold uppercase tracking-[0.18em] text-q-lime-ink">Khám phá thêm</p>
               <h2 className="mt-2 font-display text-2xl font-extrabold text-q-navy">Các bài viết khác</h2>
             </div>
             <div className="grid overflow-hidden rounded-xl border-t border-l border-q-navy/10 bg-white sm:grid-cols-2 lg:grid-cols-4">
-              {articles.map((item) => <NewsCard key={item.id} item={item} />)}
+              {articles.slice(highlights.length).map((item) => <NewsCard key={item.id} item={item} />)}
             </div>
           </div>
-          <p className="mt-5 text-center text-xs text-q-muted">Bài viết và ảnh đang ở dạng minh họa.</p>
+          ) : null}
+          {hasRealNews() ? null : <p className="mt-5 text-center text-xs text-q-muted">Bài viết và ảnh đang ở dạng minh họa.</p>}
         </Container>
       </section>
     </>

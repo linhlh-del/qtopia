@@ -2,7 +2,7 @@
 
 Tài liệu tổng hợp toàn bộ hệ thống landing page QTOPIA: hạ tầng, frontend, CMS, backend, lead, analytics, vận hành và các lỗi đã gặp. Việc còn phải làm nằm ở [TODO-CHECKLIST.md](TODO-CHECKLIST.md). Hướng dẫn cài đặt chi tiết từng bước nằm ở [deploy/DEPLOY.md](../deploy/DEPLOY.md).
 
-Cập nhật lần cuối: 06/11/2026 (bản 2: responsive, tự kéo section, sửa lỗi phóng to trên iOS, favicon).
+Cập nhật lần cuối: 06/11/2026 (bản 3: 2 bài tin tức thật, trang cảm ơn `/cam-on`, lead Worker chuyển sang `be/qtopia/`).
 
 Tài liệu liên quan: [RESPONSIVE-DEVICES.md](RESPONSIVE-DEVICES.md) (100 thiết bị, kết quả đo) · [TODO-CHECKLIST.md](TODO-CHECKLIST.md) · [deploy/DEPLOY.md](../deploy/DEPLOY.md) · [lead-worker/readme.md](../lead-worker/readme.md)
 
@@ -85,7 +85,7 @@ GA4 G-Y9NFTDSE57 (gtag trong <head>) · Google Search Console (meta xác minh tr
 ```text
 src/
 ├─ data/project.js        # TOÀN BỘ nội dung trang (siteMeta, hero, stories, facts, vị trí, tiện ích, CSBH, pháp lý, FAQ…)
-├─ data/news.js           # 10 ô bài viết (bài còn chữ mẫu → tự noindex)
+├─ data/news.js           # bài tin tức (id = slug, seoTitle, metaDescription, body có ## / ###, nguồn tham khảo)
 ├─ cms/content.js         # registerCms(): đè nội dung CMS đã đăng lên data/* lúc build
 ├─ cms/schema.js          # sinh dist/cms-schema.json (CMS đọc để biết trường nào sửa được)
 ├─ cms/tracker.js         # tracker dashboard CMS → Edge Function collect
@@ -94,7 +94,7 @@ src/
 ├─ seo/head.js            # thẻ <head> cho prerender + đổi route
 ├─ sections/*.jsx         # Hero, Story, Facts, Location, MasterPlan, FeaturedAmenities, Residences, SalesPolicy,
 │                         #   NearbyPlaces, News, Legal, Faq, Register
-├─ pages/                 # Home, Topic (trang con), NewsPage, NewsDetail, NotFound
+├─ pages/                 # Home, Topic (trang con), NewsPage, NewsDetail, ThankYou (/cam-on), NotFound
 ├─ layout/                # Header, Footer, ValueNav (thanh đáy mobile + dock trái), FloatingButtons, Layout
 ├─ lib/analytics.js       # GA4 (gtag trong <head>) + sự kiện click_cta, scroll_depth, section_view, web vitals
 ├─ lib/lead.js            # gửi form → VITE_LEAD_ENDPOINT (hoặc endpoint cấu hình trong CMS)
@@ -117,7 +117,9 @@ lead-worker/               # Cloudflare Worker nhận lead
 - `/` là trang chủ, gồm các section theo thứ tự: Hero, Tổng quan, Số liệu, Nightlife, Vị trí, Tiện ích, Tiện ích nổi bật, Mặt bằng, Chính sách bán hàng, Tin tức (**luôn hiện**, kể cả khi còn bài mẫu), Pháp lý, FAQ, Liên hệ.
 - Menu header dùng link `/#id`. Link tới section **trên cùng trang** được cuộn thẳng (không qua React Router), vì router chờ các section tải chậm sẽ làm trang đứng im (`useSamePageHashLinks` trong `Layout.jsx`).
 - **5 trang sitelinks:** `/tong-quan`, `/vi-tri`, `/tien-ich`, `/chinh-sach-ban-hang`, `/tien-ich-xung-quanh`. Thêm `/mat-bang`.
-- `/tin-tuc` và `/tin-tuc/<id>`: bài còn chữ mẫu thì `noindex` và không vào sitemap. Khi có ít nhất 1 bài thật, `/tin-tuc` tự được index.
+- `/tin-tuc` và `/tin-tuc/<slug>`: hiện có 2 bài thật (06/11/2026, lấy từ bộ 10 bài SEO), đều được index, có JSON-LD `NewsArticle` + breadcrumb 3 cấp. Bài còn chữ mẫu thì `noindex` và không vào sitemap.
+  - Thêm bài: thêm phần tử vào `src/data/news.js` (CMS không thêm/bớt bài được). Trong `body`, đoạn cách nhau 1 dòng trống, `## ` là H2, `### ` là H3. Ảnh bài tải lên trên CMS → Tin tức.
+- `/cam-on`: trang cảm ơn. Form gửi thành công (popup hay section Liên hệ) → đóng popup, chuyển sang `/cam-on`. Trang có file HTML prerender nhưng `noindex`, không vào sitemap (khai báo trong `hiddenPages`). Dùng làm trang đích chuyển đổi cho GA4/quảng cáo (page_view `/cam-on`), song song event `generate_lead`.
 - Thêm trang con mới: thêm vào `pages` + `topicPaths` (`site-meta.js`) và `BODY` (`pages/Topic.jsx`).
 
 ### Nội dung và CMS

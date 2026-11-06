@@ -19,7 +19,7 @@ const GROUPS = [
   ['nearbyContent', 'Tiện ích xung quanh'],
   ['featuredAmenityGroups', 'Tiện ích nổi bật (ảnh + chú thích)'],
   ['salesPolicy', 'Chính sách bán hàng'],
-  ['newsItems', 'Tin tức (10 bài)'],
+  ['newsItems', 'Tin tức (bài viết)'],
   ['legalContent', 'Pháp lý'],
   ['faq', 'Câu hỏi thường gặp'],
   ['leadFormContent', 'Form đăng ký'],
@@ -38,6 +38,8 @@ const LABELS = {
   value: 'Giá trị', unit: 'Đơn vị', note: 'Ghi chú', amount: 'Số tiền / %', top: 'Ghi chú phía trên', between: 'Chữ giữa hai mốc',
   bank: 'Ngân hàng giải ngân', heading: 'Tiêu đề', description: 'Mô tả', consentNote: 'Ghi chú đồng ý', disclaimer: 'Miễn trừ trách nhiệm',
   prefix: 'Chữ trước giá', minutes: 'Số phút', glossary: 'Giải thích viết tắt', perksNote: 'Ghi chú ưu đãi', image: 'Ảnh', src: 'Ảnh',
+  imageAlt: 'Mô tả ảnh (alt)', seoTitle: 'Tiêu đề SEO (≤ 60 ký tự)', metaDescription: 'Mô tả SEO (150–160 ký tự)', date: 'Ngày đăng (YYYY-MM-DD)',
+  sourceTitle: 'Tư liệu tham khảo — tên', sourceUrl: 'Tư liệu tham khảo — link',
 }
 
 function walk(value, path, out) {

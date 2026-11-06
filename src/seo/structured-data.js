@@ -80,12 +80,29 @@ export function structuredData(path) {
   ]
 
   if (path !== '/' && pages[path]) {
+    const crumbs = [{ name: pages['/'].breadcrumb, item: absUrl('/') }]
+    if (meta.article) crumbs.push({ name: pages['/tin-tuc'].breadcrumb, item: absUrl('/tin-tuc') })
+    crumbs.push({ name: meta.article ? meta.article.headline : meta.breadcrumb, item: url })
     graph.push({
       '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: pages['/'].breadcrumb, item: absUrl('/') },
-        { '@type': 'ListItem', position: 2, name: meta.breadcrumb, item: url },
-      ],
+      itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, ...c })),
+    })
+  }
+
+  if (meta.article) {
+    const a = meta.article
+    graph.push({
+      '@type': 'NewsArticle',
+      '@id': `${url}#article`,
+      headline: a.headline,
+      description: meta.description,
+      inLanguage: 'vi-VN',
+      mainEntityOfPage: { '@id': `${url}#webpage` },
+      image: absAsset(a.image || meta.ogImage),
+      ...(a.datePublished ? { datePublished: a.datePublished, dateModified: a.datePublished } : {}),
+      author: { '@id': ID.org },
+      publisher: { '@id': ID.org },
+      about: { '@id': ID.project },
     })
   }
 

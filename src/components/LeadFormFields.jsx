@@ -1,4 +1,5 @@
 import { useId, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { leadFormContent } from '../data/project'
 import { submitLead } from '../lib/lead'
 import { track } from '../lib/analytics'
@@ -22,6 +23,8 @@ export default function LeadFormFields({ formLocation, onSuccess, submitLabel = 
   const [message, setMessage] = useState('')
   const nameRef = useRef(null)
   const phoneRef = useRef(null)
+  const formRef = useRef(null)
+  const navigate = useNavigate()
 
   const dark = tone === 'dark'
   const input = `w-full rounded-2xl border px-4 py-3.5 text-base outline-none transition-colors ${
@@ -48,6 +51,9 @@ export default function LeadFormFields({ formLocation, onSuccess, submitLabel = 
       setValues({ name: '', phone: '' })
       track('generate_lead', { form_location: formLocation }) // không gửi tên / SĐT vào analytics
       onSuccess?.()
+      // Chuyển sang trang cảm ơn; đóng popup nếu form nằm trong <dialog>.
+      formRef.current?.closest('dialog')?.close()
+      navigate('/cam-on', { state: { formLocation } })
     } catch (err) {
       setStatus('error')
       setMessage(err.message)
@@ -55,7 +61,7 @@ export default function LeadFormFields({ formLocation, onSuccess, submitLabel = 
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+    <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <label htmlFor={`${uid}-name`} className={labelCls}>
           Họ và tên <span className={errCls}>*</span>

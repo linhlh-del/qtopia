@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Container from '../components/ui/Container'
 import MediaFrame from '../components/ui/MediaFrame'
-import { getNewsHref, hasRealNews, isSampleNews, newsItems } from '../data/news'
+import { formatNewsDate, getNewsHref, hasRealNews, isSampleNews, newsItems } from '../data/news'
 
 function ArrowIcon({ direction = 'right' }) {
   return (
@@ -156,9 +156,9 @@ export default function News() {
                 <Link to={getNewsHref(item.id)} className="relative block overflow-hidden" aria-label={item.title}>
                   <MediaFrame
                     src={item.image}
-                    alt={item.title}
+                    alt={item.imageAlt || item.title}
                     ratio="16 / 9"
-                    note="Khung ảnh demo"
+                    note={isSampleNews(item) ? 'Khung ảnh demo' : 'Ảnh sẽ được cập nhật'}
                     className="transition-transform duration-500 group-hover:scale-[1.03]"
                   />
                   <span className="absolute bottom-3 left-3 rounded-sm bg-q-navy px-3 py-1.5 font-display text-[length:calc(0.75rem*var(--type-scale))] font-bold uppercase tracking-wider text-q-lime">
@@ -173,7 +173,7 @@ export default function News() {
                   </h3>
                   <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-q-muted">{item.excerpt}</p>
                   <div className="mt-auto flex items-center justify-between gap-3 border-t border-q-navy/10 pt-2">
-                    <span className="text-[length:calc(0.68rem*var(--type-scale))] font-semibold uppercase tracking-wider text-q-muted">{isSampleNews(item) ? 'Bài viết mẫu' : item.category}</span>
+                    <span className="text-[length:calc(0.68rem*var(--type-scale))] font-semibold uppercase tracking-wider text-q-muted">{isSampleNews(item) ? 'Bài viết mẫu' : formatNewsDate(item.date) || item.category}</span>
                     <Link
                       to={getNewsHref(item.id)}
                       className="relative inline-flex min-h-10 items-center gap-2 font-display text-xs font-bold uppercase tracking-wide text-q-navy no-underline hover:text-q-blue"

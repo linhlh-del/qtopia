@@ -25,12 +25,12 @@ Cập nhật lần cuối: 06/11/2026 (bản 2).
 - [x] **Deploy code mới lên VPS** (tracker, payload lead):
       `cd /var/www/qtopia/src && git pull && npm ci && npm run build:release`.
       Sau đó mở website, chờ khoảng 1 phút, xem **CMS → Dashboard**: phải có ít nhất 1 người online.
-- [ ] **Deploy Lead Worker**, làm theo `lead-worker/readme.md`:
-  - [ ] Tạo Google Sheet, dán Apps Script `apps-script/Code.gs`, deploy Web app, copy URL `/exec`
-  - [ ] `npx wrangler secret put GOOGLE_SHEET_URL`
-  - [ ] `npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY`
-  - [ ] `npm run deploy`, kiểm tra `/health` có `sheetConfigured` và `cmsConfigured` đều `true`
-  - [ ] Thêm `VITE_LEAD_ENDPOINT=https://qtopia-lead-worker.<account>.workers.dev/lead` vào `.env.production` trên VPS, rồi `npm run build:release`
+- [ ] **Deploy Lead Worker** (mã nguồn đã chuyển sang `be/qtopia/`, xem `be/qtopia/readme.md`):
+  - [x] Tạo Google Sheet, dán Apps Script `apps-script/Code.gs`, deploy Web app, copy URL `/exec`
+  - [x] `npx wrangler secret put GOOGLE_SHEET_URL`
+  - [ ] `npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY` (06/11: `/health` còn `cmsConfigured: false`)
+  - [x] `npm run deploy` → `https://qtopia-lead-worker.linhlehong2208.workers.dev` (`sheetConfigured: true`, gửi thử OK, origin lạ bị 403)
+  - [ ] Thêm `VITE_LEAD_ENDPOINT=https://qtopia-lead-worker.linhlehong2208.workers.dev/lead` vào `.env.production` trên VPS, rồi `npm run build:release`
   - [ ] Gửi thử form trên website: lead phải hiện ở Google Sheet **và** CMS → Lead
 - [ ] **Đổi token deploy hook.** Token cũ đã lộ trong chat. Tạo token mới trên VPS, sửa `/etc/qtopia-deploy-hook.env`, restart service, cập nhật 2 secret trên Supabase, bấm Đăng thử.
 - [ ] **Bấm Đăng thử trên CMS**: trang Đăng phải chuyển *Đang build* rồi *Sẵn sàng*, và `cms-status.json` có `release` mới.
@@ -50,7 +50,10 @@ Cập nhật lần cuối: 06/11/2026 (bản 2).
 - [ ] Gỡ thẻ `google-site-verification` cũ (`X-aD_…`) nếu property `qtopia-tau.vercel.app` không dùng nữa
 
 ## Nội dung và pháp lý (cần chủ đầu tư / bộ phận pháp lý xác nhận)
-- [ ] Đăng 3–5 **bài tin thật** trên CMS. Section Tin tức và trang `/tin-tuc` sẽ tự được index.
+- [x] Thay 10 bài mẫu bằng 2 bài thật (bài 01, 02 trong bộ 10 bài SEO 06/11/2026)
+- [ ] **Tải ảnh 2 bài tin tức** trên CMS → Tin tức (đang hiện khung "Ảnh sẽ được cập nhật"), rồi Đăng
+- [ ] Xác minh số liệu trong 2 bài trước khi quảng bá (bài 01 ghi "hơn 7,3 ha, 9 tháp 20 tầng"; quyền dùng ảnh từ VnExpress/REB)
+- [ ] Đăng tiếp bài 03–10 (thêm vào `src/data/news.js`)
 - [ ] Phân biệt vai trò **Công ty CP Đầu tư Serenity** (chủ đầu tư pháp lý) và **Phát Đạt** (`siteMeta.developer`)
 - [ ] Đối chiếu số liệu 7,5 ha / 9 tháp với trang pháp lý (55.569,8 m², 5 tháp căn hộ du lịch S4–S8)
 - [ ] Loại hình "căn hộ du lịch" và schema `ApartmentComplex`: rà lại cách diễn đạt
@@ -62,7 +65,7 @@ Cập nhật lần cuối: 06/11/2026 (bản 2).
 - [ ] Search Console → Pages: kiểm tra trang bị loại (excluded) và Core Web Vitals
 - [ ] Chạy PageSpeed mobile và desktop 3 lần trên domain thật, ghi kết quả vào `PAGESPEED-OPTIMIZATION-CHECKLIST.md`
 - [ ] Đặt link từ website Rever, fanpage, Zalo OA về landing
-- [ ] GA4: đánh dấu `generate_lead`, `click_call`, `click_zalo` là **Key events**
+- [ ] GA4: đánh dấu `generate_lead`, `click_call`, `click_zalo` là **Key events**; có thể dùng page_view `/cam-on` làm chuyển đổi cho Google Ads / Meta
 - [ ] Tablet 768: làm layout 2 cột cho Vị trí, Tiện ích, CSBH (checklist UI mục P3)
 
 ## Khi có domain chính thức

@@ -7,6 +7,7 @@ const Topic = preloadable(() => import('./pages/Topic'))
 const NotFound = preloadable(() => import('./pages/NotFound'))
 const NewsPage = preloadable(() => import('./pages/NewsPage'))
 const NewsDetail = preloadable(() => import('./pages/NewsDetail'))
+const ThankYou = preloadable(() => import('./pages/ThankYou'))
 import { topicPaths } from './seo/site-meta'
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="tin-tuc" element={<NewsPage />} />
         <Route path="tin-tuc/:articleId" element={<NewsDetail />} />
+        <Route path="cam-on" element={<ThankYou />} />
         {topicPaths.map((p) => (
           <Route key={p} path={p} element={<Topic />} />
         ))}
