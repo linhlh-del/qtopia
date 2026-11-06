@@ -64,10 +64,14 @@ function AmenityPanel({ expanded, setExpanded, selected, setSelected, setSelecte
                 className="flex min-h-12 w-full items-center gap-2 px-3 text-left font-display text-sm font-bold text-q-navy sm:px-4">
                 <span className="size-3 shrink-0 rounded-full" style={{ background: runnerColors[zone.id] }} />
                 <span className="flex-1">{zone.name}</span>
-                <span aria-hidden="true" className={'text-lg transition-transform ' + (open ? 'rotate-180' : '')}>⌄</span>
+                <img src="/images/arrow-sm.webp" alt="" aria-hidden="true" width="96" height="56" decoding="async"
+                  className={'h-3 w-auto shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ' + (open ? 'rotate-180' : '')} />
               </button>
-              {open ? (
-                <div id={'amenities-' + zone.id} className="grid gap-1 border-t border-q-navy/10 p-2">
+              {/* Mở/đóng mượt: animate grid-template-rows 0fr ↔ 1fr (không cần đo chiều cao) */}
+              <div id={'amenities-' + zone.id} inert={!open}
+                className={'grid transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ' + (open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0')}>
+                <div className="min-h-0 overflow-hidden">
+                <div className="grid gap-1 border-t border-q-navy/10 p-2">
                   {amenitiesByZone[zone.id].map((amenity) => (
                     <button key={amenity.n} type="button" onClick={() => { setSelected(amenity.n); setSelectedZone(zone.id) }} aria-pressed={selected === amenity.n}
                       className={'flex min-h-11 items-center gap-2 rounded-xl px-2 py-1.5 text-left text-xs leading-normal transition-colors sm:text-sm ' + (selected === amenity.n ? 'bg-q-navy text-white' : 'text-q-ink hover:bg-q-cream')}>
@@ -76,7 +80,8 @@ function AmenityPanel({ expanded, setExpanded, selected, setSelected, setSelecte
                     </button>
                   ))}
                 </div>
-              ) : null}
+                </div>
+              </div>
             </div>
           )
         })}

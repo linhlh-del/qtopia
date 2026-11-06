@@ -60,6 +60,8 @@
   /* CTA: gradient đủ tương phản với chữ trắng (≥ 4.5:1) */
   --cta-from: #c8104f;
   --cta-to: #d63b00;
+  /* Nền các CTA mở form (btn-primary, nút Thông tin ở thanh dưới) */
+  --cta-form: #ff5f00;
 }
 @media (min-width: 1024px) {
   :root {
@@ -283,9 +285,9 @@ body {
     outline-offset: 2px;
   }
   .btn-primary {
-    background: linear-gradient(120deg, var(--cta-from), var(--cta-to));
+    background: var(--cta-form);
     color: #fff;
-    box-shadow: 0 12px 28px -10px rgba(200, 16, 79, 0.55);
+    box-shadow: 0 12px 28px -10px rgb(255 95 0 / 0.6);
   }
   .btn-primary:hover {
     filter: brightness(1.05);
@@ -414,13 +416,29 @@ body {
   );
 }
 
-/* Nền xanh đậm cho section Vị trí, điểm sáng đến từ các icon QTOPIA. */
-.location-galaxy {
+/* Nền xanh brand (#062aa3) đi cùng super graphic Orbit Lines (components/ui/OrbitLines.jsx). */
+.brand-orbit-bg {
   background:
-    radial-gradient(ellipse at 75% 18%, rgb(30 79 171 / 38%), transparent 48%),
-    radial-gradient(ellipse at 18% 82%, rgb(52 35 123 / 38%), transparent 45%),
-    linear-gradient(130deg, #050a2e 0%, #0b205d 52%, #060d35 100%);
+    radial-gradient(ellipse at 70% 45%, #1663ea 0%, #0b3fcf 30%, transparent 70%),
+    linear-gradient(120deg, #041c86 0%, #062aa3 45%, #0733b8 70%, #041a7c 100%);
 }
+
+/* Lớp phủ trên Orbit Lines: mobile phủ đều, desktop đậm ở cột chữ bên trái. */
+.brand-orbit-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgb(2 12 70 / 72%) 0%, rgb(2 12 70 / 60%) 100%);
+}
+@media (min-width: 1024px) {
+  .brand-orbit-scrim {
+    background:
+      linear-gradient(90deg, rgb(2 12 70 / 84%) 0%, rgb(2 12 70 / 68%) 38%, rgb(2 12 70 / 50%) 70%, rgb(2 12 70 / 62%) 100%),
+      linear-gradient(180deg, rgb(2 12 70 / 0%) 60%, rgb(2 12 70 / 30%) 100%);
+  }
+}
+
+
 .location-galaxy-art {
   position: absolute;
   inset: 0;
@@ -456,9 +474,10 @@ body {
   opacity: 0.72;
   transform: rotate(-13deg);
 }
+/* Cụm trang trí góc dưới phải, nằm giữa các vòng Orbit (không đè cột chữ bên trái) */
 .location-art-crystal {
-  top: 5%;
-  left: 3%;
+  bottom: 13%;
+  right: 11%;
   width: clamp(64px, 7vw, 110px);
   opacity: 0.95;
   filter: drop-shadow(0 0 20px rgb(179 91 255 / 52%));
@@ -478,6 +497,22 @@ body {
   opacity: 0.9;
   filter: drop-shadow(0 0 18px rgb(93 176 255 / 50%));
 }
+.location-art-orb-accent {
+  top: auto;
+  bottom: 31%;
+  left: auto;
+  right: 21%;
+  width: clamp(34px, 3vw, 48px);
+  opacity: 0.8;
+}
+.location-art-crystal-accent {
+  top: auto;
+  bottom: 30%;
+  right: 4%;
+  width: clamp(40px, 3.6vw, 58px);
+  opacity: 0.7;
+  transform: rotate(24deg);
+}
 .location-art-orb-small {
   top: 28%;
   bottom: auto;
@@ -490,10 +525,12 @@ body {
   /* mascot chỉ trang trí: ẩn trên điện thoại/tablet để không lòi khỏi mép và không đè bản đồ */
   .location-art-mascot { display: none; }
   .location-art-paraglider { top: 1%; right: 5%; width: 80px; }
-  .location-art-crystal { top: 0; left: 3%; width: 52px; opacity: 0.85; }
+  .location-art-crystal { bottom: 4%; right: auto; left: 6%; width: 52px; opacity: 0.85; }
   .location-art-orb { bottom: 5%; left: auto; right: 5%; width: 70px; opacity: 0.85; }
   .location-art-paraglider-small,
   .location-art-crystal-small,
+  .location-art-orb-accent,
+  .location-art-crystal-accent,
   .location-art-orb-small { display: none; }
 }
 

@@ -4,6 +4,7 @@ import Container from "../components/ui/Container";
 import CountUp from "../components/ui/CountUp";
 import Icon from "../components/ui/Icons";
 import Img from "../components/ui/Img";
+import OrbitLines from "../components/ui/OrbitLines";
 import SectionHeading from "../components/ui/SectionHeading";
 import { locationContent } from "../data/project";
 import { useReveal } from "../hooks/useReveal";
@@ -76,7 +77,8 @@ const legendRoutes = [...mapRoutes, ...mapAdditionalLines];
 ========================================= */
 
 const mapLocations = [
-  { id: 1, name: "Qtopia", x: 53.8, y: 80 },
+  // featured: ghim ảnh checked (gấp đôi ghim thường) + logo hiện phía trên khi bấm.
+  { id: 1, name: "Qtopia", x: 53.8, y: 80, featured: true },
   { id: 2, name: "Hồ Tràm", x: 72, y: 53.5 },
   { id: 3, name: "Bà Rịa", x: 53.2, y: 62.6 },
   { id: 4, name: "Vũng Tàu", x: 41.3, y: 89.8 },
@@ -298,15 +300,59 @@ function LocationMap() {
         </svg>
 
         {/* LOCATION MARKERS */}
-        {mapLocations.map((place) => (
+        {mapLocations.map((place) => place.featured ? (
           <div
             key={place.id}
-            className={`absolute z-[2] flex -translate-x-1/2 -translate-y-1/2 flex-col-reverse items-center gap-1.5 ${
-              active === place.id ? "z-20" : ""
+            className={`absolute flex -translate-x-1/2 -translate-y-full flex-col items-center gap-0.5 ${
+              active === place.id ? "z-20" : "z-[3]"
             }`}
+            style={{ left: `${place.x}%`, top: `${place.y + 2.5}%` }}
+          >
+            {/* Logo ẩn mặc định (tránh che ghim phía trên), chỉ hiện khi bấm vào ghim */}
+            <span
+              aria-hidden="true"
+              className={`pointer-events-none rounded-md border border-white/20 bg-[#062aa3]/90 px-2 py-1 shadow-[0_2px_8px_rgba(0,0,0,0.25)] backdrop-blur-[2px] transition-all duration-300 lg:px-2.5 ${
+                active === place.id ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+              }`}
+            >
+              <img
+                src="/images/checked-logo-sm.webp"
+                alt=""
+                width="480"
+                height="138"
+                decoding="async"
+                className="block h-4 w-auto sm:h-5 lg:h-6"
+              />
+            </span>
+            <button
+              type="button"
+              aria-label={place.name}
+              aria-expanded={active === place.id}
+              onClick={() => setActive(active === place.id ? null : place.id)}
+              className="relative grid size-7 cursor-pointer place-items-center bg-transparent p-0 transition-transform duration-300 hover:scale-110 lg:size-12"
+            >
+              <span className="qtopia-pulse absolute inset-x-1.5 bottom-0 top-3 rounded-full border-2 border-[#c13cff]" />
+              <img
+                src="/images/checked-pin.webp"
+                alt=""
+                width="144"
+                height="140"
+                decoding="async"
+                className="relative h-7 w-auto drop-shadow-md lg:h-12"
+              />
+            </button>
+          </div>
+        ) : (
+          <div
+            key={place.id}
+            className={`absolute top-[var(--pin-top-m)] flex -translate-x-1/2 -translate-y-1/2 flex-col-reverse items-center gap-1.5 lg:top-[var(--pin-top)] ${
+              active === place.id ? "z-20" : "z-[2]"
+            }`}
+            // mobile/tablet: ghim nhỏ hơn nên đẩy lên thêm 5% để mũi ghim khớp điểm trên bản đồ
             style={{
               left: `${place.x}%`,
-              top: `${Math.min(95, Math.max(8, place.y - 6))}%`,
+              "--pin-top": `${Math.min(95, Math.max(8, place.y - 6))}%`,
+              "--pin-top-m": `${Math.min(95, Math.max(3, place.y - 11))}%`,
             }}
           >
             {/* CHECK-IN BUTTON */}
@@ -337,7 +383,7 @@ function LocationMap() {
           </div>
         ))}
       </div>
-      <div className="w-full rounded-xl border border-white/20 bg-white/10 px-3 py-1 text-white sm:px-4 lg:py-4">
+      <div className="w-full rounded-xl border border-white/15 bg-[#03135c]/70 px-3 py-1 text-white backdrop-blur-md sm:px-4 lg:py-4">
         <button
           type="button"
           onClick={() => setLegendOpen((v) => !v)}
@@ -419,6 +465,8 @@ function LocationBackdrop() {
       <Img src="/images/location/crystal.webp" alt="" fade={false} className="location-art location-art-crystal location-art-crystal-small" />
       <Img src="/images/location/orb.webp" alt="" fade={false} className="location-art location-art-orb" />
       <Img src="/images/location/orb.webp" alt="" fade={false} className="location-art location-art-orb location-art-orb-small" />
+      <Img src="/images/location/orb.webp" alt="" fade={false} className="location-art location-art-orb location-art-orb-accent" />
+      <Img src="/images/location/crystal.webp" alt="" fade={false} className="location-art location-art-crystal location-art-crystal-accent" />
     </div>
   );
 }
@@ -430,8 +478,9 @@ export default function Location({ showTopicLink = true }) {
     <section
       id="vi-tri"
       data-snap-section
-      className="location-galaxy section-screen relative min-h-[calc(100svh-var(--header-h))] h-auto max-h-none overflow-hidden text-white"
+      className="brand-orbit-bg section-screen relative min-h-[calc(100svh-var(--header-h))] h-auto max-h-none overflow-hidden text-white"
     >
+      <OrbitLines />
       <LocationBackdrop />
 
       <Container className="relative z-10 flex min-h-0 flex-1 flex-col">

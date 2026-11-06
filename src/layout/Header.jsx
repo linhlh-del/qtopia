@@ -6,7 +6,39 @@ import { useContactPopup } from "../components/ContactPopup";
 import { mainNav } from "../seo/site-meta";
 
 const navCls =
-  "inline-flex items-center py-2 font-display text-[length:calc(0.92rem*var(--type-scale))] xl:text-[length:calc(1.045rem*var(--type-scale))] leading-[1.1] font-medium text-white/85 no-underline transition-colors duration-300 hover:text-q-lime";
+  "inline-flex items-center py-2 font-display text-[length:calc(0.92rem*var(--type-scale))] xl:text-[length:calc(1.045rem*var(--type-scale))] leading-[1.1] font-medium text-white no-underline transition-colors duration-300 hover:text-q-lime";
+
+// Orbit Lines trong header: một cụm vòng đồng tâm tỏa từ góc trên bên trái, một cụm từ góc dưới bên phải.
+const headerRings = Array.from({ length: 9 }, (_, i) => 14 + i * 13);
+
+function HeaderOrbit() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[var(--header-h)] overflow-hidden">
+      <svg className="absolute left-0 top-0 h-[140px] w-[140px] -translate-x-1/2 -translate-y-1/2" viewBox="-140 -140 280 280">
+        <defs>
+          <linearGradient id="header-orbit-a" x1="-140" y1="-140" x2="140" y2="140" gradientUnits="userSpaceOnUse">
+            <stop offset="0.45" stopColor="#3fe6ff" />
+            <stop offset="1" stopColor="#ff6ad5" />
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#header-orbit-a)" strokeWidth="2.2" opacity="0.55">
+          {headerRings.map((r) => <circle key={r} r={r} />)}
+        </g>
+      </svg>
+      <svg className="absolute bottom-0 right-0 h-[140px] w-[140px] translate-x-1/2 translate-y-1/2" viewBox="-140 -140 280 280">
+        <defs>
+          <linearGradient id="header-orbit-b" x1="-140" y1="-140" x2="140" y2="140" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#ff6ad5" />
+            <stop offset="0.55" stopColor="#3fe6ff" />
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#header-orbit-b)" strokeWidth="2.2" opacity="0.55">
+          {headerRings.map((r) => <circle key={r} r={r} />)}
+        </g>
+      </svg>
+    </div>
+  );
+}
 
 // Header dính đầu trang (sticky, cao cố định --header-h). Nút "Tư vấn" luôn thấy cả trên điện thoại.
 export default function Header() {
@@ -23,7 +55,8 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 bg-q-navy shadow-[inset_0_-1px_0_rgba(255,255,255,0.08)]">
+    <header className="sticky top-0 z-40 bg-[#062aa3] shadow-[inset_0_-1px_0_rgba(255,255,255,0.08)]">
+      <HeaderOrbit />
       <div className="container-page header-container relative flex h-[var(--header-h)] items-center justify-between gap-3">
         <Link
           to="/"
@@ -80,7 +113,7 @@ export default function Header() {
         <nav
           id="mobile-nav"
           aria-label="Menu di động"
-          className="max-h-[calc(100svh-var(--header-h)-var(--bar-h))] overflow-y-auto border-t border-white/10 bg-q-navy xl:hidden"
+          className="max-h-[calc(100svh-var(--header-h)-var(--bar-h))] overflow-y-auto border-t border-white/10 bg-[#062aa3] xl:hidden"
         >
           <ul className="container-page m-0 flex list-none flex-col py-3">
             {mainNav.map((item) => (

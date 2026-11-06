@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Container from '../components/ui/Container'
 import Icon from '../components/ui/Icons'
-import Img from '../components/ui/Img'
+import OrbitLines from '../components/ui/OrbitLines'
 import SectionHeading from '../components/ui/SectionHeading'
 import { useContactPopup } from '../components/ContactPopup'
 import { salesPolicy } from '../data/project'
@@ -172,17 +172,15 @@ export default function SalesPolicy({ showTopicLink = true }) {
     <section
       id="chinh-sach"
       data-snap-section
-      className="section-screen relative overflow-hidden bg-q-navy text-white"
+      className="brand-orbit-bg section-screen relative overflow-hidden text-white"
     >
-      <Img src="/images/renders/aqua-funny-park-night.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-b from-q-navy/95 via-q-navy/85 to-q-navy/95" />
-      <div className="orbit-bg" style={{ '--orbit-x': '10%', '--orbit-y': '90%' }} />
+      <OrbitLines />
 
       <Container className="relative z-10">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-10">
           <SectionHeading label={salesPolicy.label} lead={salesPolicy.lead} light />
           <p className="m-0 flex items-center gap-3 lg:justify-end">
-            <span className="font-display text-xs font-semibold uppercase leading-tight tracking-[0.14em] text-white/80 sm:text-sm">
+            <span className="font-display text-xs font-bold uppercase leading-tight tracking-[0.14em] text-white sm:text-sm">
               {price.prefix.split(' ').slice(0, 2).join(' ')}
               <br />
               {price.prefix.split(' ').slice(2).join(' ')}
@@ -259,7 +257,7 @@ export default function SalesPolicy({ showTopicLink = true }) {
           </div>
 
           <div className="stagger mt-3 flex flex-col-reverse gap-3 sm:mt-5 sm:flex-row sm:items-center sm:justify-between" style={{ '--i': 2 }}>
-            <div className="flex flex-col gap-1 text-[length:calc(0.7rem*var(--type-scale))] leading-snug text-white/60 sm:text-xs">
+            <div className="flex flex-col gap-1 text-[length:calc(0.7rem*var(--type-scale))] leading-snug text-white/90 sm:text-xs">
               <span className="max-sm:hidden">{salesPolicy.glossary}</span>
               <span>{salesPolicy.disclaimer}</span>
             </div>

@@ -6,7 +6,7 @@ export default function SectionHeading({ label, lead, align = 'left', light = fa
     <div className={`flex flex-col gap-2 ${alignCls} ${className}`}>
       <h2 className={`section-label ${light ? 'section-label-light' : ''}`}>{label}</h2>
       {lead ? (
-        <p className={`prose-lead m-0 max-w-2xl ${light ? 'text-white/85' : 'text-q-muted'}`}>{lead}</p>
+        <p className={`prose-lead m-0 max-w-2xl ${light ? 'text-white' : 'text-q-muted'}`}>{lead}</p>
       ) : null}
     </div>
   )

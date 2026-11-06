@@ -163,7 +163,7 @@ export default function ValueNav() {
               onClick={() => popup.open('sticky_bar')}
               data-cta-name="sticky_price"
               data-cta-location="sticky_bar"
-              className="cta-fx flex h-full min-h-[calc(var(--bar-h)-1px)] w-full cursor-pointer flex-col items-center justify-center gap-1 border-0 bg-gradient-to-r from-[var(--cta-from)] to-[var(--cta-to)] font-display text-[length:calc(0.7rem*var(--type-scale))] font-semibold text-white"
+              className="cta-fx flex h-full min-h-[calc(var(--bar-h)-1px)] w-full cursor-pointer flex-col items-center justify-center gap-1 border-0 bg-[var(--cta-form)] font-display text-[length:calc(0.7rem*var(--type-scale))] font-semibold text-white"
             >
               <Icon name="doc" />
               Thông tin
