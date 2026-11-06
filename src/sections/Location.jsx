@@ -195,11 +195,23 @@ function LocationMap() {
           animation: qtopia-marker-pulse 1.8s ease-out infinite;
         }
 
+        /* Ghim QTOPIA nhún nhẹ tại chỗ: lên ~8% chiều cao icon rồi về */
+        @keyframes qtopia-pin-bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8%); }
+        }
+
+        .qtopia-pin-bounce {
+          animation: qtopia-pin-bounce 1.4s ease-in-out infinite;
+          will-change: transform;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .qtopia-route,
           .qtopia-route-center,
           .qtopia-additional-line,
-          .qtopia-pulse {
+          .qtopia-pulse,
+          .qtopia-pin-bounce {
             animation: none;
           }
         }
@@ -338,7 +350,7 @@ function LocationMap() {
                 width="144"
                 height="140"
                 decoding="async"
-                className="relative h-7 w-auto drop-shadow-md lg:h-12"
+                className="qtopia-pin-bounce relative h-7 w-auto drop-shadow-md lg:h-12"
               />
             </button>
           </div>
