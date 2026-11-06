@@ -7,6 +7,8 @@
   --color-q-blue-600: #1a3fc0;
   --color-q-navy: #050a2e;
   --color-q-navy-700: #0b1446;
+  /* xanh brand đậm (mép nền Orbit) — dùng cho lớp phủ ảnh để đồng điệu header #062aa3 */
+  --color-q-brand-deep: #041a7c;
   --color-q-red: #d30821;
   --color-q-orange: #ff5f00;
   --color-q-lime: #aaec0e;
@@ -209,7 +211,7 @@ body {
       overflow: hidden;
     }
     .section-label {
-      font-size: calc(0.72rem * var(--type-scale));
+      font-size: calc(0.936rem * var(--type-scale));
     }
   }
   @media (max-height: 620px) and (min-width: 1024px) {
@@ -230,7 +232,8 @@ body {
   .section-label {
     font-family: var(--font-display);
     margin: 0;
-    font-size: calc(clamp(0.82rem, 1.1vw, 0.95rem) * var(--type-scale));
+    /* +30% so với bản trước (0.82–0.95rem) */
+    font-size: calc(clamp(1.066rem, 1.43vw, 1.235rem) * var(--type-scale));
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -422,6 +425,11 @@ body {
     radial-gradient(ellipse at 70% 45%, #1663ea 0%, #0b3fcf 30%, transparent 70%),
     linear-gradient(120deg, #041c86 0%, #062aa3 45%, #0733b8 70%, #041a7c 100%);
 }
+.brand-orbit-bg-flip {
+  background:
+    radial-gradient(ellipse at 30% 45%, #1663ea 0%, #0b3fcf 30%, transparent 70%),
+    linear-gradient(240deg, #041c86 0%, #062aa3 45%, #0733b8 70%, #041a7c 100%);
+}
 
 /* Lớp phủ trên Orbit Lines: mobile phủ đều, desktop đậm ở cột chữ bên trái. */
 .brand-orbit-scrim {
@@ -435,6 +443,12 @@ body {
     background:
       linear-gradient(90deg, rgb(2 12 70 / 84%) 0%, rgb(2 12 70 / 68%) 38%, rgb(2 12 70 / 50%) 70%, rgb(2 12 70 / 62%) 100%),
       linear-gradient(180deg, rgb(2 12 70 / 0%) 60%, rgb(2 12 70 / 30%) 100%);
+  }
+}
+/* Orbit đặt bên trái (flip): lớp phủ đậm phía phải, nhạt phía trái để chữ Q vẫn sáng */
+@media (min-width: 1024px) {
+  .brand-orbit-scrim-flip {
+    transform: scaleX(-1);
   }
 }
 
@@ -890,15 +904,15 @@ main > section:not(#top) {
 .text-panel {
   padding: clamp(1rem, 2.4vw, 1.75rem);
   border-radius: 1.5rem;
-  background: rgb(5 10 46 / 0.58);
-  border: 1px solid rgb(255 255 255 / 0.12);
+  background: rgb(4 26 124 / 0.55);
+  border: 1px solid rgb(255 255 255 / 0.14);
   box-shadow: 0 20px 50px -24px rgb(0 0 0 / 0.6);
   -webkit-backdrop-filter: blur(10px) saturate(115%);
   backdrop-filter: blur(10px) saturate(115%);
   text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .text-panel { background: rgb(5 10 46 / 0.78); }
+  .text-panel { background: rgb(4 26 124 / 0.75); }
 }
 
 /* ── Màn hình thấp trên điện thoại (Safari iPhone 6/7/8/SE ≈ 553px, Android nhỏ): sắp xếp lại nội dung

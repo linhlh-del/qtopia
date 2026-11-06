@@ -12,18 +12,18 @@ export default function Story({ data }) {
     <section
       id={data.id}
       data-snap-section
-      className="relative flex min-h-[calc(100svh-var(--header-h))] items-center overflow-hidden bg-q-navy text-white"
+      className="relative flex min-h-[calc(100svh-var(--header-h))] items-center overflow-hidden bg-q-brand-deep text-white"
     >
       <Img src={data.image} alt={data.alt} className="absolute inset-0 h-full w-full object-cover" />
       <div
         className={`absolute inset-0 ${
           right ? 'bg-gradient-to-l' : 'bg-gradient-to-r'
-        } from-q-navy/85 via-q-navy/35 to-transparent max-lg:bg-gradient-to-t max-lg:from-q-navy/90 max-lg:via-q-navy/40 max-lg:to-transparent`}
+        } from-q-brand-deep/85 via-q-brand-deep/35 to-transparent max-lg:bg-gradient-to-t max-lg:from-q-brand-deep/90 max-lg:via-q-brand-deep/40 max-lg:to-transparent`}
       />
       <Container
         className={`relative z-10 flex py-14 max-lg:items-end max-lg:pb-[calc(2rem+var(--bar-h))] ${right ? 'lg:justify-end' : ''}`}
       >
-        <div ref={ref} className="text-panel flex max-w-md flex-col gap-3">
+        <div ref={ref} className="text-panel flex max-w-xl flex-col gap-3">
           <h2 className="section-label section-label-light">{data.label}</h2>
           <p className="prose-lead m-0 text-white">{data.lead}</p>
           {data.points.length ? (

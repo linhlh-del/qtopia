@@ -63,8 +63,7 @@ export const heroContent = {
       src: "/images/renders/ocean-galaxy.webp",
       alt: "Phối cảnh khu Ocean Galaxy về đêm với hồ bơi và sàn DJ tại QTOPIA",
       h1: "Sở hữu nhà Sài Gòn có biển\ngiá chỉ từ 1.195 tỷ",
-      slogan:
-        "Căn Studio tại Phước Hải — trước biển, sau núi, gần rừng.",
+      slogan: "Căn Studio tại Phước Hải — trước biển, sau núi, gần rừng.",
     },
     {
       src: "/images/renders/aqua-funny-park-night.webp",
@@ -116,7 +115,7 @@ export const stories = [
 
 // 8 ô số liệu — mỗi ô 1 con số (chạy hiệu ứng đếm) + đơn vị + chú thích ngắn.
 export const facts = [
-  { value: "7,5", unit: "ha", label: "Quy mô" },
+  { value: "7,38", unit: "ha", label: "Quy mô" },
   { value: "9", unit: "Tháp", label: "Q5 · Q6 · Q7" },
   {
     value: "5",
@@ -149,7 +148,10 @@ export const featuredAmenityGroups = [
         image: "/images/renders/aqua-funny-park-night.webp",
         caption: "Aqua Funny Park về đêm",
       },
-      { image: "/images/renders/ocean-galaxy-2.webp", caption: "Câu lạc bộ bãi biển" },
+      {
+        image: "/images/renders/ocean-galaxy-2.webp",
+        caption: "Câu lạc bộ bãi biển",
+      },
       {
         image: "/images/renders/ocean-galaxy-3.webp",
         caption: "Phố thương mại Ocean Galaxy",
@@ -430,17 +432,35 @@ export const nearbyContent = {
       title: "Kết nối giao thông",
       icon: "pin",
       items: [
-        { name: "Trung tâm TP.HCM", minutes: "75", note: "Qua hệ thống cao tốc kết nối khu vực phía Đông" },
-        { name: "Sân bay Quốc tế Long Thành", minutes: "30", note: "Cửa ngõ hàng không quốc tế của vùng" },
-        { name: "Cảng Cái Mép – Thị Vải", note: "Cụm cảng nước sâu trên bản đồ kết nối vùng" },
-        { name: "Biên Hòa", note: "Đô thị công nghiệp – dịch vụ phía Bắc tuyến kết nối" },
+        {
+          name: "Trung tâm TP.HCM",
+          minutes: "75",
+          note: "Qua hệ thống cao tốc kết nối khu vực phía Đông",
+        },
+        {
+          name: "Sân bay Quốc tế Long Thành",
+          minutes: "30",
+          note: "Cửa ngõ hàng không quốc tế của vùng",
+        },
+        {
+          name: "Cảng Cái Mép – Thị Vải",
+          note: "Cụm cảng nước sâu trên bản đồ kết nối vùng",
+        },
+        {
+          name: "Biên Hòa",
+          note: "Đô thị công nghiệp – dịch vụ phía Bắc tuyến kết nối",
+        },
       ],
     },
     {
       title: "Điểm đến biển & du lịch",
       icon: "star",
       items: [
-        { name: "Quảng trường Phước Hải", minutes: "2", note: "Trung tâm sinh hoạt ngay cạnh dự án" },
+        {
+          name: "Quảng trường Phước Hải",
+          minutes: "2",
+          note: "Trung tâm sinh hoạt ngay cạnh dự án",
+        },
         { name: "Hồ Tràm", minutes: "19", note: "Dải biển nghỉ dưỡng lân cận" },
         { name: "Vũng Tàu", note: "Thành phố biển trên trục kết nối ven biển" },
         { name: "Bà Rịa", note: "Đô thị hành chính – dịch vụ của khu vực" },
@@ -452,9 +472,20 @@ export const nearbyContent = {
 
 /* ── Đăng ký với CMS: nội dung đã publish đè lên các object này lúc build (xem src/cms/content.js) ── */
 for (const [name, obj] of Object.entries({
-  siteMeta, heroContent, stories, facts, locationContent, nearbyContent,
-  featuredAmenityGroups, salesPolicy, legalContent, legalNotice, faq, leadFormContent,
-})) registerCms(name, obj);
+  siteMeta,
+  heroContent,
+  stories,
+  facts,
+  locationContent,
+  nearbyContent,
+  featuredAmenityGroups,
+  salesPolicy,
+  legalContent,
+  legalNotice,
+  faq,
+  leadFormContent,
+}))
+  registerCms(name, obj);
 
 // Sau khi CMS đã đè nội dung
 export const legalDisclaimer = legalNotice.disclaimer;

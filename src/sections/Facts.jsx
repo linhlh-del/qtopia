@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import Container from '../components/ui/Container'
 import CountUp from '../components/ui/CountUp'
-import Img from '../components/ui/Img'
+import OrbitLines from '../components/ui/OrbitLines'
 import { facts } from '../data/project'
 import { useReveal } from '../hooks/useReveal'
 
 // Tổng quan dự án = 8 ô số liệu (2 cột trên điện thoại, 4 cột trên máy tính → 2 hàng đều nhau).
-// Nền ảnh phối cảnh (như hai màn story) thay vì màu đặc, có lớp phủ tối để chữ/số liệu đủ tương phản.
+// Nền xanh brand + Orbit Lines giống section Vị trí / Chính sách để đồng bộ với header #062aa3.
 export default function Facts({ showTopicLink = true }) {
   const ref = useReveal()
   return (
@@ -14,10 +14,10 @@ export default function Facts({ showTopicLink = true }) {
       id="so-lieu"
       data-snap-section
       aria-label="Số liệu tổng quan dự án QTOPIA"
-      className="section-screen relative overflow-hidden bg-q-navy text-white"
+      className="brand-orbit-bg brand-orbit-bg-flip section-screen relative overflow-hidden text-white"
     >
-      <Img src="/images/renders/view-from-sea.webp" alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-b from-q-navy/92 via-q-navy/70 to-q-navy/92" />
+      {/* chữ Q bên trái, tâm sát mép → chỉ hiện một nửa */}
+      <OrbitLines flip className="-translate-x-[22%]" />
       <Container className="relative z-10">
         <p className="section-label section-label-light mb-3 sm:mb-5 [@media(max-height:740px)]:mb-2">Tổng quan dự án</p>
         <dl ref={ref} className="m-0 grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-white/15 lg:grid-cols-4">
@@ -25,7 +25,7 @@ export default function Facts({ showTopicLink = true }) {
             <div
               key={f.label}
               style={{ '--i': i }}
-              className="stagger flex flex-col gap-0.5 bg-q-navy-700/90 px-3.5 py-3 backdrop-blur-sm sm:gap-1 sm:px-6 sm:py-7 [@media(max-height:740px)]:gap-0 [@media(max-height:740px)]:py-1.5 [@media(max-height:620px)]:px-3 [@media(max-height:620px)]:py-1.5"
+              className="stagger flex flex-col gap-0.5 bg-[#03135c]/75 px-3.5 py-3 backdrop-blur-sm sm:gap-1 sm:px-6 sm:py-7 [@media(max-height:740px)]:gap-0 [@media(max-height:740px)]:py-1.5 [@media(max-height:620px)]:px-3 [@media(max-height:620px)]:py-1.5"
             >
               <dd className="order-1 m-0 flex flex-col items-start gap-0 sm:flex-row sm:items-baseline sm:gap-1.5">
                 <CountUp value={f.value} className="font-display text-[1.7rem] font-extrabold leading-tight sm:text-4xl [@media(max-height:740px)]:text-2xl" />

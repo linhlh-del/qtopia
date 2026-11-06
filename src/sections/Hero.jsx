@@ -45,7 +45,7 @@ export default function Hero() {
     <section
       id="top"
       data-snap-section
-      className="relative flex min-h-[calc(100svh-var(--header-h))] items-end overflow-hidden bg-q-navy text-white"
+      className="relative flex min-h-[calc(100svh-var(--header-h))] items-end overflow-hidden bg-q-brand-deep text-white"
     >
       {heroContent.images.slice(active, active + 1).map((img) => (
         <Img
@@ -59,11 +59,12 @@ export default function Hero() {
       ))}
       {/* Lớp phủ chỉ đậm ở dải đáy — phần còn lại để ảnh hiện rõ */}
       {/* Lớp phủ đậm hơn ở điện thoại (chữ nằm trên vùng ảnh sáng) và nhạt hơn ở máy tính */}
-      <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-q-navy via-q-navy/85 to-transparent lg:h-[42%] lg:via-q-navy/65" />
+      <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-q-brand-deep via-q-brand-deep/80 to-transparent lg:h-[42%] lg:via-q-brand-deep/60" />
 
       <Container className="relative z-10 pb-[calc(1.5rem+var(--bar-h))] pt-20 lg:pb-10 lg:pr-24">
-        <div className="flex max-w-lg flex-col items-start gap-3">
-          <div key={slide.src} className="hero-copy-enter flex flex-col gap-3 [text-shadow:0_2px_14px_rgb(5_10_46/0.55)]">
+        {/* Khung nền mờ phía sau chữ để không lẫn vào ảnh */}
+        <div className="text-panel flex w-fit max-w-2xl flex-col items-start gap-3">
+          <div key={slide.src} className="hero-copy-enter flex flex-col gap-3 [text-shadow:0_2px_14px_rgb(4_26_124/0.6)]">
             <h1 className="m-0 font-display text-[clamp(1.35rem,3.1vw,2.1rem)] font-extrabold leading-[1.15] tracking-tight text-white">
               {titleLines.map((line, i) => (
                 <Fragment key={i}>

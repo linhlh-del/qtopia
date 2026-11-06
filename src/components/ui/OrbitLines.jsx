@@ -70,7 +70,7 @@ export default function OrbitLines({ flip = false, className = '' }) {
       </g>
     </svg>
     {/* Lớp phủ tối để chữ nổi trên nền sáng: đậm bên trái (cột chữ), nhạt dần sang phải */}
-    <div aria-hidden="true" className="brand-orbit-scrim" />
+    <div aria-hidden="true" className={`brand-orbit-scrim ${flip ? 'brand-orbit-scrim-flip' : ''}`} />
     </>
   )
 }
