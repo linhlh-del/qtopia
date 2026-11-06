@@ -131,7 +131,11 @@ lead-worker/               # Cloudflare Worker nhận lead
 ### Hiệu năng (PageSpeed mobile 97 trên bản Vercel cũ)
 - Ảnh WebP nhiều kích thước, có `srcset`/`sizes`. Ảnh hero `fetchpriority=high`; các ảnh khác lazy.
 - Các section nặng (Vị trí, Tiện ích, Mặt bằng, Tin tức) chỉ tải JS khi khách cuộn gần tới. HTML prerender vẫn có đủ nội dung.
-- Font tự host (subset tiếng Việt). Có `content-visibility: auto` cho các section.
+- Font tự host trong `public/fonts` (khai báo ở `src/fonts.css`):
+  - Nội dung, link (`--font-body`): SF Pro trên iPhone/iPad/Mac, **Inter** (variable 400–800, subset Việt + Latin) trên thiết bị khác.
+  - Tiêu đề, nút, nhãn (`--font-display`): SF Pro trên iPhone/iPad/Mac, **Poppins** (500–800) trên thiết bị khác.
+  - Đã thử font tiêu đề amatry (SVN-Amatry của site chủ đầu tư) ngày 06/11/2026 rồi bỏ, giữ nguyên font cũ cho cả tiêu đề lẫn nội dung.
+- Có `content-visibility: auto` cho các section.
 - GA4 hiện nằm trong `<head>` theo yêu cầu, nên điểm mobile có thể thấp hơn một chút so với lúc trì hoãn tải GA.
 
 ### UI / responsive (chi tiết: [RESPONSIVE-DEVICES.md](RESPONSIVE-DEVICES.md))

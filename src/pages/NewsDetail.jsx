@@ -77,7 +77,14 @@ export default function NewsDetail() {
                   </>
                 ) : null}
               </p>
-              <h1 className="section-title mt-4 text-[length:calc(clamp(1.8rem,4vw,3rem)*var(--type-scale))] text-q-navy">{article.title}</h1>
+              {/* Tiêu đề bài thường dài: dùng Inter (Poppins bản tiếng Việt lệch nét giữa chữ có dấu và không dấu),
+                  đậm 600, nhỏ hơn section-title một chút */}
+              <h1
+                className="section-title mt-4 text-[length:calc(clamp(1.6rem,3.2vw,2.5rem)*var(--type-scale))] font-semibold leading-tight tracking-[-0.02em] text-q-navy"
+                style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+              >
+                {article.title}
+              </h1>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-q-muted">{article.excerpt}</p>
             </div>
 
