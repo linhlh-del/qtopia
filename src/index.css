@@ -19,9 +19,9 @@
   --color-q-ink: #0b1020;
   --color-q-muted: #5b6072;
 
-  /* Ưu tiên SF Pro (hiển thị thật trên iPhone/iPad/Mac), fallback Poppins/Inter cho thiết bị khác */
-  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Poppins', system-ui, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+  /* Cùng một bộ font trên mọi thiết bị (kể cả iPhone/iPad/Mac): Poppins cho tiêu đề, Inter cho nội dung (tự host) */
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
 
   --shadow-soft: 0 10px 30px -12px rgba(5, 10, 46, 0.18);
   --shadow-card: 0 24px 60px -24px rgba(5, 10, 46, 0.35);
@@ -1085,7 +1085,7 @@ main > section:not(#top) {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* chiều cao cố định theo cỡ số, căn giữa dọc: không phụ thuộc metric từng font (Poppins / SF Pro) */
+  /* chiều cao cố định theo cỡ số, căn giữa dọc: không phụ thuộc metric font */
   align-self: center;
   height: calc(var(--num) * 0.64);
   /* tâm chữ số nằm cao hơn tâm dòng một chút */
