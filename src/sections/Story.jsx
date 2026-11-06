@@ -24,7 +24,8 @@ export default function Story({ data }) {
         className={`relative z-10 flex py-14 max-lg:items-end max-lg:pb-[calc(2rem+var(--bar-h))] ${right ? 'lg:justify-end' : ''}`}
       >
         <div ref={ref} className="text-panel flex max-w-xl flex-col gap-3">
-          <h2 className="section-label section-label-light">{data.label}</h2>
+          {/* "siêu đô thị" luôn đi liền một dòng (khoảng trắng không ngắt) */}
+          <h2 className="section-label section-label-light">{data.label.replace(/siêu đô thị/gi, (m) => m.replace(/ /g, ' '))}</h2>
           <p className="prose-lead m-0 text-white">{data.lead}</p>
           {data.points.length ? (
             <ul className="m-0 flex list-none flex-col gap-1.5 p-0 text-sm text-white/95">

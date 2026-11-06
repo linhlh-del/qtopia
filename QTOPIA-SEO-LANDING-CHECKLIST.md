@@ -19,6 +19,23 @@ Các thay đổi chính trong đợt này:
 
 Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 
+**Cập nhật 06/11/2026 (bản 2), sau khi phát hành commit `ffe5071` trên `https://qtopia.rever.io.vn`:**
+
+- **Chuyển sang Đạt:**
+  - 1.2: canonical, `og:url`, sitemap, robots và schema dùng chung `https://qtopia.rever.io.vn` (curl site thật).
+  - 2.3: `seo-check` 0 lỗi alt trên 10 URL; ảnh trang trí có `alt=""` + `aria-hidden="true"` trên chính `<img>`.
+  - 3.1: màu, font, thời lượng hiệu ứng gom trong `@theme`/CSS variables (`--color-q-*`, `--cta-form`, `--dur-*`).
+  - 5.1: các route con đều có nội dung thật (`/tong-quan`, `/vi-tri`, `/tien-ich`, `/mat-bang`, `/chinh-sach-ban-hang`, `/tien-ich-xung-quanh`, `/tin-tuc` + 2 bài). Chưa có `/bang-gia`, `/tien-do` vì chưa có dữ liệu.
+  - 6.2: 10 trang + 404 được prerender; curl HTML thô (không chạy JS) đã có canonical, robots, OG.
+  - 7.5: canonical, sitemap (10 URL), robots (`Sitemap:`) đúng domain đang chạy.
+  - 9.2, 9.3, 9.4, 9.7: kiểm trong code (`src/lib/analytics.js`, `lead.js`, `utm.js`) — `generate_lead` chỉ sau khi gửi thành công, có `form_location`, không gửi tên/SĐT; có `click_call`, `click_zalo`, `click_cta`, `scroll_depth`, `section_view`, `view_floorplan`; UTM first-touch gửi kèm lead.
+  - 11.2, 11.3, 11.5: stagger, animate transform/opacity, tắt hiệu ứng khi `prefers-reduced-motion`; section `svh` + tự kéo section, section dài và footer cuộn tự nhiên; nội dung có sẵn trong HTML prerender.
+  - 12.3, 12.4: hiệu ứng nhịp/nhún dừng khi giảm chuyển động, thanh CTA đáy (52px) không che form; header mobile và 2 CTA CSBH không vỡ ở 320–375px.
+- **Chuyển sang Cần xác minh** (code đã xong, chờ kiểm tra thực tế): 1.5 (đủ `og:type/title/description/url/image` 1200×630, cần xem preview Facebook/Zalo — ảnh OG đang là WebP), 9.1 (GA4 `G-Y9NFTDSE57` đã gắn, cần GA4 DebugView), 11.4 (anchor đã sửa, cần test thiết bị thật).
+- **Chuyển sang Chưa đạt:** 13.2 — HTTPS, HSTS, brotli và cache `immutable` cho asset đã có, nhưng `http://qtopia.rever.io.vn` trả 200 thay vì 301 sang https (bật Cloudflare *Always Use HTTPS*).
+- **Vẫn Chưa đạt, có ghi chú mới:** 7.1 — `build:release` 0 lỗi nhưng còn 4 cảnh báo thiếu `width/height` (ảnh tin tức từ CMS). 12.2 — nút cam `#ff5f00` chữ trắng chỉ đạt khoảng 3:1, dưới 4,5:1. 2.4/2.7 — Tổng quan đổi sang 7,38 ha, vẫn cần đối chiếu với trang pháp lý (55.569,8 m²).
+- 4.2 vẫn Cần xác minh: Worker đã gửi thử thành công vào Google Sheet; còn phải gửi form thật trên website sau khi cấu hình endpoint.
+
 ## 0. Mục tiêu và cách đo
 
 | Mục tiêu               | Ngưỡng tham khảo                            | Cách đo                                   |
@@ -36,10 +53,10 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 | Đạt | Chưa đạt | Cần xác minh | ID  | Tiêu chí                                                                                                      |
 | :-: | :------: | :----------: | --- | ------------------------------------------------------------------------------------------------------------- |
 | [x] |   [ ]    |     [ ]      | 1.1 | `lang="vi"`, `charset="UTF-8"`, viewport, `robots` phù hợp từng route.                                        |
-| [ ] |   [x]    |     [ ]      | 1.2 | Domain chính thức QTOPIA được cấu hình nhất quán trong canonical, OG URL, sitemap, robots và schema.          |
+| [x] |   [ ]    |     [ ]      | 1.2 | Domain chính thức QTOPIA được cấu hình nhất quán trong canonical, OG URL, sitemap, robots và schema.          |
 | [x] |   [ ]    |     [ ]      | 1.3 | Mỗi route có title riêng, ưu tiên từ khóa ở đầu, mục tiêu ≤ 60 ký tự.                                         |
 | [x] |   [ ]    |     [ ]      | 1.4 | Mỗi route có description riêng, đúng nội dung, mục tiêu 150–160 ký tự; có thông tin cụ thể và CTA tự nhiên.   |
-| [ ] |   [x]    |     [ ]      | 1.5 | Open Graph đủ `og:type`, `og:title`, `og:description`, `og:image` 1200×630, `og:url`; kiểm tra Facebook/Zalo. |
+| [ ] |   [ ]    |     [x]      | 1.5 | Open Graph đủ `og:type`, `og:title`, `og:description`, `og:image` 1200×630, `og:url`; kiểm tra Facebook/Zalo. |
 | [x] |   [ ]    |     [ ]      | 1.6 | Canonical tự trỏ cho trang indexable; trang 404 noindex và không vào sitemap.                                 |
 | [x] |   [ ]    |     [ ]      | 1.7 | Đếm độ dài title/description từ HTML build, không chỉ từ config.                                              |
 
@@ -49,7 +66,7 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 | :-: | :------: | :----------: | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [x] |   [ ]    |     [ ]      | 2.1 | Mỗi route đúng một H1; H2/H3 theo thứ bậc; slogan để trong đoạn văn nếu không mô tả chủ đề.                                                           |
 | [x] |   [ ]    |     [ ]      | 2.2 | Dùng `header`, `nav`, `main`, `section`, `footer`; có liên kết bỏ qua menu cho bàn phím.                                                              |
-| [ ] |   [x]    |     [ ]      | 2.3 | Ảnh nội dung có alt mô tả đúng ảnh; ảnh trang trí dùng alt rỗng đúng cách.                                                                            |
+| [x] |   [ ]    |     [ ]      | 2.3 | Ảnh nội dung có alt mô tả đúng ảnh; ảnh trang trí dùng alt rỗng đúng cách.                                                                            |
 | [ ] |   [x]    |     [ ]      | 2.4 | Tên dự án, chủ đầu tư, vị trí và số liệu nhất quán giữa nội dung, metadata, schema, form và footer.                                                   |
 | [x] |   [ ]    |     [ ]      | 2.5 | Xác minh địa chỉ QTOPIA, đơn vị hành chính hiện hành và tên địa danh cũ bằng nguồn chính thức; đối chiếu Google Business Profile nếu có.              |
 | [ ] |   [x]    |     [ ]      | 2.6 | Những thông tin giá, pháp lý, tiến độ và cam kết đầu tư chỉ xuất bản khi có tài liệu xác thực.                                                        |
@@ -60,7 +77,7 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 
 | Đạt | Chưa đạt | Cần xác minh | ID  | Tiêu chí                                                                                                      |
 | :-: | :------: | :----------: | --- | ------------------------------------------------------------------------------------------------------------- |
-| [ ] |   [x]    |     [ ]      | 3.1 | Màu, font, thời lượng hiệu ứng gom trong CSS variables; giao diện mobile trước, lưới co giãn tốt.             |
+| [x] |   [ ]    |     [ ]      | 3.1 | Màu, font, thời lượng hiệu ứng gom trong CSS variables; giao diện mobile trước, lưới co giãn tốt.             |
 | [ ] |   [x]    |     [ ]      | 3.2 | Chữ thân dễ đọc (`line-height` khoảng 1,6–1,8); khoảng trắng đủ thoáng; CTA đạt vùng chạm tối thiểu 48×48 px. |
 | [x] |   [ ]    |     [ ]      | 3.3 | Ảnh được nén và dùng WebP/AVIF khi phù hợp; có `width`/`height` hoặc aspect ratio.                            |
 | [x] |   [ ]    |     [ ]      | 3.4 | Ảnh hero được ưu tiên (`fetchpriority="high"`, không lazy); ảnh dưới màn đầu lazy.                            |
@@ -81,7 +98,7 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 
 | Đạt | Chưa đạt | Cần xác minh | ID  | Tiêu chí                                                                                                                                                            |
 | :-: | :------: | :----------: | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ ] |   [x]    |     [ ]      | 5.1 | Trang chủ giới thiệu tổng quan QTOPIA; các route con chỉ tạo khi có nội dung thật (ví dụ `/vi-tri`, `/tien-ich`, `/mat-bang`, `/bang-gia`, `/tin-tuc`, `/tien-do`). |
+| [x] |   [ ]    |     [ ]      | 5.1 | Trang chủ giới thiệu tổng quan QTOPIA; các route con chỉ tạo khi có nội dung thật (ví dụ `/vi-tri`, `/tien-ich`, `/mat-bang`, `/bang-gia`, `/tin-tuc`, `/tien-do`). |
 | [x] |   [ ]    |     [ ]      | 5.2 | Mỗi route có title, description, H1, canonical và OG riêng.                                                                                                         |
 | [x] |   [ ]    |     [ ]      | 5.3 | Tin tức chỉ index khi là bài thật; bài mẫu/lorem ipsum không đưa vào sitemap.                                                                                       |
 | [x] |   [ ]    |     [ ]      | 5.4 | Internal link dùng văn bản mô tả trang đích; không lạm dụng liên kết ra ngoài.                                                                                      |
@@ -93,7 +110,7 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 | Đạt | Chưa đạt | Cần xác minh | ID  | Tiêu chí                                                                                              |
 | :-: | :------: | :----------: | --- | ----------------------------------------------------------------------------------------------------- |
 | [x] |   [ ]    |     [ ]      | 6.1 | Giữ kiến trúc framework hiện có, tách component/dữ liệu/SEO/đo lường rõ ràng.                         |
-| [ ] |   [x]    |     [ ]      | 6.2 | Prerender hoặc SSR nội dung và metadata cho mọi route indexable; bot đọc được khi chưa chạy JS.       |
+| [x] |   [ ]    |     [ ]      | 6.2 | Prerender hoặc SSR nội dung và metadata cho mọi route indexable; bot đọc được khi chưa chạy JS.       |
 | [ ] |   [x]    |     [ ]      | 6.3 | Không nhúng script hoặc style tĩnh không cần thiết vào HTML; giá trị động chỉ dùng inline khi hợp lý. |
 | [x] |   [ ]    |     [ ]      | 6.4 | Có lệnh build, lint và kiểm tra SEO build được ghi trong README.                                      |
 
@@ -105,7 +122,7 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 | [ ] |   [x]    |     [ ]      | 7.2 | Kiểm tra nội dung và số liệu dự án khớp tài liệu chủ đầu tư.                                                         |
 | [ ] |   [ ]    |     [x]      | 7.3 | Chạy Lighthouse/PageSpeed trên mobile và desktop; ghi kết quả theo URL và thời điểm.                                 |
 | [ ] |   [ ]    |     [x]      | 7.4 | Kiểm tra OG preview trên Facebook/Zalo và các CTA/form trên điện thoại thật.                                         |
-| [ ] |   [ ]    |     [x]      | 7.5 | Kiểm tra canonical, sitemap, robots sau khi gắn domain chính thức.                                                   |
+| [x] |   [ ]    |     [ ]      | 7.5 | Kiểm tra canonical, sitemap, robots sau khi gắn domain chính thức.                                                   |
 
 ## 8. Google Search Console
 
@@ -120,13 +137,13 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 
 | Đạt | Chưa đạt | Cần xác minh | ID  | Tiêu chí                                                                                                                             |
 | :-: | :------: | :----------: | --- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| [ ] |   [x]    |     [ ]      | 9.1 | Cấu hình GTM và GA4 thực, test GTM Preview/GA4 DebugView; SPA gửi `page_view` đúng một lần mỗi route.                                |
-| [ ] |   [x]    |     [ ]      | 9.2 | Đo `generate_lead` chỉ sau gửi form thành công, có `form_location` và không gửi tên/số điện thoại vào analytics.                     |
-| [ ] |   [x]    |     [ ]      | 9.3 | Đo `click_call`, `click_zalo`, `click_cta` (`cta_name`, `cta_location`, `cta_target`), `scroll_depth` 25/50/75/90 và `section_view`. |
-| [ ] |   [x]    |     [ ]      | 9.4 | Nếu có công cụ liên quan: đo `loan_calculator_use`, `view_floorplan`.                                                                |
+| [ ] |   [ ]    |     [x]      | 9.1 | Cấu hình GTM và GA4 thực, test GTM Preview/GA4 DebugView; SPA gửi `page_view` đúng một lần mỗi route.                                |
+| [x] |   [ ]    |     [ ]      | 9.2 | Đo `generate_lead` chỉ sau gửi form thành công, có `form_location` và không gửi tên/số điện thoại vào analytics.                     |
+| [x] |   [ ]    |     [ ]      | 9.3 | Đo `click_call`, `click_zalo`, `click_cta` (`cta_name`, `cta_location`, `cta_target`), `scroll_depth` 25/50/75/90 và `section_view`. |
+| [x] |   [ ]    |     [ ]      | 9.4 | Nếu có công cụ liên quan: đo `loan_calculator_use`, `view_floorplan`.                                                                |
 | [ ] |   [ ]    |     [x]      | 9.5 | Đánh dấu các event chuyển đổi phù hợp là Key events trong GA4.                                                                       |
 | [ ] |   [x]    |     [ ]      | 9.6 | Quy ước UTM viết thường, không dấu; gắn ở chiến dịch bên ngoài, không gắn internal link.                                             |
-| [ ] |   [x]    |     [ ]      | 9.7 | Lưu first-touch UTM và gửi kèm lead; đối chiếu nguồn lead với báo cáo GA4.                                                           |
+| [x] |   [ ]    |     [ ]      | 9.7 | Lưu first-touch UTM và gửi kèm lead; đối chiếu nguồn lead với báo cáo GA4.                                                           |
 | [ ] |   [ ]    |     [x]      | 9.8 | Rà soát yêu cầu consent/cookie theo thị trường và cách triển khai thực tế.                                                           |
 
 ## 10. SEO snippets và schema
@@ -145,10 +162,10 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 | Đạt | Chưa đạt | Cần xác minh | ID   | Tiêu chí                                                                                                               |
 | :-: | :------: | :----------: | ---- | ---------------------------------------------------------------------------------------------------------------------- |
 | [x] |   [ ]    |     [ ]      | 11.1 | Thời lượng/easing tập trung trong biến CSS; hiệu ứng xuất hiện khoảng 0,8–1,2 s, hover khoảng 0,25–0,35 s khi phù hợp. |
-| [ ] |   [x]    |     [ ]      | 11.2 | Có stagger hợp lý; ưu tiên animate transform/opacity; hỗ trợ `prefers-reduced-motion`.                                 |
-| [ ] |   [x]    |     [ ]      | 11.3 | Nếu chọn cuộn từng section: dùng `svh/dvh`, snap phù hợp, xử lý section dài, footer và trang con cuộn tự nhiên.        |
-| [ ] |   [x]    |     [ ]      | 11.4 | Anchor cuộn mượt và tránh header cố định; test chuột, bàn phím, iOS Safari, Android Chrome và desktop.                 |
-| [ ] |   [x]    |     [ ]      | 11.5 | Nội dung vẫn hiện trong HTML prerender, không phụ thuộc animation để bot đọc được.                                     |
+| [x] |   [ ]    |     [ ]      | 11.2 | Có stagger hợp lý; ưu tiên animate transform/opacity; hỗ trợ `prefers-reduced-motion`.                                 |
+| [x] |   [ ]    |     [ ]      | 11.3 | Nếu chọn cuộn từng section: dùng `svh/dvh`, snap phù hợp, xử lý section dài, footer và trang con cuộn tự nhiên.        |
+| [ ] |   [ ]    |     [x]      | 11.4 | Anchor cuộn mượt và tránh header cố định; test chuột, bàn phím, iOS Safari, Android Chrome và desktop.                 |
+| [x] |   [ ]    |     [ ]      | 11.5 | Nội dung vẫn hiện trong HTML prerender, không phụ thuộc animation để bot đọc được.                                     |
 
 ## 12. CTA
 
@@ -156,8 +173,8 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 | :-: | :------: | :----------: | ---- | ------------------------------------------------------------------------------------------------------------------------------- |
 | [x] |   [ ]    |     [ ]      | 12.1 | Nút nổi icon ≥ 48×48 px có `aria-label`/`title`; nút lên đầu trang ẩn ở hero và hiện khi cuộn.                                  |
 | [ ] |   [x]    |     [ ]      | 12.2 | CTA có hover, active, focus-visible, disabled phù hợp; độ tương phản chữ/nền tối thiểu 4,5:1.                                   |
-| [ ] |   [x]    |     [ ]      | 12.3 | Không che form/nội dung hoặc trùng với thanh CTA mobile; hiệu ứng pulse vừa phải và dừng khi giảm chuyển động.                  |
-| [ ] |   [x]    |     [ ]      | 12.4 | Header mobile có CTA tư vấn nổi bật, không vỡ ở màn 320–360 px.                                                                 |
+| [x] |   [ ]    |     [ ]      | 12.3 | Không che form/nội dung hoặc trùng với thanh CTA mobile; hiệu ứng pulse vừa phải và dừng khi giảm chuyển động.                  |
+| [x] |   [ ]    |     [ ]      | 12.4 | Header mobile có CTA tư vấn nổi bật, không vỡ ở màn 320–360 px.                                                                 |
 | [ ] |   [x]    |     [ ]      | 12.5 | CTA ở hero dẫn tới các giá trị chính của QTOPIA bằng link crawlable nếu là điều hướng; chốt tên nhãn và đích với nội dung thật. |
 | N/A |   N/A    |     N/A      | 12.6 | Nếu có section bảng giá, có đường về các giá trị khác và giữ lựa chọn người dùng khi hợp lý.                                    |
 | [ ] |   [x]    |     [ ]      | 12.7 | Có CTA map: nhãn \| vị trí \| đích \| event; kiểm tra không bỏ sót CTA.                                                         |
@@ -167,7 +184,7 @@ Các mục 13.2 và 7.5 cần kiểm tra lại sau khi gắn domain trên VPS.
 | Đạt | Chưa đạt | Cần xác minh | ID   | Tiêu chí                                                                                                                  |
 | :-: | :------: | :----------: | ---- | ------------------------------------------------------------------------------------------------------------------------- |
 | [ ] |   [ ]    |     [x]      | 13.1 | Đo LCP, INP, CLS bằng dữ liệu thực tế; kiểm tra ảnh hero, font swap, kích thước khung, tác vụ JS dài.                     |
-| [ ] |   [ ]    |     [x]      | 13.2 | HTTPS và redirect về một hostname; cache dài cho asset có hash, gzip/brotli ở hosting.                                    |
+| [ ] |   [x]    |     [ ]      | 13.2 | HTTPS và redirect về một hostname; cache dài cho asset có hash, gzip/brotli ở hosting.                                    |
 | [x] |   [ ]    |     [ ]      | 13.3 | Favicon, manifest, theme-color, 404 đúng mã; không có redirect chain.                                                     |
 | [ ] |   [ ]    |     [x]      | 13.4 | Điều hướng bàn phím và focus rõ; test Chrome, Safari iOS, Firefox, Samsung Internet; màn 375 px, tablet, desktop 1440 px. |
 | [ ] |   [ ]    |     [x]      | 13.5 | Kiểm tra lead thật, analytics thật, OG preview, schema, Lighthouse trước và sau publish.                                  |

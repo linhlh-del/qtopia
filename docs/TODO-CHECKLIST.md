@@ -2,7 +2,7 @@
 
 Đánh dấu `[x]` khi xong. Thông tin hệ thống nằm ở [KNOWLEDGE-BASE.md](KNOWLEDGE-BASE.md), lệnh chi tiết ở [deploy/DEPLOY.md](../deploy/DEPLOY.md).
 
-Cập nhật lần cuối: 06/11/2026 (bản 2).
+Cập nhật lần cuối: 06/11/2026 (bản 3).
 
 ## Đã xong
 - [x] Landing chạy trên VPS qua Cloudflare Tunnel: `https://qtopia.rever.io.vn`
@@ -19,6 +19,13 @@ Cập nhật lần cuối: 06/11/2026 (bản 2).
 - [x] Sửa "Phóng to" Tiện ích / Mặt bằng / lightbox trên iPhone (portal)
 - [x] Tấm nền chữ section Story, nội dung thuần Việt
 - [x] Favicon mới (`favicon.ico` + `public/icons/`); trang chủ đã được Google index
+- [x] 2 bài tin tức thật + trang cảm ơn `/cam-on` sau khi gửi form
+- [x] Giao diện theo màu thương hiệu: header `#062aa3`; nền Orbit Lines cho Tổng quan, Vị trí, CSBH; lớp phủ Hero/Story xanh brand; CTA form `#ff5f00`
+- [x] Bản đồ Vị trí: ghim QTOPIA riêng (nhún nhẹ, logo khi bấm), nhãn đang chọn nằm trên các ghim khác
+- [x] 3 khu trải nghiệm: viền + line trắng chạy, mũi tên ảnh xoay đúng tâm, danh sách mở mượt, thanh cuộn mảnh không nhảy chiều rộng
+- [x] Mặt bằng: một line trắng chạy lần lượt qua từng căn, nghỉ giữa các căn
+- [x] CSBH: khối giá nổi bật, CTA mobile một dòng; thanh CTA đáy mobile chỉ icon, thấp hơn header
+- [x] Dọn file không dùng (`Dropdown.jsx`, font Inter thừa, ảnh gốc lớn, 6 icon cũ ở gốc `public/`); site thật chạy commit `ffe5071`, `seo-check` 0 lỗi
 
 ## Việc ngay (tuần này)
 - [ ] **Thêm `'qtopia'` vào `PROJECTS` của Edge Function `collect`** (Supabase dashboard) — nếu dashboard CMS vẫn trống. Kiểm tra bằng lệnh `curl` collect trong KNOWLEDGE-BASE mục 12.
@@ -41,12 +48,14 @@ Cập nhật lần cuối: 06/11/2026 (bản 2).
 
 ## Bảo mật và vận hành
 - [ ] Cloudflare → Configuration Rule cho riêng `qtopia.rever.io.vn`: SSL **Full (strict)**
+- [ ] **Cloudflare → SSL/TLS → Edge Certificates → Always Use HTTPS**: 06/11 kiểm tra `http://qtopia.rever.io.vn` vẫn trả 200 thay vì 301 sang https (canonical đã là https)
 - [ ] Đồng bộ code `cms-admin` trên Supabase với repo `cms-supabase`. Bản đang chạy cũ hơn và gửi POST rỗng. Khi deploy lại, kiểm tra không làm hỏng 4 CMS khác.
 - [ ] Đưa `cms-supabase/` vào git (hiện chưa có repo riêng, các thay đổi hook và migration chỉ nằm trên máy dev)
 - [ ] Theo dõi uptime (UptimeRobot hoặc Better Stack) cho `https://qtopia.rever.io.vn` và `/cms-status.json`
 - [ ] Sao lưu: export bảng `cms_content` và `cms_leads` định kỳ; sao lưu `/etc/qtopia-deploy-hook.env` và `/etc/cloudflared/config.yml`
 - [ ] Khi nâng Node bằng nvm: sửa đường dẫn `v24.14.1` trong `qtopia-deploy-hook.service`, rồi `systemctl daemon-reload && systemctl restart qtopia-deploy-hook`
-- [ ] Xoá thư mục `dist/`, `.ssr/` và các icon cũ không còn dùng ở gốc `public/` (`favicon-32.png`, `favicon-48.png`, `favicon-96.png`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`) bị khoá quyền trên máy Windows (PowerShell Admin)
+- [x] Xoá các icon cũ ở gốc `public/` (`favicon-32/48/96.png`, `icon-192/512.png`, `apple-touch-icon.png`) — bộ đang dùng nằm trong `public/icons/`
+- [ ] Xoá thư mục `dist/`, `.ssr/` bị khoá quyền trên máy Windows (PowerShell Admin); trong lúc chờ build bằng `dist-check` / `.ssr-check`
 - [ ] Gỡ thẻ `google-site-verification` cũ (`X-aD_…`) nếu property `qtopia-tau.vercel.app` không dùng nữa
 
 ## Nội dung và pháp lý (cần chủ đầu tư / bộ phận pháp lý xác nhận)
@@ -55,7 +64,7 @@ Cập nhật lần cuối: 06/11/2026 (bản 2).
 - [ ] Xác minh số liệu trong 2 bài trước khi quảng bá (bài 01 ghi "hơn 7,3 ha, 9 tháp 20 tầng"; quyền dùng ảnh từ VnExpress/REB)
 - [ ] Đăng tiếp bài 03–10 (thêm vào `src/data/news.js`)
 - [ ] Phân biệt vai trò **Công ty CP Đầu tư Serenity** (chủ đầu tư pháp lý) và **Phát Đạt** (`siteMeta.developer`)
-- [ ] Đối chiếu số liệu 7,5 ha / 9 tháp với trang pháp lý (55.569,8 m², 5 tháp căn hộ du lịch S4–S8)
+- [ ] Đối chiếu số liệu 7,38 ha / 9 tháp với trang pháp lý (55.569,8 m², 5 tháp căn hộ du lịch S4–S8)
 - [ ] Loại hình "căn hộ du lịch" và schema `ApartmentComplex`: rà lại cách diễn đạt
 - [ ] Cập nhật mục Pháp lý "Giấy phép xây dựng" (văn bản miễn GPXD 34147/SXD-QLXDCT, thông báo khởi công 29/10/2026)
 - [ ] Bộ phận pháp lý duyệt câu "Bằng việc gửi biểu mẫu…" ở form và chính sách bán hàng
@@ -67,6 +76,9 @@ Cập nhật lần cuối: 06/11/2026 (bản 2).
 - [ ] Đặt link từ website Rever, fanpage, Zalo OA về landing
 - [ ] GA4: đánh dấu `generate_lead`, `click_call`, `click_zalo` là **Key events**; có thể dùng page_view `/cam-on` làm chuyển đổi cho Google Ads / Meta
 - [ ] Tablet 768: làm layout 2 cột cho Vị trí, Tiện ích, CSBH (checklist UI mục P3)
+- [ ] **Độ tương phản nút cam:** chữ trắng trên `#ff5f00` chỉ đạt khoảng 3:1 (WCAG cần 4,5:1 cho chữ thường). Cân nhắc chữ đậm/to hơn, hoặc cam đậm hơn (vd. `#d94f00`) nếu cần đạt chuẩn
+- [ ] `build:release` còn 4 cảnh báo "ảnh thiếu width/height" (trang chủ, Tin tức, 2 bài): nhiều khả năng là ảnh tin tức tải lên CMS — cho `fetch-cms` ghi kích thước ảnh CMS vào `image-sizes.json`
+- [ ] Mặt bằng tháp Q7 (`public/images/mat-bangq7.webp` đã có): thêm toạ độ căn và đưa vào section Mặt bằng
 
 ## Khi có domain chính thức
 - [ ] Cloudflare: thêm hostname vào tunnel (`/etc/cloudflared/config.yml`), tạo DNS CNAME, chứng chỉ Origin mới

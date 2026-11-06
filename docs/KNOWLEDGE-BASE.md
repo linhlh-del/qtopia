@@ -2,9 +2,9 @@
 
 Tài liệu tổng hợp toàn bộ hệ thống landing page QTOPIA: hạ tầng, frontend, CMS, backend, lead, analytics, vận hành và các lỗi đã gặp. Việc còn phải làm nằm ở [TODO-CHECKLIST.md](TODO-CHECKLIST.md). Hướng dẫn cài đặt chi tiết từng bước nằm ở [deploy/DEPLOY.md](../deploy/DEPLOY.md).
 
-Cập nhật lần cuối: 06/11/2026 (bản 3: 2 bài tin tức thật, trang cảm ơn `/cam-on`, lead Worker chuyển sang `be/qtopia/`).
+Cập nhật lần cuối: 06/11/2026 (bản 4: giao diện theo màu thương hiệu — header và nền xanh `#062aa3`, Orbit Lines, CTA cam `#ff5f00`, ghim QTOPIA trên bản đồ, thanh CTA đáy chỉ icon; dọn file không dùng).
 
-Tài liệu liên quan: [RESPONSIVE-DEVICES.md](RESPONSIVE-DEVICES.md) (100 thiết bị, kết quả đo) · [TODO-CHECKLIST.md](TODO-CHECKLIST.md) · [deploy/DEPLOY.md](../deploy/DEPLOY.md) · [lead-worker/readme.md](../lead-worker/readme.md)
+Tài liệu liên quan: [RESPONSIVE-DEVICES.md](RESPONSIVE-DEVICES.md) (100 thiết bị, kết quả đo) · [TODO-CHECKLIST.md](TODO-CHECKLIST.md) · [deploy/DEPLOY.md](../deploy/DEPLOY.md) · [be/qtopia/readme.md](../../be/qtopia/readme.md) (lead Worker)
 
 ---
 
@@ -92,6 +92,7 @@ src/
 ├─ seo/site-meta.js       # title/description/H1/OG từng route, sitelinkPaths, mainNav
 ├─ seo/structured-data.js # JSON-LD (WebSite, Organization, ApartmentComplex, WebPage, Breadcrumb, FAQPage, ItemList sitelinks)
 ├─ seo/head.js            # thẻ <head> cho prerender + đổi route
+├─ components/ui/OrbitLines.jsx # super graphic Orbit Lines (vòng đồng tâm hình chữ Q) + lớp phủ tối
 ├─ sections/*.jsx         # Hero, Story, Facts, Location, MasterPlan, FeaturedAmenities, Residences, SalesPolicy,
 │                         #   NearbyPlaces, News, Legal, Faq, Register
 ├─ pages/                 # Home, Topic (trang con), NewsPage, NewsDetail, ThankYou (/cam-on), NotFound
@@ -110,7 +111,6 @@ scripts/
 ├─ optimize-images.mjs    # tạo biến thể WebP 480–1920 → src/data/responsive-images.json
 └─ serve-dist.mjs         # server tĩnh test cục bộ (có header bảo mật như production)
 deploy/                    # nginx, header bảo mật, deploy hook, DEPLOY.md
-lead-worker/               # Cloudflare Worker nhận lead
 ```
 
 ### Route và trang
@@ -125,7 +125,7 @@ lead-worker/               # Cloudflare Worker nhận lead
 ### Nội dung và CMS
 - Mỗi object trong `data/project.js` và `data/news.js` đều được gọi `registerCms(name, obj)`. CMS sửa theo khoá đường dẫn, ví dụ `salesPolicy.methods.2.title` hoặc `newsItems.0.image`. Danh sách trong CMS có **số phần tử cố định**: không thêm hay bớt dòng trên CMS được, muốn thêm thì sửa code.
 - SEO từng trang (title, description, ảnh OG) sửa được trong CMS → trang SEO.
-- Thông tin đã chốt: thời gian tới trung tâm TP.HCM là **75 phút**. Địa chỉ: "Thửa đất số 08, tờ bản đồ số 38, xã Phước Hải, TP. Hồ Chí Minh" (lấy từ phaply.qtopia.vn). Giá Studio từ **1.195 tỷ**.
+- Thông tin đã chốt: thời gian tới trung tâm TP.HCM là **75 phút**. Địa chỉ: "Thửa đất số 08, tờ bản đồ số 38, xã Phước Hải, TP. Hồ Chí Minh" (lấy từ phaply.qtopia.vn). Giá Studio từ **1.195 tỷ**. Quy mô trong Tổng quan dự án: **7,38 ha** (06/11/2026).
 - **Quy ước nội dung:** viết thuần Việt, câu ngắn. Giữ nguyên **tên riêng trong brochure** (Quậy Station, Ocean Galaxy, Oasis Resort, Aqua Funny Park, DJ Ocean, AMA/MIRA/VITA/ARIA, Aqua Home, Galaxy Dome…). Dịch các từ tiếng Anh chung: Entertainment Complex → *khu giải trí phức hợp*, Nightlife Hub → *khu giải trí đêm*, Resort City / wellness → *thành phố nghỉ dưỡng / chăm sóc sức khoẻ*, rooftop / tầng mái → *sân thượng*, Beach club → *câu lạc bộ bãi biển*, Locker → *tủ đồ cá nhân*, Infinity → *hồ bơi vô cực*, check-in → *chụp ảnh*.
 
 ### Hiệu năng (PageSpeed mobile 97 trên bản Vercel cũ)
@@ -146,10 +146,32 @@ lead-worker/               # Cloudflare Worker nhận lead
   3. Section vẫn dư thì cuộn tự nhiên (chỉ còn ở iPhone SE đời 1 và vài section ở iPhone 7/8 dư 12–37px).
 - **Tablet:** cỡ chữ ×1,656 và bố cục 1 cột **chỉ khi dọc** (`(768px <= width < 1280px) and (orientation: portrait)`). Tablet ngang dùng bố cục 2 cột của desktop.
 - **Tự kéo section (`section-snap.js`, chỉ trang chủ):** khi khách ngừng cuộn, lướt ≥ 25% màn hình thì section kế tiếp/phía trên kéo lên sát header, chưa tới 25% thì trở về. Cuộn tự do trong section cao hơn màn hình, trong footer, khi popup mở, khi điện thoại ngang. Đổi độ nhạy bằng hằng `THRESHOLD`.
-- **Chữ trên ảnh:** section Story có tấm nền `.text-panel` (navy 58% + làm mờ ảnh + bóng chữ); Hero có bóng chữ.
+- **Chữ trên ảnh:** Hero và Story đặt chữ trong tấm nền `.text-panel` (xanh brand đậm `#041a7c` 55%, mobile 75% + làm mờ ảnh + bóng chữ). Khung Story rộng tối đa `max-w-xl`; khung Hero ôm vừa chữ (tối đa `max-w-2xl`).
 - **Lớp phủ toàn màn hình** (Phóng to sơ đồ Tiện ích, Phóng to Mặt bằng, lightbox ảnh tiện ích) được render qua **React Portal vào `<body>`**. Không đặt `position: fixed` bên trong section: `content-visibility`, `transform` (hiệu ứng xuất hiện) và `zoom` làm nó bị neo vào section.
 - Mobile khác: nút ↑ chỉ hiện khi khách cuộn ngược lên; chú thích tuyến giao thông thu gọn; sơ đồ tiện ích chỉ hiện chấm màu kèm danh sách theo khu; CSBH timeline dọc mỗi mốc một dòng; FAQ hiện 5 câu + "Xem thêm"; Pháp lý đóng sẵn trên mobile; Mặt bằng phóng to có gợi ý xoay ngang máy.
 - **Không thêm phần tử `position: absolute` (vd. `.sr-only`) bên trong carousel/khung cuộn mà không có cha `relative`**: nó thoát khỏi khung, làm trang rộng ra và Safari iOS cũ thu nhỏ cả trang. `body` có `overflow-x: clip` làm lưới an toàn.
+
+### Giao diện thương hiệu (06/11/2026)
+- **Màu:** header `#062aa3` (`--color-q-blue`); lớp phủ ảnh Hero/Story và nền dự phòng `#041a7c` (`--color-q-brand-deep`); CTA mở form `#ff5f00` (`--cta-form`, dùng cho `.btn-primary` và nút tài liệu ở thanh đáy). Nút gọi nổi vẫn dùng `--cta-from`. Bộ xanh lá phụ (theo ảnh khách gửi): `#1a997b`, `#00ba59`, `#aaec0e` (`q-lime`).
+- **Nền Orbit Lines** (`.brand-orbit-bg` + `<OrbitLines />`): dùng cho **Tổng quan dự án (Facts)**, **Vị trí**, **Chính sách bán hàng**.
+  - 24 vòng **đồng tâm, cách đều** (cùng tâm `CENTER`), viền gradient hồng → cyan → xanh, cụm vòng mờ ở góc đối diện.
+  - Lớp phủ `.brand-orbit-scrim` để chữ đọc được: mobile 60–72%, desktop đậm bên trái (cột chữ) nhạt dần sang phải. Muốn chữ rõ hơn thì tăng độ đậm trong class này.
+  - `flip` đảo chữ Q sang trái (Facts dùng `flip` + `-translate-x-[22%]` để chỉ hiện một nửa chữ Q, kèm `.brand-orbit-bg-flip` và `.brand-orbit-scrim-flip`).
+  - Id gradient trong SVG lấy từ `useId()` (đã lọc ký tự) để 2 section cùng trang không trùng id.
+- **Tiêu đề nhỏ xanh lá** (`.section-label`) đã tăng 30%: `clamp(1.066rem, 1.43vw, 1.235rem)`. Hero không dùng class này.
+- **Header:** nền `#062aa3`, chữ menu trắng 100%. Không có vòng Orbit trên header (đã thử rồi bỏ).
+- **Vị trí — bản đồ:**
+  - QTOPIA là marker riêng (`featured: true` trong `mapLocations`): ghim `checked-pin.webp` (gấp đôi ghim thường; < `lg` nhỏ hơn 30%: 28px, desktop 48px), **nhún nhẹ ~8% chiều cao mỗi 1,4 s** (`.qtopia-pin-bounce`, tắt khi giảm chuyển động). Logo `checked-logo-sm.webp` trong khung nền `#062aa3` chỉ hiện khi bấm ghim.
+  - Ghim thường: < `lg` dời lên thêm 5% (`--pin-top-m`), desktop dùng `--pin-top`. Marker đang chọn dùng `z-20`, các marker khác `z-[2]` (không để 2 class z cùng lúc — class sau trong CSS sẽ thắng).
+  - Hộp chú thích tuyến nền `#03135c` 70% + làm mờ. Cụm trang trí pha lê/bong bóng nằm góc dưới phải, trong các vòng Orbit.
+- **3 khu trải nghiệm:** mũi tên `arrow-sm.webp` trong khung vuông 18px, xoay 180° quanh tâm (0,5 s). Danh sách mở/đóng bằng `grid-template-rows 0fr ↔ 1fr`. Thanh cuộn `.scroll-thin`: mảnh, chỉ hiện khi rê chuột, `scrollbar-gutter: stable` để mở danh sách không làm nhảy chiều rộng.
+- **Chính sách bán hàng:**
+  - Khối giá `.price-badge` ("Căn studio chỉ từ 1.195 tỷ đồng"): nền lime 15% + bóng nhẹ, không viền. Cỡ số theo biến `--num` (mobile 2.4rem, sm 3.75rem, xl 4.5rem).
+  - Hai cột chữ hai bên (`.price-badge-side`) cao `0.64 × --num`, căn giữa theo số. **Không** dùng `text-box-trim` cho số: số tô gradient bằng `bg-clip-text` sẽ bị cắt mất đầu.
+  - Mobile: nút "Chi tiết chính sách" rộng vừa chữ (ẩn mũi tên), nút "Nhận bảng tính dòng tiền" một dòng.
+- **Thanh CTA đáy (mobile, `ValueNav`):** chỉ icon (24px), cao `--bar-h` 52px (màn thấp 50/48px, tablet dọc 64px) — luôn thấp hơn header. Zalo là chữ "Zalo" trắng. Mỗi nút có `aria-label`.
+- **Ảnh trang trí** có `alt=""` thì **phải có `aria-hidden="true"` ngay trên thẻ `<img>`** (không phải thẻ bao), nếu không `seo-check` báo lỗi và `build:release` dừng.
+- **Ảnh mới:** chỉ đưa bản đã thu nhỏ vào `public/images` (vd. `checked-pin.webp` 144px, `checked-logo-sm.webp` 480px, `arrow-sm.webp` 96px). `mat-bangq7.webp` (mặt bằng Q7) đã có nhưng chưa dùng.
 
 ---
 
@@ -158,7 +180,7 @@ lead-worker/               # Cloudflare Worker nhận lead
 | Lệnh | Tác dụng |
 |---|---|
 | `npm run dev` | Chạy dev ở máy (Vite) |
-| `npm run build` | Build đầy đủ vào `dist/` (`QTOPIA_BUILD_DIR` đổi được) |
+| `npm run build` | Build đầy đủ vào `dist/` (`QTOPIA_BUILD_DIR` đổi được). Máy Windows bị khoá `dist/`/`.ssr/`: `QTOPIA_BUILD_DIR=dist-check QTOPIA_SSR_DIR=.ssr-check node scripts/build.mjs` rồi `QTOPIA_BUILD_DIR=dist-check node scripts/seo-check.mjs` (thư mục SSR phải nằm trong project) |
 | `npm run seo:check` | Kiểm tra bản build (dùng sitemap làm danh sách trang) |
 | `npm run build:release` | **Dùng trên VPS**: build vào release mới, chạy seo-check, đổi symlink, dọn bản cũ |
 | `npm run images:optimize` | Tạo lại ảnh tối ưu sau khi thêm hoặc đổi ảnh trong `public/images` |
@@ -260,6 +282,11 @@ Form (Hero popup / Liên hệ / nút nổi…) → src/lib/lead.js → POST VITE
 | Tablet ngang: Vị trí/Tiện ích cao gấp rưỡi màn hình | Khối CSS tablet (chữ ×1,656, 1 cột) áp cả khi xoay ngang | Chỉ áp khi `orientation: portrait` |
 | Google hiện icon quả địa cầu thay vì logo | Mới index; thiếu `/favicon.ico`; logo trong icon nhỏ | Thêm `favicon.ico` + bộ `public/icons/`; Request indexing trang chủ; chờ vài ngày–vài tuần |
 | Không ghi đè được file trong `public/` trên máy Windows (`Invalid argument` / `EPERM`) | File do sandbox khác tạo, khoá quyền ghi | Ghi file mới với tên/thư mục khác, hoặc xoá bằng PowerShell Admin |
+| `build:release` dừng: "x/y ảnh thiếu alt", website giữ bản cũ | Ảnh trang trí `alt=""` nhưng `aria-hidden` đặt ở thẻ bao, không ở `<img>` | Thêm `aria-hidden="true"` vào chính `<img>`; build + `seo-check` ở máy trước khi push |
+| Số giá 1.195 bị cắt mất phần đầu | `text-box: trim-both cap` trên chữ dùng `bg-clip-text` (nền chỉ tô trong khung đã bị thu) | Không trim số; chỉ trim chữ hai bên, cho cột chữ chiều cao cố định theo `--num` |
+| Màu mới trong `@theme` (vd. `q-brand-deep`) không có tác dụng, lớp phủ trong suốt | Dev server Vite chưa nạp lại `@theme` | Khởi động lại dev server |
+| Mở danh sách tiện ích làm nội dung nhảy chiều rộng | Thanh cuộn xuất hiện chiếm chỗ | `scrollbar-gutter: stable` (`.scroll-thin`) |
+| `http://qtopia.rever.io.vn` trả 200, không chuyển sang https | Cloudflare chưa bật Always Use HTTPS | Canonical/OG đã là https; bật Cloudflare → SSL/TLS → Edge Certificates → **Always Use HTTPS** |
 
 ---
 

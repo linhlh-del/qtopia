@@ -1,6 +1,23 @@
 # Đối chiếu `qtopia-landing` với checklist SEO landing page BĐS
 
-**Bảng tick 77 tiêu chí:** [QTOPIA-SEO-LANDING-CHECKLIST.md](QTOPIA-SEO-LANDING-CHECKLIST.md) — 11 đạt, 50 chưa đạt (gồm các mục làm một phần), 14 cần xác minh, 2 không áp dụng.
+**Bảng tick 77 tiêu chí:** [QTOPIA-SEO-LANDING-CHECKLIST.md](QTOPIA-SEO-LANDING-CHECKLIST.md) — **43 đạt, 15 chưa đạt, 17 cần xác minh, 2 không áp dụng** (cập nhật 06/11/2026; bản 04/11/2026 là 11 / 50 / 14 / 2).
+
+## Cập nhật 06/11/2026 — kiểm tra trên site thật
+
+Site `https://qtopia.rever.io.vn` đang chạy commit `ffe5071` (release `20261106-104857`, xem `/cms-status.json`). `build:release` trên VPS: **0 lỗi, 4 cảnh báo** (ảnh thiếu `width/height` ở trang chủ, `/tin-tuc` và 2 bài — nhiều khả năng ảnh tin tức từ CMS). Build ở máy dev (không lấy nội dung CMS): 0 lỗi, 0 cảnh báo.
+
+| Kiểm tra (curl site thật) | Kết quả |
+|---|---|
+| Canonical / `og:url` / `og:image` (`/vi-tri`) | `https://qtopia.rever.io.vn/vi-tri`, OG 1200×630 riêng từng trang chính |
+| `sitemap.xml` | 10 URL đúng domain (trang chủ, 6 trang con, `/tin-tuc`, 2 bài) |
+| `robots.txt` | Có `Sitemap:`; Cloudflare tự chèn khối *Content Signals* chặn bot huấn luyện AI (Googlebot vẫn được phép) |
+| Trang không tồn tại | HTTP **404** |
+| HTTPS | HSTS `max-age=31536000`, nén **brotli**, asset có hash `max-age=31536000, immutable` |
+| `http://` | **200, không chuyển sang https** → bật Cloudflare *Always Use HTTPS* |
+
+Đã sửa trong đợt này: alt ảnh trang trí, 2 bài tin tức thật (index được), trang `/cam-on` noindex, domain thống nhất, dọn file không dùng. Việc còn lại được liệt kê trong checklist và [docs/TODO-CHECKLIST.md](docs/TODO-CHECKLIST.md).
+
+> Phần dưới đây là báo cáo gốc ngày 04/11/2026, giữ lại để đối chiếu.
 
 Ngày rà soát: 04/11/2026. Đối chiếu từ source hiện có, `dist/` hiện có và lệnh kiểm tra local. Đây là site **QTOPIA**, không có dữ liệu hay code ATOPIA trong thư mục. Trạng thái: **Đạt** = xác minh được trong code/HTML; **Một phần** = đã có cơ chế nhưng thiếu dữ liệu hoặc chưa test thực tế; **Chưa đạt** = có bằng chứng thiếu/sai; **Chưa xác minh** = cần quyền tài khoản, site đã deploy hoặc thiết bị thật.
 
