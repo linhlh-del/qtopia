@@ -124,7 +124,7 @@ if (!/^Sitemap: https?:\/\//m.test(robots)) err('robots', 'thiếu dòng Sitemap
 if (/Disallow:\s*\/\s*$/m.test(robots)) err('robots', 'đang chặn toàn site')
 if (!existsSync(join(dist, '404.html'))) err('404', 'thiếu 404.html')
 else if (!/noindex/.test(readFileSync(join(dist, '404.html'), 'utf8'))) err('404', '404.html chưa noindex')
-for (const f of ['favicon-48.png', 'apple-touch-icon.png', 'site.webmanifest']) if (!existsSync(join(dist, f))) err('assets', `thiếu ${f}`)
+for (const f of ['favicon.ico', 'icons/favicon-48.png', 'icons/apple-touch-icon.png', 'site.webmanifest']) if (!existsSync(join(dist, f))) err('assets', `thiếu ${f}`)
 if (!/theme-color/.test(readFileSync(fileOf('/'), 'utf8'))) err('/', 'thiếu theme-color')
 if (/qtopia\.example\.com/.test(sm)) warn('sitemap', 'đang dùng domain MẪU — đặt VITE_SITE_URL trước khi phát hành')
 
