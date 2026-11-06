@@ -24,17 +24,25 @@ export async function preloadAll() {
 // Section trang chủ: giữ HTML prerender, chỉ tải JS khi section gần khung nhìn (hydrate muộn).
 export function deferredSection(id, loader) {
   const Component = lazy(async () => {
-    if (typeof window !== 'undefined') {
+    // Chỉ hoãn khi đang hydrate HTML prerender của lần tải trang đầu. Chuyển trang trong ứng dụng
+    // (window.__qtopiaHydrated = true, đặt trong Layout) → tải ngay, không chờ cuộn.
+    if (typeof window !== 'undefined' && !window.__qtopiaHydrated) {
       const section = document.getElementById(id)
       if (section && 'IntersectionObserver' in window) {
+        // Tải khi section gần khung nhìn — HOẶC ngay khi khách chuyển trang trong ứng dụng (sự kiện
+        // qtopia:route-change từ Layout). Nếu không, lần render trang mới sẽ chờ một section không bao giờ
+        // được cuộn tới (phần tử cũ đã bị gỡ khỏi DOM) → điều hướng đứng im.
         await new Promise((resolve) => {
+          const done = () => {
+            observer.disconnect()
+            window.removeEventListener('qtopia:route-change', done)
+            resolve()
+          }
           const observer = new IntersectionObserver((entries) => {
-            if (entries.some((entry) => entry.isIntersecting)) {
-              observer.disconnect()
-              resolve()
-            }
+            if (entries.some((entry) => entry.isIntersecting)) done()
           }, { rootMargin: '600px' })
           observer.observe(section)
+          window.addEventListener('qtopia:route-change', done, { once: true })
         })
       }
     }

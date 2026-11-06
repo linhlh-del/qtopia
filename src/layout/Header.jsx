@@ -14,7 +14,13 @@ export default function Header() {
   const { pathname, hash } = useLocation();
   const popup = useContactPopup();
 
-  useEffect(() => setOpen(false), [pathname, hash]);
+  useEffect(() => setOpen(false), [pathname, hash])
+  // Link cùng trang cuộn thẳng (Layout → useSamePageHashLinks), không đổi location của router → đóng menu ở đây
+  useEffect(() => {
+    const close = () => setOpen(false)
+    window.addEventListener('qtopia:hash-nav', close)
+    return () => window.removeEventListener('qtopia:hash-nav', close)
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 bg-q-navy shadow-[inset_0_-1px_0_rgba(255,255,255,0.08)]">
