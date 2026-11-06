@@ -234,7 +234,7 @@ export default function SalesPolicy({ showTopicLink = true }) {
             id={`csbh-panel-${active.id}`}
             role="tabpanel"
             aria-labelledby={`csbh-tab-${active.id}`}
-            className="stagger mt-3 rounded-3xl border border-white/10 bg-q-navy-700/70 px-4 py-3.5 backdrop-blur-md sm:px-8 sm:py-7"
+            className="stagger relative mt-3 rounded-3xl border border-white/10 bg-q-navy-700/70 px-4 py-3.5 backdrop-blur-md sm:px-8 sm:py-7"
             style={{ '--i': 1 }}
           >
             <h3 className="m-0 mb-2 font-display text-sm font-bold uppercase max-sm:sr-only tracking-[0.12em] text-white sm:mb-6 sm:text-lg">

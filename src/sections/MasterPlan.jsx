@@ -115,7 +115,7 @@ export default function MasterPlan() {
     <section id="tien-ich" data-snap-section className="section-screen bg-q-cream">
       <Container>
         <div ref={ref}>
-          <SectionHeading label="Ba khu trải nghiệm tại QTOPIA" lead="Quậy Station mở ra phía biển, Ocean Galaxy mang nhịp vui sôi động, còn Oasis Resort dành cho những khoảng nghỉ và vận động." />
+          <SectionHeading label="Ba khu trải nghiệm tại QTOPIA" lead="Quậy Station hướng biển, Ocean Galaxy sôi động, Oasis Resort để thư giãn và vận động." />
         </div>
 
         <div className={fullscreen ? 'amenity-layout-full fixed inset-0 z-[100] flex flex-col justify-center gap-3 overflow-auto bg-q-navy p-3' : 'amenity-layout relative mt-5 w-full rounded-[2rem] bg-white p-2 shadow-card sm:p-3 lg:flex'}

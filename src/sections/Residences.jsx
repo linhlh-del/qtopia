@@ -285,7 +285,7 @@ export default function Residences({ showTopicLink = true }) {
           <div className="mt-12">
             <SectionHeading
               label="Loại căn tại tháp Q7"
-              lead="Brochure Q7 giới thiệu thêm dòng ARIA 3PN, bên cạnh AMA Studio, MIRA 1PN+ và VITA 2PN. Diện tích dưới đây là khoảng theo loại căn, không thay thế thông số từng mã căn."
+              lead="Tháp Q7 có thêm căn ARIA 3PN, bên cạnh AMA Studio, MIRA 1PN+ và VITA 2PN. Diện tích là khoảng theo loại căn, không thay cho thông số từng mã căn."
             />
             <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {q7Types.map((type) => (

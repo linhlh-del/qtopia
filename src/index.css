@@ -93,6 +93,17 @@ html {
   }
 }
 
+/* Lưới an toàn: không phần tử nào được kéo rộng trang theo chiều ngang. Trên Safari iOS cũ (không có
+   content-visibility), một phần tử tràn ngang khiến cả trang bị thu nhỏ và 100svh tính sai. */
+body {
+  overflow-x: hidden;
+}
+@supports (overflow: clip) {
+  body {
+    overflow-x: clip;
+  }
+}
+
 body {
   font-size: calc(1rem * var(--type-scale));
   margin: 0;
@@ -821,6 +832,60 @@ main > section:not(#top) {
   .location-art-mascot { display: none; }
 }
 
+/* Trình duyệt không hiểu đơn vị svh (Safari < 15.4, vd. iPhone 6s/7 chưa cập nhật): dùng vh thay thế,
+   nếu không min-height bị bỏ qua và section co lại theo nội dung. */
+@supports not (height: 100svh) {
+  .section-screen,
+  main > section[data-snap-section] {
+    min-height: calc(100vh - var(--header-h));
+  }
+}
+
+/* Tấm nền cho khối chữ đặt trên ảnh nền nhiều màu (section Story…): navy trong mờ + làm mờ ảnh phía sau
+   + bóng chữ nhẹ → chữ trắng luôn đủ tương phản dù ảnh sáng (biển, trời) hay tối (đêm, pháo hoa). */
+.text-panel {
+  padding: clamp(1rem, 2.4vw, 1.75rem);
+  border-radius: 1.5rem;
+  background: rgb(5 10 46 / 0.58);
+  border: 1px solid rgb(255 255 255 / 0.12);
+  box-shadow: 0 20px 50px -24px rgb(0 0 0 / 0.6);
+  -webkit-backdrop-filter: blur(10px) saturate(115%);
+  backdrop-filter: blur(10px) saturate(115%);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .text-panel { background: rgb(5 10 46 / 0.78); }
+}
+
+/* ── Màn hình thấp trên điện thoại (Safari iPhone 6/7/8/SE ≈ 553px, Android nhỏ): sắp xếp lại nội dung
+   để section vừa 1 khung hình trước khi phải thu nhỏ (fit-sections.js) ── */
+@media (max-width: 639px) and (max-height: 760px) {
+  /* Vị trí: 4 mốc thời gian xếp lưới 2×2 thay vì 4 dòng */
+  .location-highlights {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+  .location-highlights > li { border-bottom: 0 !important; padding-block: 0.15rem !important; }
+  .location-note { display: none; }
+  /* CSBH: câu dẫn rút còn 2 dòng (giá + tab + timeline đã đủ thông tin) */
+  #chinh-sach .prose-lead {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+}
+
+/* Tin tức trên màn hình thấp (điện thoại, laptop 1280×720, tablet ngang): bỏ phụ đề, ảnh thẻ bài thấp hơn,
+   tóm tắt 1 dòng → section vừa 1 khung hình */
+@media (max-height: 820px) {
+  .qtopia-news .news-subtitle { display: none; }
+  .qtopia-news li [style*='aspect-ratio'] { aspect-ratio: 2 / 1 !important; }
+  .qtopia-news header h2 { margin-top: 0.25rem; font-size: clamp(1.5rem, 3vw, 2.2rem); }
+  .qtopia-news li p { -webkit-line-clamp: 1; }
+}
+
 /* Thiết bị cảm ứng: ẩn hướng dẫn "rê chuột" */
 @media (hover: none) {
   .hint-hover { display: none; }
@@ -833,7 +898,10 @@ main > section:not(#top) {
 
 /* Tablet, including landscape: reduced 20% from 2.07 (2.07 × 0.8 = 1.656).
    Hero retains its own scale. Desktop and phone layouts are unchanged. */
-@media (768px <= width < 1280px) {
+/* Chỉ tablet DỌC: cỡ chữ lớn, bố cục 1 cột (bản đồ, sơ đồ tiện ích full chiều ngang).
+   Tablet NẰM NGANG (iPad 1024×768, 1180×820, Lenovo/Galaxy Tab 1280×800) thấp hơn nhiều → dùng bố cục
+   2 cột của máy tính để section vừa 1 khung hình. */
+@media (768px <= width < 1280px) and (orientation: portrait) {
   :root {
     --type-scale: 1.656;
     --bar-h: 86px;

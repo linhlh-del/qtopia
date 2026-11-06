@@ -10,6 +10,7 @@ import { initDelegatedTracking, loadGtm, trackPageView, trackScrollDepth, trackS
 import { captureFirstTouch } from '../lib/utm'
 import { pauseOffscreenMotion } from '../lib/motion'
 import { cmsPageView, initCmsTracker } from '../cms/tracker'
+import { fitSections } from '../lib/fit-sections'
 
 /* Cuộn tới section khi URL có #id; chỉ cuộn một lần để không giành quyền cuộn của người dùng.
    scroll-padding-top của <html> đã tính chiều cao header. */
@@ -117,7 +118,9 @@ export default function Layout() {
     const stopScroll = trackScrollDepth()
     const stopSections = trackSectionViews()
     const stopMotion = pauseOffscreenMotion()
+    const stopFit = fitSections()
     return () => {
+      stopFit()
       stopScroll()
       stopSections()
       stopMotion()

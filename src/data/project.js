@@ -21,31 +21,31 @@ export const siteMeta = {
 export const faq = [
   {
     q: "QTOPIA là dự án gì và nằm ở đâu?",
-    a: "Theo tài liệu dự án, QTOPIA là tổ hợp căn hộ và trải nghiệm giải trí, nghỉ dưỡng bên biển tại khu vực Phước Hải. Brochure định vị nơi đây là “thành phố cuối tuần” cách trung tâm TP.HCM khoảng 75 phút di chuyển.",
+    a: "QTOPIA là tổ hợp căn hộ nghỉ dưỡng và giải trí bên biển tại Phước Hải, được định vị là “thành phố cuối tuần” cách trung tâm TP.HCM khoảng 75 phút.",
   },
   {
     q: "Từ TP.HCM đến QTOPIA mất bao lâu?",
-    a: "Brochure nêu thời gian tham khảo khoảng 75 phút từ trung tâm TP.HCM, 30 phút từ sân bay Long Thành và 19 phút từ Hồ Tràm. Thời gian thực tế phụ thuộc điểm xuất phát, tuyến đường và giao thông.",
+    a: "Khoảng 75 phút từ trung tâm TP.HCM, 30 phút từ sân bay Long Thành, 19 phút từ Hồ Tràm (tham khảo). Thời gian thực tế tuỳ tuyến đường và giao thông.",
   },
   {
     q: "QTOPIA có những khu tiện ích nào?",
-    a: "Ba khu trải nghiệm chính trong brochure là Quậy Station, Ocean Galaxy và Oasis Resort. Các điểm nổi bật gồm quảng trường biển, DJ Ocean, Aqua Funny Park, hồ bơi Oasis, khu thể thao và vườn Romantic Garden.",
+    a: "Ba khu trải nghiệm: Quậy Station, Ocean Galaxy và Oasis Resort. Nổi bật có quảng trường biển, sàn DJ Ocean, công viên nước Aqua Funny Park, hồ bơi Oasis, khu thể thao và vườn hoa.",
   },
   {
     q: "Q5, Q6 và Q7 có những loại căn nào?",
-    a: "Tầng điển hình Q5–Q6 có AMA Studio, MIRA 1PN+ và VITA 2PN. Q7 có thêm ARIA 3PN. Brochure thể hiện tầng điển hình từ tầng 4 đến tầng 10.",
+    a: "Tháp Q5–Q6 có căn AMA Studio, MIRA 1PN+ và VITA 2PN; tháp Q7 có thêm ARIA 3PN. Tầng điển hình từ tầng 4 đến tầng 10.",
   },
   {
     q: "Diện tích căn hộ QTOPIA được tính như thế nào?",
-    a: "Tài liệu phân biệt diện tích sử dụng (SD) và diện tích tim tường (TT). Bản mặt bằng Q5–Q6 trên trang cho phép xem cả hai chỉ số theo từng mã căn; diện tích chính thức cần đối chiếu hồ sơ bán hàng.",
+    a: "Có hai chỉ số: diện tích sử dụng (SD) và diện tích tim tường (TT). Chọn mã căn trên mặt bằng Q5–Q6 để xem cả hai; số liệu chính thức theo hồ sơ bán hàng.",
   },
   {
     q: "Căn hộ QTOPIA có thể dùng để ở hay cho thuê?",
-    a: "Brochure giới thiệu định hướng “tài sản 2 trong 1”: sử dụng làm nơi nghỉ cuối tuần hoặc khai thác cho thuê. Khả năng vận hành, chi phí và doanh thu phụ thuộc phương án thực tế; tài liệu không đưa ra mức lợi nhuận bảo đảm.",
+    a: "Dự án hướng tới “tài sản 2 trong 1”: vừa nghỉ cuối tuần, vừa cho thuê. Chi phí và doanh thu tuỳ phương án vận hành thực tế, không có cam kết lợi nhuận.",
   },
   {
     q: "Làm sao nhận thông tin sản phẩm mới nhất?",
-    a: "Bạn có thể để lại thông tin tại biểu mẫu tư vấn. Bảng giá, chính sách bán hàng, tiêu chuẩn bàn giao và hồ sơ pháp lý cần được xác nhận theo tài liệu chính thức ở thời điểm giao dịch.",
+    a: "Để lại thông tin ở biểu mẫu tư vấn. Bảng giá, chính sách, tiêu chuẩn bàn giao và pháp lý được xác nhận theo tài liệu chính thức lúc giao dịch.",
   },
 ];
 
@@ -64,7 +64,7 @@ export const heroContent = {
       alt: "Phối cảnh khu Ocean Galaxy về đêm với hồ bơi và sàn DJ tại QTOPIA",
       h1: "Sở hữu nhà Sài Gòn có biển\ngiá chỉ từ 1.195 tỷ",
       slogan:
-        "Căn Studio QTOPIA tại Phước Hải — trước biển, sau núi, gần rừng.",
+        "Căn Studio tại Phước Hải — trước biển, sau núi, gần rừng.",
     },
     {
       src: "/images/renders/aqua-funny-park-night.webp",
@@ -83,11 +83,11 @@ export const stories = [
     image: "/images/renders/birdview.webp",
     alt: "Phối cảnh tổng thể dự án QTOPIA bên bờ biển với núi xanh phía sau",
     align: "left",
-    label: "Thành phố cuối tuần của siêu độ thị TP. HỒ CHÍ MINH",
-    lead: "Biển ở phía trước, núi và rừng ở phía sau. QTOPIA kết nối không gian nghỉ dưỡng với nhịp vui của một tổ hợp Entertainment Complex.",
+    label: "Thành phố cuối tuần của siêu đô thị TP. HỒ CHÍ MINH",
+    lead: "Biển phía trước, núi rừng phía sau. QTOPIA là khu giải trí phức hợp, nơi nghỉ dưỡng và vui chơi hoà làm một.",
     points: [
-      "Ba khu trải nghiệm: Quậy Station · Ocean Galaxy · Oasis Resort",
-      "Loại hình căn hộ Studio · 1PN+ · 2PN · 3PN · Aqua Home theo từng tháp",
+      "3 khu trải nghiệm: Quậy Station · Ocean Galaxy · Oasis Resort",
+      "Căn hộ Studio · 1PN+ · 2PN · 3PN · Aqua Home",
     ],
     cta: {
       label: "Khám phá mặt bằng",
@@ -98,12 +98,12 @@ export const stories = [
   {
     id: "nightlife",
     image: "/images/renders/ocean-galaxy.webp",
-    alt: "Phối cảnh Nightlife Hub Ocean Galaxy về đêm với hồ bơi, sàn DJ và pháo hoa tại QTOPIA",
+    alt: "Phối cảnh khu giải trí đêm Ocean Galaxy với hồ bơi, sàn DJ và pháo hoa tại QTOPIA",
     align: "right",
     label: "Một ngày, nhiều nhịp vui",
-    lead: "Ban ngày thư giãn bên hồ bơi, khám phá Aqua Funny Park. Khi đêm xuống, Ocean Galaxy tiếp nối bằng âm nhạc, ánh sáng và không gian giải trí bên biển.",
+    lead: "Ngày thư giãn bên hồ bơi, công viên nước Aqua Funny Park. Đêm xuống, Ocean Galaxy rộn ràng âm nhạc và ánh sáng bên biển.",
     points: [
-      "DJ Ocean · phố thương mại dịch vụ",
+      "Sàn DJ Ocean · phố mua sắm, ẩm thực",
       "Oasis Resort · khu thể thao · vườn cảnh quan",
     ],
     cta: {
@@ -149,10 +149,10 @@ export const featuredAmenityGroups = [
         image: "/images/renders/aqua-funny-park-night.webp",
         caption: "Aqua Funny Park về đêm",
       },
-      { image: "/images/renders/ocean-galaxy-2.webp", caption: "Beach club" },
+      { image: "/images/renders/ocean-galaxy-2.webp", caption: "Câu lạc bộ bãi biển" },
       {
         image: "/images/renders/ocean-galaxy-3.webp",
-        caption: "Phố TMDV Ocean Galaxy",
+        caption: "Phố thương mại Ocean Galaxy",
       },
     ],
   },
@@ -179,16 +179,16 @@ export const featuredAmenityGroups = [
   },
   {
     id: "rooftop",
-    label: "Không gian tầng mái",
+    label: "Không gian sân thượng",
     items: [
       {
         image: "/images/renders/roof-q5.webp",
-        caption: "Tầng mái Q5 — Ocean Lounge",
+        caption: "Sân thượng Q5 — Ocean Lounge",
         span: "big",
       },
       {
         image: "/images/renders/roof-q6.webp",
-        caption: "Tầng mái Q6 — Galaxy Dome",
+        caption: "Sân thượng Q6 — Galaxy Dome",
       },
       {
         image: "/images/renders/tien-ich-2.webp",
@@ -208,7 +208,7 @@ export const featuredAmenityGroups = [
 
 export const locationContent = {
   label: "Vị trí QTOPIA",
-  lead: "Phía trước là biển, phía sau là núi và rừng. Brochure giới thiệu QTOPIA như điểm đến cuối tuần cách trung tâm TP.HCM khoảng 75 phút.",
+  lead: "Trước biển, sau núi và rừng. Điểm đến cuối tuần cách trung tâm TP.HCM khoảng 75 phút.",
   mapImage: "/images/position-map.webp",
   highlights: [
     { label: "Trung tâm TP.HCM", value: "75" },
@@ -292,7 +292,7 @@ export const leadFormContent = {
   label: "Tìm hiểu QTOPIA",
   heading: "Nhận thông tin dự án QTOPIA",
   description:
-    "Để lại thông tin để nhận tài liệu sản phẩm và được liên hệ khi có cập nhật chính thức về bảng giá, chính sách bán hàng.",
+    "Để lại thông tin để nhận tài liệu, bảng giá và chính sách bán hàng mới nhất.",
   image: "/images/renders/view-from-sea.webp",
   consentNote:
     "Bằng việc gửi biểu mẫu, bạn đồng ý để bộ phận tư vấn liên hệ về thông tin dự án QTOPIA.",
@@ -302,7 +302,7 @@ export const leadFormContent = {
 // Mục chưa có văn bản để `subtitle: 'Đang cập nhật'`; khi CĐT công bố thì thay bằng số hiệu thật.
 export const legalContent = {
   label: "Pháp lý dự án QTOPIA",
-  lead: "Các văn bản pháp lý chính của dự án theo thông tin đã công bố. Khách hàng nên đối chiếu bản gốc khi ký kết giao dịch.",
+  lead: "Các văn bản pháp lý chính đã công bố. Vui lòng đối chiếu bản gốc khi giao dịch.",
   items: [
     {
       title: "Đấu giá quyền sử dụng đất",
@@ -330,7 +330,7 @@ export const legalContent = {
 
 export const legalNotice = {
   disclaimer:
-    "Thông tin, hình ảnh, các tiện ích trong tài liệu bán hàng chỉ mang tính tương đối và có thể được điều chỉnh theo quyết định của Chủ đầu tư từng thời điểm đảm bảo phù hợp quy hoạch và thực tế thi công dự án. Các thông tin, cam kết chính thức sẽ được quy định cụ thể tại Hợp đồng mua bán. Việc quản lý, vận hành và kinh doanh khu đô thị sẽ do theo quy định của Ban quản lý.",
+    "Thông tin, hình ảnh và tiện ích chỉ mang tính tham khảo, có thể được Chủ đầu tư điều chỉnh để phù hợp quy hoạch và thực tế thi công. Cam kết chính thức được quy định tại Hợp đồng mua bán. Việc quản lý, vận hành khu đô thị theo quy định của Ban quản lý.",
 };
 
 /* ── Chính sách bán hàng (theo bảng CSBH của chủ đầu tư) ───────────────────
@@ -424,7 +424,7 @@ export const salesPolicy = {
    Chỉ dùng các mốc có trên bản đồ vị trí / brochure; thời gian là tham khảo. */
 export const nearbyContent = {
   label: "Tiện ích xung quanh QTOPIA",
-  lead: "Từ QTOPIA, các điểm đến biển, đô thị và đầu mối giao thông của khu vực đều nằm trong bán kính một chuyến đi ngắn. Thời gian di chuyển dưới đây là số liệu tham khảo theo brochure.",
+  lead: "Biển, đô thị và sân bay đều chỉ cách một chuyến đi ngắn. Thời gian di chuyển là số liệu tham khảo.",
   groups: [
     {
       title: "Kết nối giao thông",

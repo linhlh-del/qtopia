@@ -63,7 +63,7 @@ export default function Hero() {
 
       <Container className="relative z-10 pb-[calc(1.5rem+var(--bar-h))] pt-20 lg:pb-10 lg:pr-24">
         <div className="flex max-w-lg flex-col items-start gap-3">
-          <div key={slide.src} className="hero-copy-enter flex flex-col gap-3">
+          <div key={slide.src} className="hero-copy-enter flex flex-col gap-3 [text-shadow:0_2px_14px_rgb(5_10_46/0.55)]">
             <h1 className="m-0 font-display text-[clamp(1.35rem,3.1vw,2.1rem)] font-extrabold leading-[1.15] tracking-tight text-white">
               {titleLines.map((line, i) => (
                 <Fragment key={i}>

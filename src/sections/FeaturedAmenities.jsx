@@ -49,7 +49,7 @@ export default function FeaturedAmenities() {
     <section id="tien-ich-noi-bat" data-snap-section className="section-screen bg-q-sand">
       <Container>
         <div ref={ref}>
-          <SectionHeading label="Tiện ích QTOPIA theo từng nhịp sống" lead="Chọn một trải nghiệm: năng lượng của Ocean Galaxy, khoảng nghỉ tại Oasis Resort hay góc nhìn riêng từ các tầng mái." />
+          <SectionHeading label="Tiện ích QTOPIA theo từng nhịp sống" lead="Chọn trải nghiệm: sôi động ở Ocean Galaxy, thư giãn ở Oasis Resort hay ngắm cảnh từ sân thượng." />
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">

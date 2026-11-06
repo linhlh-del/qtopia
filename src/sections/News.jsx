@@ -110,7 +110,7 @@ export default function News() {
           <h2 className="mt-2 font-display text-[length:calc(clamp(1.7rem,3.8vw,2.8rem)*var(--type-scale))] font-extrabold uppercase leading-tight tracking-wide text-q-navy">
             Tin tức & sự kiện
           </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-q-muted sm:text-base">
+          <p className="news-subtitle mx-auto mt-2 max-w-2xl text-sm leading-relaxed text-q-muted sm:text-base">
             Cập nhật những thông tin mới nhất về QTOPIA.
           </p>
         </header>
@@ -176,7 +176,7 @@ export default function News() {
                     <span className="text-[length:calc(0.68rem*var(--type-scale))] font-semibold uppercase tracking-wider text-q-muted">{isSampleNews(item) ? 'Bài viết mẫu' : item.category}</span>
                     <Link
                       to={getNewsHref(item.id)}
-                      className="inline-flex min-h-10 items-center gap-2 font-display text-xs font-bold uppercase tracking-wide text-q-navy no-underline hover:text-q-blue"
+                      className="relative inline-flex min-h-10 items-center gap-2 font-display text-xs font-bold uppercase tracking-wide text-q-navy no-underline hover:text-q-blue"
                     >
                       Đọc thêm<span className="sr-only">: {item.title}</span>
                       <ArrowIcon />

@@ -14,7 +14,7 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <Img src="/images/brand/logo-horizontal-white.png" alt="QTOPIA" className="h-9 w-auto self-start" />
             <p className="max-w-xs text-sm leading-relaxed">
-              Thành phố cuối tuần của siêu đô thị TP. Hồ Chí Minh — Entertainment Complex bên biển.
+              Thành phố cuối tuần của siêu đô thị TP. Hồ Chí Minh — khu giải trí phức hợp bên biển.
             </p>
           </div>
 

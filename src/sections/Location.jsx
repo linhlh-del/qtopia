@@ -465,7 +465,7 @@ export default function Location({ showTopicLink = true }) {
               ))}
             </ul>
 
-            <p className="mt-1.5 text-[length:calc(0.7rem*var(--type-scale))] leading-snug text-white/65 lg:mt-3 lg:text-xs">
+            <p className="location-note mt-1.5 text-[length:calc(0.7rem*var(--type-scale))] leading-snug text-white/65 lg:mt-3 lg:text-xs">
               Thời gian di chuyển tham khảo theo brochure; thực tế phụ thuộc
               tuyến đường và giao thông.
             </p>

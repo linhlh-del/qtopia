@@ -1,6 +1,6 @@
 # QTOPIA — landing page
 
-> 📘 **Tài liệu hệ thống:** [docs/KNOWLEDGE-BASE.md](docs/KNOWLEDGE-BASE.md) · **Việc cần làm:** [docs/TODO-CHECKLIST.md](docs/TODO-CHECKLIST.md) · **Triển khai VPS + CMS:** [deploy/DEPLOY.md](deploy/DEPLOY.md) · **Lead Worker:** [lead-worker/readme.md](lead-worker/readme.md)
+> 📘 **Tài liệu hệ thống:** [docs/KNOWLEDGE-BASE.md](docs/KNOWLEDGE-BASE.md) · **Việc cần làm:** [docs/TODO-CHECKLIST.md](docs/TODO-CHECKLIST.md) · **Triển khai VPS + CMS:** [deploy/DEPLOY.md](deploy/DEPLOY.md) · **Lead Worker:** [lead-worker/readme.md](lead-worker/readme.md) · **Responsive / thiết bị:** [docs/RESPONSIVE-DEVICES.md](docs/RESPONSIVE-DEVICES.md)
 
 React 19 + Vite + Tailwind v4, prerender HTML tĩnh cho từng route (SEO, Open Graph, Zalo/Facebook đọc được không cần JS).
 

@@ -38,10 +38,10 @@ export const pages = {
   '/': {
     title: 'QTOPIA — Thành phố cuối tuần bên biển gần TP.HCM',
     description:
-      'QTOPIA – Thành phố cuối tuần bên biển, cách TP.HCM 75 phút. Sở hữu thiên nhiên núi, biển, rừng; nghỉ dưỡng Resort City, wellness, giải trí 24/7 vận hành CBRE.',
+      'QTOPIA – Thành phố cuối tuần bên biển, cách TP.HCM 75 phút. Sở hữu thiên nhiên núi, biển, rừng; thành phố nghỉ dưỡng, chăm sóc sức khoẻ, giải trí 24/7.',
     ogTitle: 'QTOPIA — Thành phố cuối tuần của siêu đô thị TP.HCM',
     ogDescription:
-      'QTOPIA – Thành phố cuối tuần bên biển, cách TP.HCM 75 phút. Sở hữu thiên nhiên núi, biển, rừng; nghỉ dưỡng Resort City, wellness, giải trí 24/7 vận hành CBRE.',
+      'QTOPIA – Thành phố cuối tuần bên biển, cách TP.HCM 75 phút. Sở hữu thiên nhiên núi, biển, rừng; thành phố nghỉ dưỡng, chăm sóc sức khoẻ, giải trí 24/7.',
     breadcrumb: 'Trang chủ',
     changefreq: 'weekly',
     priority: 1.0,
@@ -88,14 +88,14 @@ export const pages = {
     breadcrumb: 'Tiện ích',
     h1: 'Tiện ích QTOPIA — ba khu trải nghiệm bên biển',
     intro: [
-      'Quậy Station hướng ra biển, Ocean Galaxy gắn với âm nhạc và trải nghiệm về đêm, còn Oasis Resort dành cho hồ bơi, vận động và những khoảng nghỉ giữa cảnh quan.',
-      'Brochure gọi tên DJ Ocean, Aqua Funny Park, hồ bơi Oasis, Romantic Garden và các tiện ích tầng mái. Chọn từng khu trên sơ đồ để khám phá các điểm nổi bật.',
+      'Quậy Station hướng ra biển, Ocean Galaxy sôi động về đêm, Oasis Resort dành cho hồ bơi, thể thao và thư giãn.',
+      'Nổi bật có sàn DJ Ocean, công viên nước Aqua Funny Park, hồ bơi Oasis, vườn hoa và sân thượng. Chọn từng khu trên sơ đồ để xem chi tiết.',
     ],
     changefreq: 'monthly',
     priority: 0.8,
     ogImage: '/images/og-qtopia-tien-ich.webp',
     ogImageAlt: 'Phối cảnh khu Ocean Galaxy về đêm với hồ bơi và sàn DJ tại QTOPIA',
-    menu: 'Ba cụm tiện ích và Nightlife Hub của QTOPIA',
+    menu: 'Ba khu tiện ích và khu giải trí đêm của QTOPIA',
   },
   '/mat-bang': {
     title: 'Mặt bằng QTOPIA — Q5, Q6, Q7 và bốn loại căn',
