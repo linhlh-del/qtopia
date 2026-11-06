@@ -1111,3 +1111,10 @@ main > section:not(#top) {
 @media (prefers-reduced-motion: reduce) {
   .fp-drawer, .fp-drawer-backdrop { animation: none; }
 }
+
+/* Ngăn trượt từ mép phải (menu mobile) */
+.side-drawer-backdrop { animation: fp-fade-in 0.25s ease-out both; }
+.side-drawer { animation: fp-slide-left 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .side-drawer, .side-drawer-backdrop { animation: none; }
+}

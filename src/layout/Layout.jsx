@@ -70,6 +70,8 @@ function useSamePageHashLinks() {
       const el = document.getElementById(decodeURIComponent(url.hash.slice(1)))
       if (!el) return
       e.preventDefault()
+      // báo trước để menu mobile mở khoá cuộn trang (body overflow) trước khi cuộn
+      window.dispatchEvent(new Event('qtopia:before-hash-nav'))
       el.scrollIntoView({ block: 'start' })
       if (window.location.hash !== url.hash) window.history.pushState(window.history.state, '', url.hash)
       window.dispatchEvent(new CustomEvent('qtopia:hash-nav', { detail: url.hash }))
