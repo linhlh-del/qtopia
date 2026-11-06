@@ -317,7 +317,7 @@ function LocationMap() {
             >
               <img
                 src="/images/checked-logo-sm.webp"
-                alt=""
+                alt="" aria-hidden="true"
                 width="480"
                 height="138"
                 decoding="async"
@@ -334,7 +334,7 @@ function LocationMap() {
               <span className="qtopia-pulse absolute inset-x-1.5 bottom-0 top-3 rounded-full border-2 border-[#c13cff]" />
               <img
                 src="/images/checked-pin.webp"
-                alt=""
+                alt="" aria-hidden="true"
                 width="144"
                 height="140"
                 decoding="async"

@@ -68,7 +68,7 @@ function AmenityPanel({ expanded, setExpanded, selected, setSelected, setSelecte
                 <span aria-hidden="true"
                   className="grid size-[18px] shrink-0 place-items-center transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform [transform-origin:50%_50%] motion-reduce:transition-none"
                   style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-                  <img src="/images/arrow-sm.webp" alt="" width="96" height="56" decoding="async" className="block h-auto w-[17.5px]" />
+                  <img src="/images/arrow-sm.webp" alt="" aria-hidden="true" width="96" height="56" decoding="async" className="block h-auto w-[17.5px]" />
                 </span>
               </button>
               {/* Mở/đóng mượt: animate grid-template-rows 0fr ↔ 1fr (không cần đo chiều cao) */}
