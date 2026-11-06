@@ -1118,3 +1118,11 @@ main > section:not(#top) {
 @media (prefers-reduced-motion: reduce) {
   .side-drawer, .side-drawer-backdrop { animation: none; }
 }
+
+/* Menu chọn tháp (Mặt bằng) */
+.tower-menu { animation: tower-menu-in 0.2s ease-out both; }
+@keyframes tower-menu-in { from { opacity: 0; transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .tower-menu { animation: none; } }
+/* Đổi tháp ở Mặt bằng: nội dung mới hiện dần, không dịch chuyển bố cục */
+.tower-fade { animation: fp-fade-in 0.45s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .tower-fade { animation: none; } }

@@ -8,23 +8,25 @@ import MediaFrame from '../components/ui/MediaFrame'
 import SectionHeading from '../components/ui/SectionHeading'
 import { useContactPopup } from '../components/ContactPopup'
 import { unitLayoutImages, unitTypeInfo } from '../data/project'
-import { FLOOR_VIEWBOX_H, FLOOR_VIEWBOX_W, q5q6FloorPlan } from '../data/qtopiaFloorPlan'
+import { floorPlans } from '../data/qtopiaFloorPlan'
 import { track } from '../lib/analytics'
 import { useReveal } from '../hooks/useReveal'
 import { useNearViewport } from '../hooks/useNearViewport'
 
-const tower = q5q6FloorPlan
-const unitsByCode = Object.fromEntries(tower.units.map((unit) => [unit.code, unit]))
-const legend = [...new Set(tower.units.map((unit) => unit.type))].map((type) => unitTypeInfo[type])
+// Dữ liệu tính sẵn cho từng tháp (Q5 & Q6, Q7): tra căn theo mã, chú thích loại căn, thứ tự line trắng chạy
+// (hàng trên trái → phải, rồi hàng dưới phải → trái)
+const towerMeta = Object.fromEntries(floorPlans.map((plan) => [plan.id, {
+  unitsByCode: Object.fromEntries(plan.units.map((unit) => [unit.code, unit])),
+  legend: [...new Set(plan.units.map((unit) => unit.type))].map((type) => unitTypeInfo[type]),
+  runnerOrder: [
+    ...plan.units.filter((u) => u.labelY < plan.viewBoxH / 2).sort((a, b) => a.labelX - b.labelX),
+    ...plan.units.filter((u) => u.labelY >= plan.viewBoxH / 2).sort((a, b) => b.labelX - a.labelX),
+  ],
+}]))
 const q7Types = Object.entries(unitLayoutImages.q7).map(([id, layout]) => ({ ...unitTypeInfo[id], ...layout }))
 
 // Viền căn: tông tươi, đậm sắc theo loại căn (nền căn vẫn giữ màu pastel của sơ đồ)
 const unitBorderColors = { 'ama-studio': '#ff8a1f', 'mira-1pn': '#a8d81c', 'vita-2pn': '#1ab8ff' }
-// Thứ tự line trắng chạy qua các căn theo vòng: hàng trên trái → phải, rồi hàng dưới phải → trái
-const runnerOrder = [
-  ...tower.units.filter((u) => u.labelY < 100).sort((a, b) => a.labelX - b.labelX),
-  ...tower.units.filter((u) => u.labelY >= 100).sort((a, b) => b.labelX - a.labelX),
-]
 const RUNNER_LAP = '2s' // thời gian line chạy hết 1 vòng quanh 1 căn (chậm hơn 10% so với 1,8s ban đầu)
 const RUNNER_REST_MS = 600 // nghỉ giữa 2 căn: line ẩn đi rồi mới xuất hiện ở căn kế tiếp
 
@@ -32,6 +34,10 @@ export default function Residences({ showTopicLink = true }) {
   const ref = useReveal()
   const [planRef, planVisible] = useNearViewport('300px')
   const popup = useContactPopup()
+  const [towerId, setTowerId] = useState(floorPlans[0].id)
+  const [towerMenu, setTowerMenu] = useState(false)
+  const tower = floorPlans.find((plan) => plan.id === towerId)
+  const { unitsByCode, legend, runnerOrder } = towerMeta[towerId]
   const [activeCode, setActiveCode] = useState(null) // căn đang mở popup (bấm)
   const [hoverCode, setHoverCode] = useState(null) // căn đang rê chuột (chỉ làm nổi bật)
   const [fullscreen, setFullscreen] = useState(false)
@@ -57,6 +63,32 @@ export default function Residences({ showTopicLink = true }) {
   const activeLayout = activeUnit ? unitLayoutImages[tower.id]?.[activeUnit.type] : null
 
   const closePanel = () => setActiveCode(null)
+
+  // Đổi tháp: đóng popup, bỏ nổi bật, line trắng chạy lại từ căn đầu
+  const selectTower = (id) => {
+    setTowerMenu(false)
+    if (id === towerId) return
+    setTowerId(id)
+    setActiveCode(null)
+    setHoverCode(null)
+    setRunIndex(0)
+    setRunnerResting(false)
+    window.clearTimeout(restTimer.current)
+    track('select_floorplan_tower', { tower: id })
+  }
+
+  // Menu chọn tháp: bấm ra ngoài hoặc Esc để đóng
+  useEffect(() => {
+    if (!towerMenu) return undefined
+    const onDoc = (event) => { if (!event.target.closest?.('[data-tower-menu]')) setTowerMenu(false) }
+    const onKey = (event) => event.key === 'Escape' && setTowerMenu(false)
+    document.addEventListener('click', onDoc)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('click', onDoc)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [towerMenu])
 
   const selectUnit = (unit) => (event) => {
     event.stopPropagation()
@@ -99,11 +131,13 @@ export default function Residences({ showTopicLink = true }) {
 
   const planBlock = (
       <div ref={planRef} data-floor-plan
-        className={fullscreen ? 'fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-q-navy' : 'relative mt-4 overflow-hidden rounded-[1.5rem] bg-white shadow-card sm:h-[min(540px,44svh)] xl:h-[min(600px,50svh)]'}
+        className={fullscreen ? 'fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-q-navy' : 'relative mt-4 h-[calc(min(1000px,38svh*3.165)/2.8716)] overflow-hidden rounded-[1.5rem] bg-white shadow-card sm:h-[min(540px,44svh)] xl:h-[min(600px,50svh)]'}
         onMouseLeave={() => setHoverCode(null)}>
-        <div className={fullscreen ? 'flex h-full w-full overflow-auto' : 'overflow-x-auto sm:flex sm:h-full sm:items-center'}
+        {/* Khung cố định chiều cao cho mọi tháp (mobile lấy theo ảnh có tỉ lệ cao nhất - Q7), ảnh căn giữa dọc
+            → đổi tháp không làm các phần bên dưới dịch chuyển */}
+        <div className={fullscreen ? 'flex h-full w-full overflow-auto' : 'flex h-full items-center overflow-x-auto'}
           style={fullscreen ? { justifyContent: 'safe center', alignItems: 'safe center' } : undefined}>
-          <div className={fullscreen ? 'floorplan-fullscreen relative shrink-0' : 'relative w-full min-w-[min(1000px,calc(38svh*3.165))] lg:min-w-0'}
+          <div key={tower.id} className={fullscreen ? 'floorplan-fullscreen tower-fade relative shrink-0' : 'tower-fade relative w-full min-w-[min(1000px,calc(38svh*3.165))] lg:min-w-0'}
             style={fullscreen ? { '--fp-ar': tower.imageWidth / tower.imageHeight, '--fp-zoom': zoom } : undefined}>
             <MediaFrame
               src={tower.image}
@@ -113,7 +147,7 @@ export default function Residences({ showTopicLink = true }) {
             />
             {planVisible ? <svg
               className="absolute inset-0 h-full w-full"
-              viewBox={`0 0 ${FLOOR_VIEWBOX_W} ${FLOOR_VIEWBOX_H}`}
+              viewBox={`0 0 ${tower.viewBoxW} ${tower.viewBoxH}`}
               preserveAspectRatio="none"
               aria-label={`Sơ đồ tương tác ${tower.label}, chọn mã căn để xem diện tích`}
             >
@@ -204,8 +238,8 @@ export default function Residences({ showTopicLink = true }) {
                   onMouseEnter={() => setHoverCode(unit.code)}
                   onClick={selectUnit(unit)}
                   style={{
-                    left: `${(unit.labelX / FLOOR_VIEWBOX_W) * 100}%`,
-                    top: `${(unit.labelY / FLOOR_VIEWBOX_H) * 100}%`,
+                    left: `${(unit.labelX / tower.viewBoxW) * 100}%`,
+                    top: `${(unit.labelY / tower.viewBoxH) * 100}%`,
                     background: unit.labelColor,
                   }}
                   className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-1.5 py-0.5 before:absolute before:-inset-x-1.5 before:-inset-y-2.5 before:content-[''] font-display text-[length:calc(10px*var(--type-scale))] font-bold leading-none text-white shadow-sm transition-transform sm:text-xs ${isActive ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'}`}
@@ -305,25 +339,64 @@ export default function Residences({ showTopicLink = true }) {
       {unitDrawer}
       <Container>
         <div ref={ref}>
-          <SectionHeading label="Mặt bằng căn hộ Q5 & Q6" lead={`${tower.floorRange} · ${tower.units.length} căn trên sơ đồ · ${legend.length} loại căn`} />
+          {/* Tiêu đề mọi tháp xếp chồng trong cùng 1 ô lưới, chỉ hiện tháp đang chọn → khối luôn cao bằng
+              tiêu đề dài nhất ("Q5 & Q6" xuống 2 dòng trên mobile), đổi tháp không làm phần dưới dịch chuyển */}
+          <div className="grid">
+            {floorPlans.map((plan) => (
+              <SectionHeading
+                key={plan.id}
+                className={`[grid-area:1/1] transition-opacity duration-500 ease-out motion-reduce:transition-none ${plan.id === tower.id ? 'opacity-100' : 'invisible opacity-0'}`}
+                label={`Mặt bằng căn hộ ${plan.short}`}
+                lead={`${plan.floorRange} · ${plan.units.length} căn trên sơ đồ · ${towerMeta[plan.id].legend.length} loại căn`}
+              />
+            ))}
+          </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap justify-center gap-3">
-          {legend.map((type) => (
-            <span key={type.id} className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm font-semibold text-q-navy shadow-soft [@media(max-height:740px)]:py-1">
-              <span className="h-3 w-3 rounded-full" style={{ background: tower.units.find((unit) => unit.type === type.id).color }} />
-              {type.name} · {type.subtitle}
-            </span>
-          ))}
+        <div className="mt-4 flex flex-col items-start gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+          {/* Chọn tháp: Q5 & Q6 / Q7. Mobile: nút một hàng riêng, 3 chú thích một hàng bên dưới */}
+          <div data-tower-menu className="relative">
+            <button type="button" onClick={() => setTowerMenu((v) => !v)} aria-haspopup="listbox" aria-expanded={towerMenu}
+              aria-label={`Chọn tháp, đang xem ${tower.label}`}
+              className="inline-flex min-w-[9.5rem] shrink-0 cursor-pointer items-center justify-between gap-2.5 whitespace-nowrap rounded-full border-0 bg-q-blue px-4 py-2 font-display text-sm font-bold text-white shadow-soft [@media(max-height:740px)]:py-1">
+              {tower.label}
+              <span aria-hidden="true" className="grid size-4 place-items-center rounded-full bg-white transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] motion-reduce:transition-none"
+                style={{ transform: towerMenu ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                <img src="/images/arrow-sm.webp" alt="" aria-hidden="true" width="96" height="56" decoding="async" className="block h-auto w-[10px]" />
+              </span>
+            </button>
+            {towerMenu ? (
+              <ul role="listbox" aria-label="Chọn tháp"
+                className="tower-menu absolute left-0 top-full z-40 m-0 mt-2 min-w-full list-none overflow-hidden rounded-2xl bg-white p-1.5 shadow-card">
+                {floorPlans.map((plan) => (
+                  <li key={plan.id}>
+                    <button type="button" role="option" aria-selected={plan.id === towerId} onClick={() => selectTower(plan.id)}
+                      className={`flex min-h-11 w-full cursor-pointer items-center justify-between gap-3 whitespace-nowrap rounded-xl border-0 px-3 text-left font-display text-sm font-semibold ${plan.id === towerId ? 'bg-q-blue/10 text-q-blue' : 'bg-transparent text-q-navy hover:bg-q-sand'}`}>
+                      {plan.label}
+                      {plan.id === towerId ? <span aria-hidden="true">✓</span> : null}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+          <div className="flex flex-nowrap items-center gap-1.5 sm:contents">
+            {legend.map((type) => (
+              <span key={type.id} className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-white px-2.5 py-1.5 text-xs font-semibold max-[359px]:gap-1 max-[359px]:px-2 max-[359px]:text-[11px] text-q-navy shadow-soft sm:gap-2 sm:px-3 sm:py-2 sm:text-sm [@media(max-height:740px)]:py-1">
+                <span className="size-2.5 rounded-full sm:size-3" style={{ background: tower.units.find((unit) => unit.type === type.id).color }} />
+                {type.name} · {type.subtitle}
+              </span>
+            ))}
+          </div>
         </div>
 
-        <p className="mt-4 text-center text-sm text-q-muted lg:hidden [@media(max-height:740px)]:mt-2">Chạm “Phóng to” để xem toàn sơ đồ, hoặc vuốt ngang và chạm vào căn để xem chi tiết.</p>
+        <p className="mt-4 text-left text-sm text-q-muted lg:hidden [@media(max-height:740px)]:mt-2">Chạm “Phóng to” để xem toàn sơ đồ, hoặc vuốt ngang và chạm vào căn để xem chi tiết.</p>
         {/* Toàn màn hình: đưa ra <body> bằng portal — section dùng content-visibility / transform / zoom làm position:fixed bị neo vào section (iOS: màn hình trống, khoá cuộn) */}
         {fullscreen && typeof document !== 'undefined' ? createPortal(planBlock, document.body) : planBlock}
 
-        <p className="hint-hover mt-2 text-center text-xs text-q-muted">Rê chuột hoặc chọn mã căn để xem layout và diện tích.</p>
+        <p className="hint-hover mt-2 text-left text-xs text-q-muted">Rê chuột hoặc chọn mã căn để xem layout và diện tích.</p>
         {showTopicLink ? (
-          <div className="mt-3 flex justify-center">
+          <div className="mt-3 flex justify-start">
             <Link to="/mat-bang" title="Mặt bằng tầng điển hình và các loại căn hộ QTOPIA" data-cta-name="floorplan_detail" data-cta-location="mat-bang" className="btn-base btn-dark cta-fx no-underline">
               Xem mặt bằng chi tiết
               <Icon name="arrow" size={18} />
