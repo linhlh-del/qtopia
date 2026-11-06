@@ -53,7 +53,7 @@ function AmenityDetail({ n, onClose, inline = false }) {
 
 function AmenityPanel({ expanded, setExpanded, selected, setSelected, setSelectedZone, className = '' }) {
   return (
-    <aside className={'flex flex-col overflow-y-auto p-3 sm:p-4 ' + className} aria-label="Danh sách tiện ích theo khu">
+    <aside className={'scroll-thin flex flex-col overflow-y-auto p-3 sm:p-4 ' + className} aria-label="Danh sách tiện ích theo khu">
       <p className="mb-3 font-display text-xs font-bold uppercase tracking-widest text-q-muted">3 khu trải nghiệm</p>
       <div className="amenity-panel-groups flex flex-col gap-2">
         {zones.map((zone) => {
@@ -64,8 +64,12 @@ function AmenityPanel({ expanded, setExpanded, selected, setSelected, setSelecte
                 className="flex min-h-12 w-full items-center gap-2 px-3 text-left font-display text-sm font-bold text-q-navy sm:px-4">
                 <span className="size-3 shrink-0 rounded-full" style={{ background: runnerColors[zone.id] }} />
                 <span className="flex-1">{zone.name}</span>
-                <img src="/images/arrow-sm.webp" alt="" aria-hidden="true" width="96" height="56" decoding="async"
-                  className={'h-3 w-auto shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ' + (open ? 'rotate-180' : '')} />
+                {/* Khung vuông cố định: mũi tên xoay quanh đúng tâm của nó, không xê dịch khi mở/đóng */}
+                <span aria-hidden="true"
+                  className="grid size-[18px] shrink-0 place-items-center transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] will-change-transform [transform-origin:50%_50%] motion-reduce:transition-none"
+                  style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                  <img src="/images/arrow-sm.webp" alt="" width="96" height="56" decoding="async" className="block h-auto w-[17.5px]" />
+                </span>
               </button>
               {/* Mở/đóng mượt: animate grid-template-rows 0fr ↔ 1fr (không cần đo chiều cao) */}
               <div id={'amenities-' + zone.id} inert={!open}

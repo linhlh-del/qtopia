@@ -1026,3 +1026,30 @@ main > section:not(#top) {
   .amenity-layout .floorplan-drawer { display: none; }
 }
 
+/* Thanh cuộn mảnh: gần như ẩn, chỉ hiện rõ khi rê chuột / focus vào vùng cuộn. */
+.scroll-thin {
+  /* luôn chừa sẵn rãnh cho thanh cuộn → mở danh sách không làm nội dung co lại / nhảy width */
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s ease;
+}
+.scroll-thin:hover,
+.scroll-thin:focus-within {
+  scrollbar-color: rgb(6 42 163 / 0.35) transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: transparent;
+}
+.scroll-thin:hover::-webkit-scrollbar-thumb,
+.scroll-thin:focus-within::-webkit-scrollbar-thumb {
+  background: rgb(6 42 163 / 0.35);
+}
