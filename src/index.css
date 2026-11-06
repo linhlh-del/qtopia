@@ -700,6 +700,13 @@ html.js-ready img[data-img-fade][data-loaded] {
 .amenity-zone-runner-active {
   filter: drop-shadow(0 0 7px currentColor) drop-shadow(0 0 17px currentColor);
 }
+/* Mặt bằng tiện ích: vệt chạy là line trắng, phát sáng nhẹ (sơ đồ căn hộ vẫn dùng vệt màu ở trên) */
+.amenity-zone-runner-white {
+  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+}
+.amenity-zone-runner-white.amenity-zone-runner-active {
+  filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 9px rgba(255, 255, 255, 0.9));
+}
 .amenity-zone:nth-child(3) .amenity-zone-runner { animation-duration: 7s; }
 .amenity-zone:nth-child(4) .amenity-zone-runner { animation-duration: 8s; }
 #vi-tri:not([data-motion-active]) .qtopia-route,

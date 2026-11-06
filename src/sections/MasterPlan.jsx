@@ -16,6 +16,8 @@ const zones = [
 
 const sourceIdByZone = { 10: 'oasis-resort', 11: 'ocean-galaxy', 12: 'quay-station' }
 const runnerColors = { 10: '#4f7709', 11: '#b51258', 12: '#006baf' }
+// Màu viền khu trên mặt bằng: tông tươi, đậm sắc (không pha trắng) để nổi trên ảnh
+const zoneLightColors = { 10: '#a8ef1c', 11: '#ff3f8e', 12: '#1ab8ff' }
 const amenitiesByZone = Object.fromEntries(zones.map((zone) => [zone.id, masterPlan.zones.find((item) => item.id === sourceIdByZone[zone.id])?.markers || []]))
 
 // Tra cứu nhanh tiện ích theo số để mở popup chi tiết khi bấm vào số trên mặt bằng.
@@ -130,8 +132,10 @@ export default function MasterPlan() {
           {mapVisible ? <svg className={'absolute inset-y-0 left-0 h-full ' + (fullscreen ? 'w-full' : 'w-[149.2857%] lg:w-full')} viewBox="0 0 1672 941" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mặt bằng tiện ích QTOPIA với ba khu Oasis Resort, Ocean Galaxy và Quậy Station">
             {zones.map((zone) => (
               <g key={zone.id} className="amenity-zone" style={{ color: zone.color, opacity: expanded && expanded !== zone.id ? 0.55 : 1 }}>
-                <path d={zone.path} fill="currentColor" fillOpacity={expanded === zone.id ? 0.07 : 0.035} stroke="currentColor" strokeOpacity="0.95" strokeWidth="4.2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-                <path d={zone.path} fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 98" pathLength="100" vectorEffect="non-scaling-stroke" className={'amenity-zone-runner ' + (highlightedZone === zone.id ? 'amenity-zone-runner-active' : '')} style={{ color: highlightedZone === zone.id ? zone.color : runnerColors[zone.id] }} />
+                {/* Viền khu: mảnh, màu sáng (tông nhạt của màu khu) */}
+                <path d={zone.path} fill="currentColor" fillOpacity={expanded === zone.id ? 0.07 : 0.035} stroke="currentColor" strokeOpacity="1" strokeWidth="2.4" strokeLinejoin="round" vectorEffect="non-scaling-stroke" style={{ color: zoneLightColors[zone.id] }} />
+                {/* Vệt chạy: đoạn line trắng mảnh hơn viền, chạy ở giữa đường viền */}
+                <path d={zone.path} fill="none" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="9 91" pathLength="100" vectorEffect="non-scaling-stroke" className={'amenity-zone-runner amenity-zone-runner-white ' + (highlightedZone === zone.id ? 'amenity-zone-runner-active' : '')} />
                 <path d={zone.path} fill="transparent" stroke="transparent" strokeWidth="18" onMouseEnter={() => { setHoveredZone(zone.id); showZone(zone.id) }} onMouseLeave={() => setHoveredZone(null)} onClick={() => { showZone(zone.id); setSelectedZone(zone.id) }} className="cursor-pointer" />
               </g>
             ))}

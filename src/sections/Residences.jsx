@@ -18,6 +18,16 @@ const unitsByCode = Object.fromEntries(tower.units.map((unit) => [unit.code, uni
 const legend = [...new Set(tower.units.map((unit) => unit.type))].map((type) => unitTypeInfo[type])
 const q7Types = Object.entries(unitLayoutImages.q7).map(([id, layout]) => ({ ...unitTypeInfo[id], ...layout }))
 
+// Viền căn: tông tươi, đậm sắc theo loại căn (nền căn vẫn giữ màu pastel của sơ đồ)
+const unitBorderColors = { 'ama-studio': '#ff8a1f', 'mira-1pn': '#a8d81c', 'vita-2pn': '#1ab8ff' }
+// Thứ tự line trắng chạy qua các căn theo vòng: hàng trên trái → phải, rồi hàng dưới phải → trái
+const runnerOrder = [
+  ...tower.units.filter((u) => u.labelY < 100).sort((a, b) => a.labelX - b.labelX),
+  ...tower.units.filter((u) => u.labelY >= 100).sort((a, b) => b.labelX - a.labelX),
+]
+const RUNNER_LAP = '2s' // thời gian line chạy hết 1 vòng quanh 1 căn (chậm hơn 10% so với 1,8s ban đầu)
+const RUNNER_REST_MS = 600 // nghỉ giữa 2 căn: line ẩn đi rồi mới xuất hiện ở căn kế tiếp
+
 export default function Residences({ showTopicLink = true }) {
   const ref = useReveal()
   const [planRef, planVisible] = useNearViewport('300px')
@@ -27,6 +37,22 @@ export default function Residences({ showTopicLink = true }) {
   const [fullscreen, setFullscreen] = useState(false)
   const [zoom, setZoom] = useState(1)
   const suppressHover = useRef(false)
+  const [runIndex, setRunIndex] = useState(0)
+  const [runnerResting, setRunnerResting] = useState(false)
+  const restTimer = useRef(0)
+  useEffect(() => () => window.clearTimeout(restTimer.current), [])
+  // Hết 1 vòng quanh căn → nghỉ RUNNER_REST_MS → sang căn kế tiếp
+  const nextRunnerUnit = () => {
+    setRunnerResting(true)
+    window.clearTimeout(restTimer.current)
+    restTimer.current = window.setTimeout(() => {
+      setRunIndex((i) => (i + 1) % runnerOrder.length)
+      setRunnerResting(false)
+    }, RUNNER_REST_MS)
+  }
+  // SVG chỉ render ở client (planVisible), nên đọc matchMedia ngay khi render là an toàn
+  const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  const runnerUnit = runnerOrder[runIndex % runnerOrder.length]
   const activeUnit = activeCode ? unitsByCode[activeCode] : null
   const activeType = activeUnit ? unitTypeInfo[activeUnit.type] : null
   const activeLayout = activeUnit ? unitLayoutImages[tower.id]?.[activeUnit.type] : null
@@ -142,42 +168,43 @@ export default function Residences({ showTopicLink = true }) {
                     style={{
                       fill: unit.color,
                       fillOpacity: isActive ? 0.55 : 0.28,
-                      stroke: unit.color,
-                      strokeWidth: isActive ? 3 : 2.5,
-                      strokeDasharray: isActive ? undefined : '10 6',
+                      stroke: unitBorderColors[unit.type] || unit.labelColor,
+                      strokeWidth: isActive ? 2.6 : 1.8,
                       strokeLinejoin: 'round',
                       vectorEffect: 'non-scaling-stroke',
                       opacity: activeCode && !isActive ? 0.45 : 1,
-                      filter: isActive ? `drop-shadow(0 0 5px ${unit.color})` : undefined,
+                      filter: `drop-shadow(0 0 ${isActive ? 6 : 3}px ${unitBorderColors[unit.type] || unit.labelColor})`,
                     }}
                   >
                     <title>{unit.code}</title>
                   </polygon>
                 )
               })}
-              {/* Đốm sáng chạy dọc viền từng căn (dùng chung keyframe với mặt bằng tiện ích) */}
-              {tower.units.map((unit, i) => (
+              {/* Line trắng chạy giữa viền, lần lượt qua từng căn (hết 1 vòng căn này thì sang căn kế tiếp).
+                  Tạm dừng khi section ra khỏi màn hình (CSS #mat-bang:not([data-motion-active])). */}
+              {!reduceMotion && runnerUnit && !runnerResting ? (
                 <polygon
-                  key={`runner-${unit.code}`}
-                  points={unit.points}
+                  key={`runner-${runIndex}`}
+                  points={runnerUnit.points}
                   pathLength="100"
                   pointerEvents="none"
-                  className={'amenity-zone-runner ' + (activeCode === unit.code ? 'amenity-zone-runner-active' : '')}
+                  onAnimationEnd={nextRunnerUnit}
+                  className={'amenity-zone-runner amenity-zone-runner-white ' + (activeCode === runnerUnit.code ? 'amenity-zone-runner-active' : '')}
                   style={{
-                    color: unit.labelColor,
                     fill: 'none',
-                    stroke: 'currentColor',
-                    strokeWidth: 4,
+                    stroke: '#fff',
+                    strokeWidth: 1.4,
                     strokeLinecap: 'round',
                     strokeLinejoin: 'round',
-                    strokeDasharray: '6 94',
+                    strokeDasharray: '16 84',
                     vectorEffect: 'non-scaling-stroke',
-                    animationDuration: `${5 + (i % 3)}s`,
-                    animationDelay: `${-(i * 0.7)}s`,
-                    opacity: activeCode && activeCode !== unit.code ? 0.6 : 1,
+                    animationDuration: RUNNER_LAP,
+                    animationIterationCount: 1,
+                    // chậm dần ở cuối vòng, nhanh dần ở đầu vòng → chuyển căn không bị giật
+                    animationTimingFunction: 'ease-in-out',
                   }}
                 />
-              ))}
+              ) : null}
             </svg> : null}
             {planVisible ? tower.units.map((unit) => {
               const isActive = activeCode === unit.code
