@@ -65,7 +65,7 @@ function usePastHero() {
 }
 
 const barItem =
-  'flex h-[calc(var(--bar-h)-1px)] flex-col items-center justify-center gap-1 font-display text-[length:calc(0.7rem*var(--type-scale))] font-semibold no-underline'
+  'flex h-[calc(var(--bar-h)-1px)] items-center justify-center no-underline'
 
 export default function ValueNav() {
   const { pathname } = useLocation()
@@ -134,14 +134,12 @@ export default function ValueNav() {
               aria-label={explore ? 'Đóng danh mục lối tắt' : 'Mở danh mục: vị trí, tiện ích, mặt bằng'}
               className={`${barItem} w-full cursor-pointer border-0 border-r border-white/10 ${explore ? 'bg-white/10' : 'bg-transparent'} text-white`}
             >
-              <Icon name="grid" />
-              Khám phá
+              <Icon name="grid" size={24} />
             </button>
           </li>
           {isFilled(siteMeta.hotline) && siteMeta.hotlineHref ? <li>
             <a href={siteMeta.hotlineHref} data-cta-location="sticky_bar" aria-label="Gọi hotline tư vấn" className={`${barItem} text-white`}>
-              <Icon name="phone" />
-              Gọi
+              <Icon name="phone" size={24} />
             </a>
           </li> : null}
           {isFilled(siteMeta.zalo) ? <li>
@@ -153,8 +151,7 @@ export default function ValueNav() {
               aria-label="Chat Zalo với tư vấn viên"
               className={`${barItem} border-x border-white/10 text-white`}
             >
-              <Icon name="chat" />
-              Zalo
+              <span aria-hidden="true" className="font-display text-[length:calc(1rem*var(--type-scale))] font-extrabold leading-none tracking-tight">Zalo</span>
             </a>
           </li> : null}
           <li>
@@ -163,10 +160,10 @@ export default function ValueNav() {
               onClick={() => popup.open('sticky_bar')}
               data-cta-name="sticky_price"
               data-cta-location="sticky_bar"
-              className="cta-fx flex h-full min-h-[calc(var(--bar-h)-1px)] w-full cursor-pointer flex-col items-center justify-center gap-1 border-0 bg-[var(--cta-form)] font-display text-[length:calc(0.7rem*var(--type-scale))] font-semibold text-white"
+              aria-label="Nhận thông tin dự án"
+              className="cta-fx flex h-full min-h-[calc(var(--bar-h)-1px)] w-full cursor-pointer items-center justify-center border-0 bg-[var(--cta-form)] text-white"
             >
-              <Icon name="doc" />
-              Thông tin
+              <Icon name="doc" size={24} />
             </button>
           </li>
         </ul>

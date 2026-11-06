@@ -179,19 +179,19 @@ export default function SalesPolicy({ showTopicLink = true }) {
       <Container className="relative z-10">
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-10">
           <SectionHeading label={salesPolicy.label} lead={salesPolicy.lead} light />
-          <p className="m-0 flex items-center gap-3 lg:justify-end">
-            <span className="font-display text-xs font-bold uppercase leading-tight tracking-[0.14em] text-white sm:text-sm">
-              {price.prefix.split(' ').slice(0, 2).join(' ')}
-              <br />
-              {price.prefix.split(' ').slice(2).join(' ')}
+          {/* Hai cột chữ hai bên mỗi cột cao đúng bằng chiều cao chữ số (--num = cỡ chữ của số).
+              Số giữ nguyên chiều cao; hai cột chữ căn theo đỉnh/chân chữ số (xem .price-badge trong index.css). */}
+          <p className="price-badge m-0 flex w-fit items-stretch gap-2.5 justify-self-start rounded-2xl px-4 py-3 [--num:2.4rem] sm:gap-3 sm:px-5 sm:[--num:3.75rem] lg:justify-self-end xl:[--num:4.5rem]">
+            <span className="price-badge-side font-display font-bold uppercase text-white">
+              <span>{price.prefix.split(' ').slice(0, 2).join(' ')}</span>
+              <span>{price.prefix.split(' ').slice(2).join(' ')}</span>
             </span>
-            <span className="bg-gradient-to-b from-white to-q-lime bg-clip-text font-display text-[2.6rem] font-extrabold leading-none tracking-tight text-transparent sm:text-6xl xl:text-7xl">
+            <span className="price-badge-num bg-gradient-to-b from-white to-[#aaec0e] bg-clip-text font-display font-extrabold tracking-tight text-transparent">
               {price.value}
             </span>
-            <span className="font-display text-sm font-bold uppercase leading-tight text-white sm:text-base">
-              {price.unit.split(' ')[0]}
-              <br />
-              {price.unit.split(' ').slice(1).join(' ')}
+            <span className="price-badge-side font-display font-bold uppercase text-white">
+              <span>{price.unit.split(' ')[0]}</span>
+              <span>{price.unit.split(' ').slice(1).join(' ')}</span>
             </span>
           </p>
         </div>
@@ -261,7 +261,7 @@ export default function SalesPolicy({ showTopicLink = true }) {
               <span className="max-sm:hidden">{salesPolicy.glossary}</span>
               <span>{salesPolicy.disclaimer}</span>
             </div>
-            <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex sm:self-auto [&>*]:max-sm:!px-3 [&>*]:max-sm:!text-[0.8rem]">
+            <div className="grid shrink-0 grid-cols-[auto_minmax(0,1fr)] gap-2 sm:flex sm:self-auto [&>*]:whitespace-nowrap [&>*]:max-sm:!gap-1.5 [&>*]:max-sm:!px-3 [&>*]:max-sm:!text-[0.8rem]">
             {showTopicLink ? (
               <Link
                 to="/chinh-sach-ban-hang"
@@ -271,7 +271,7 @@ export default function SalesPolicy({ showTopicLink = true }) {
                 className="btn-base btn-outline cta-fx no-underline"
               >
                 Chi tiết chính sách
-                <Icon name="arrow" size={18} />
+                <Icon name="arrow" size={18} className="max-sm:hidden" />
               </Link>
             ) : null}
             <button
