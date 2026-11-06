@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Container from '../components/ui/Container'
 import Img from '../components/ui/Img'
 import SectionHeading from '../components/ui/SectionHeading'
@@ -102,7 +103,9 @@ export default function FeaturedAmenities() {
         <p className="mt-2 text-xs text-q-muted lg:hidden">Bấm mũi tên hoặc vuốt ngang để xem thêm ảnh</p>
       </Container>
 
-      {lightbox ? (
+      {/* Lightbox đưa ra <body> bằng portal: section dùng content-visibility / transform / zoom làm
+          position:fixed bị neo vào section (lệch khỏi màn hình trên iOS) */}
+      {lightbox && typeof document !== 'undefined' ? createPortal(
         <div
           className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
           role="dialog"
@@ -121,7 +124,8 @@ export default function FeaturedAmenities() {
             <Img src={lightbox.image} alt={`${lightbox.caption} — tiện ích dự án QTOPIA`} priority className="max-h-[82vh] w-full rounded-xl object-contain" />
             <figcaption className="mt-3 text-center text-sm text-white/80">{lightbox.caption}</figcaption>
           </figure>
-        </div>
+        </div>,
+        document.body,
       ) : null}
     </section>
   )

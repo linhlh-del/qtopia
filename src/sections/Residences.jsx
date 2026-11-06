@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Container from '../components/ui/Container'
@@ -83,6 +84,185 @@ export default function Residences({ showTopicLink = true }) {
     }
   }, [pinned])
 
+  const planBlock = (
+      <div ref={planRef} data-floor-plan
+        className={fullscreen ? 'fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-q-navy' : 'relative mt-4 overflow-hidden rounded-[1.5rem] bg-white shadow-card sm:h-[min(540px,44svh)] xl:h-[min(600px,50svh)]'}
+        onMouseLeave={() => { suppressHover.current = false; if (!pinned) setActiveCode(null) }}>
+        <div className={fullscreen ? 'flex h-full w-full overflow-auto' : 'overflow-x-auto sm:flex sm:h-full sm:items-center'}
+          style={fullscreen ? { justifyContent: 'safe center', alignItems: 'safe center' } : undefined}>
+          <div className={fullscreen ? 'floorplan-fullscreen relative shrink-0' : 'relative w-full min-w-[min(1000px,calc(38svh*3.165))] lg:min-w-0'}
+            style={fullscreen ? { '--fp-ar': tower.imageWidth / tower.imageHeight, '--fp-zoom': zoom } : undefined}>
+            <MediaFrame
+              src={tower.image}
+              alt={`Mặt bằng tầng điển hình ${tower.label} dự án QTOPIA`}
+              ratio={`${tower.imageWidth} / ${tower.imageHeight}`}
+              imgClassName="h-full w-full object-fill"
+            />
+            {planVisible ? <svg
+              className="absolute inset-0 h-full w-full"
+              viewBox={`0 0 ${FLOOR_VIEWBOX_W} ${FLOOR_VIEWBOX_H}`}
+              preserveAspectRatio="none"
+              aria-label={`Sơ đồ tương tác ${tower.label}, chọn mã căn để xem diện tích`}
+            >
+              {tower.units.map((unit) => {
+                const top = unit.labelY < 100
+                return (
+                  <line
+                    key={`leader-${unit.code}`}
+                    x1={unit.labelX}
+                    x2={unit.labelX}
+                    y1={top ? unit.labelY + 10 : 351}
+                    y2={top ? 53 : unit.labelY - 10}
+                    stroke={unit.labelColor}
+                    strokeWidth="1.5"
+                    opacity=".65"
+                    pointerEvents="none"
+                  />
+                )
+              })}
+              {tower.units.map((unit) => {
+                const isActive = activeCode === unit.code
+                return (
+                  <polygon
+                    key={unit.code}
+                    points={unit.points}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Căn ${unit.code} — ${unitTypeInfo[unit.type].name} ${unitTypeInfo[unit.type].subtitle}, diện tích sử dụng ${unit.usableArea} mét vuông`}
+                    onMouseEnter={() => hoverUnit(unit.code)}
+                    onFocus={() => hoverUnit(unit.code)}
+                    onClick={selectUnit(unit)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault()
+                        selectUnit(unit)(event)
+                      }
+                    }}
+                    className="cursor-pointer outline-none transition-[fill-opacity,opacity,filter] duration-300"
+                    style={{
+                      fill: unit.color,
+                      fillOpacity: isActive ? 0.55 : 0.28,
+                      stroke: unit.color,
+                      strokeWidth: isActive ? 3 : 2.5,
+                      strokeDasharray: isActive ? undefined : '10 6',
+                      strokeLinejoin: 'round',
+                      vectorEffect: 'non-scaling-stroke',
+                      opacity: activeCode && !isActive ? 0.45 : 1,
+                      filter: isActive ? `drop-shadow(0 0 5px ${unit.color})` : undefined,
+                    }}
+                  >
+                    <title>{unit.code}</title>
+                  </polygon>
+                )
+              })}
+              {/* Đốm sáng chạy dọc viền từng căn (dùng chung keyframe với mặt bằng tiện ích) */}
+              {tower.units.map((unit, i) => (
+                <polygon
+                  key={`runner-${unit.code}`}
+                  points={unit.points}
+                  pathLength="100"
+                  pointerEvents="none"
+                  className={'amenity-zone-runner ' + (activeCode === unit.code ? 'amenity-zone-runner-active' : '')}
+                  style={{
+                    color: unit.labelColor,
+                    fill: 'none',
+                    stroke: 'currentColor',
+                    strokeWidth: 4,
+                    strokeLinecap: 'round',
+                    strokeLinejoin: 'round',
+                    strokeDasharray: '6 94',
+                    vectorEffect: 'non-scaling-stroke',
+                    animationDuration: `${5 + (i % 3)}s`,
+                    animationDelay: `${-(i * 0.7)}s`,
+                    opacity: activeCode && activeCode !== unit.code ? 0.6 : 1,
+                  }}
+                />
+              ))}
+            </svg> : null}
+            {planVisible ? tower.units.map((unit) => {
+              const isActive = activeCode === unit.code
+              return (
+                <button
+                  key={`label-${unit.code}`}
+                  type="button"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  onMouseEnter={() => hoverUnit(unit.code)}
+                  onClick={selectUnit(unit)}
+                  style={{
+                    left: `${(unit.labelX / FLOOR_VIEWBOX_W) * 100}%`,
+                    top: `${(unit.labelY / FLOOR_VIEWBOX_H) * 100}%`,
+                    background: unit.labelColor,
+                  }}
+                  className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-1.5 py-0.5 before:absolute before:-inset-x-1.5 before:-inset-y-2.5 before:content-[''] font-display text-[length:calc(10px*var(--type-scale))] font-bold leading-none text-white shadow-sm transition-transform sm:text-xs ${isActive ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'}`}
+                >
+                  {unit.code}
+                </button>
+              )
+            }) : null}
+          </div>
+        </div>
+
+        {activeUnit ? (
+          <aside
+            key={activeUnit.code}
+            onClick={(event) => event.stopPropagation()}
+            className={`floorplan-drawer absolute inset-x-0 bottom-0 z-30 overflow-y-auto rounded-t-[1.5rem] bg-white/95 shadow-card backdrop-blur-xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-80 sm:rounded-l-[1.5rem] sm:rounded-tr-none ${fullscreen ? 'max-h-[48%]' : 'max-h-[94%]'}`}
+          >
+            <div className="relative">
+              {activeLayout ? (
+                <MediaFrame
+                  src={activeLayout.image}
+                  alt={`Mặt bằng tham khảo loại ${activeType.name} ${activeType.subtitle} tại ${tower.label}`}
+                  ratio="16 / 9"
+                  className="h-28 w-full sm:h-44"
+                  imgClassName="h-full w-full object-contain"
+                />
+              ) : null}
+              <button type="button" onClick={closePanel} aria-label="Đóng thông tin căn hộ" className="absolute right-2 top-2 grid h-11 w-11 place-items-center rounded-full bg-q-navy/80 text-xl text-white hover:bg-q-navy">
+                ×
+              </button>
+            </div>
+            <div className="flex flex-col gap-3 p-4 sm:p-5">
+              <p className="m-0 text-xs font-semibold uppercase tracking-wide" style={{ color: activeUnit.labelColor }}>{tower.label} · {tower.floorRange}</p>
+              <h3 className="m-0 font-display text-xl font-bold text-q-navy">Căn {activeUnit.code} · {activeType.name} {activeType.subtitle}</h3>
+              <dl className="grid grid-cols-2 gap-3 rounded-xl bg-q-sand/70 p-3 text-sm">
+                <div><dt className="text-q-muted">Diện tích sử dụng</dt><dd className="m-0 font-bold text-q-navy">{activeUnit.usableArea} m²</dd></div>
+                <div><dt className="text-q-muted">Diện tích tim tường</dt><dd className="m-0 font-bold text-q-navy">{activeUnit.grossArea} m²</dd></div>
+              </dl>
+              <p className="m-0 text-xs text-q-muted">Ảnh layout minh họa theo loại căn; diện tích lấy theo mã căn trên sơ đồ.</p>
+              <button type="button" onClick={() => popup.open('mat-bang')} data-cta-name="floorplan_quote" className="btn-base btn-primary w-full">
+                Nhận báo giá căn {activeUnit.code}
+              </button>
+            </div>
+          </aside>
+        ) : null}
+
+        {/* Điện thoại: nút nằm ở hành lang giữa hai dãy căn để không che mã căn ở góc trên */}
+        <div className={'absolute right-3 top-3 z-40 flex items-center gap-2' + (fullscreen ? ' pt-[env(safe-area-inset-top)]' : ' max-lg:top-1/2 max-lg:-translate-y-1/2')}>
+          {fullscreen ? (
+            <div className="flex items-center overflow-hidden rounded-full bg-q-navy/80 backdrop-blur">
+              <button type="button" onClick={() => setZoom((current) => Math.max(1, current - 1))} disabled={zoom === 1}
+                aria-label="Thu nhỏ mức phóng" className="grid size-11 place-items-center text-xl text-white disabled:opacity-40">−</button>
+              <span aria-live="polite" className="min-w-10 text-center font-display text-sm font-semibold text-white">{zoom}x</span>
+              <button type="button" onClick={() => setZoom((current) => Math.min(4, current + 1))} disabled={zoom === 4}
+                aria-label="Phóng to thêm" className="grid size-11 place-items-center text-xl text-white disabled:opacity-40">+</button>
+            </div>
+          ) : null}
+          <button type="button" onClick={() => setFullscreen((current) => !current)}
+            aria-label={fullscreen ? 'Thu nhỏ sơ đồ mặt bằng' : 'Phóng to sơ đồ mặt bằng'}
+            className="inline-flex min-h-11 items-center rounded-full bg-q-navy/80 px-4 font-display text-sm font-semibold text-white backdrop-blur hover:bg-q-navy">
+            {fullscreen ? 'Thu nhỏ' : 'Phóng to'}
+          </button>
+        </div>
+        {fullscreen ? (
+          <p className="pointer-events-none absolute inset-x-0 bottom-[calc(1rem+env(safe-area-inset-bottom))] m-0 hidden text-center text-xs text-white/70 portrait:block lg:hidden">
+            Xoay ngang điện thoại để xem sơ đồ lớn hơn · bấm + để phóng to
+          </p>
+        ) : null}
+      </div>
+  )
+
   return (
     <section id="mat-bang" data-snap-section className="section-screen bg-q-cream">
       <Container>
@@ -100,177 +280,8 @@ export default function Residences({ showTopicLink = true }) {
         </div>
 
         <p className="mt-4 text-center text-sm text-q-muted lg:hidden [@media(max-height:740px)]:mt-2">Chạm “Phóng to” để xem toàn sơ đồ, hoặc vuốt ngang và chạm vào căn để xem chi tiết.</p>
-        <div ref={planRef} data-floor-plan
-          className={fullscreen ? 'fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-q-navy' : 'relative mt-4 overflow-hidden rounded-[1.5rem] bg-white shadow-card sm:h-[min(540px,44svh)] xl:h-[min(600px,50svh)]'}
-          onMouseLeave={() => { suppressHover.current = false; if (!pinned) setActiveCode(null) }}>
-          <div className={fullscreen ? 'flex h-full w-full overflow-auto' : 'overflow-x-auto sm:flex sm:h-full sm:items-center'}
-            style={fullscreen ? { justifyContent: 'safe center', alignItems: 'safe center' } : undefined}>
-            <div className={fullscreen ? 'floorplan-fullscreen relative shrink-0' : 'relative w-full min-w-[min(1000px,calc(38svh*3.165))] lg:min-w-0'}
-              style={fullscreen ? { '--fp-ar': tower.imageWidth / tower.imageHeight, '--fp-zoom': zoom } : undefined}>
-              <MediaFrame
-                src={tower.image}
-                alt={`Mặt bằng tầng điển hình ${tower.label} dự án QTOPIA`}
-                ratio={`${tower.imageWidth} / ${tower.imageHeight}`}
-                imgClassName="h-full w-full object-fill"
-              />
-              {planVisible ? <svg
-                className="absolute inset-0 h-full w-full"
-                viewBox={`0 0 ${FLOOR_VIEWBOX_W} ${FLOOR_VIEWBOX_H}`}
-                preserveAspectRatio="none"
-                aria-label={`Sơ đồ tương tác ${tower.label}, chọn mã căn để xem diện tích`}
-              >
-                {tower.units.map((unit) => {
-                  const top = unit.labelY < 100
-                  return (
-                    <line
-                      key={`leader-${unit.code}`}
-                      x1={unit.labelX}
-                      x2={unit.labelX}
-                      y1={top ? unit.labelY + 10 : 351}
-                      y2={top ? 53 : unit.labelY - 10}
-                      stroke={unit.labelColor}
-                      strokeWidth="1.5"
-                      opacity=".65"
-                      pointerEvents="none"
-                    />
-                  )
-                })}
-                {tower.units.map((unit) => {
-                  const isActive = activeCode === unit.code
-                  return (
-                    <polygon
-                      key={unit.code}
-                      points={unit.points}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Căn ${unit.code} — ${unitTypeInfo[unit.type].name} ${unitTypeInfo[unit.type].subtitle}, diện tích sử dụng ${unit.usableArea} mét vuông`}
-                      onMouseEnter={() => hoverUnit(unit.code)}
-                      onFocus={() => hoverUnit(unit.code)}
-                      onClick={selectUnit(unit)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault()
-                          selectUnit(unit)(event)
-                        }
-                      }}
-                      className="cursor-pointer outline-none transition-[fill-opacity,opacity,filter] duration-300"
-                      style={{
-                        fill: unit.color,
-                        fillOpacity: isActive ? 0.55 : 0.28,
-                        stroke: unit.color,
-                        strokeWidth: isActive ? 3 : 2.5,
-                        strokeDasharray: isActive ? undefined : '10 6',
-                        strokeLinejoin: 'round',
-                        vectorEffect: 'non-scaling-stroke',
-                        opacity: activeCode && !isActive ? 0.45 : 1,
-                        filter: isActive ? `drop-shadow(0 0 5px ${unit.color})` : undefined,
-                      }}
-                    >
-                      <title>{unit.code}</title>
-                    </polygon>
-                  )
-                })}
-                {/* Đốm sáng chạy dọc viền từng căn (dùng chung keyframe với mặt bằng tiện ích) */}
-                {tower.units.map((unit, i) => (
-                  <polygon
-                    key={`runner-${unit.code}`}
-                    points={unit.points}
-                    pathLength="100"
-                    pointerEvents="none"
-                    className={'amenity-zone-runner ' + (activeCode === unit.code ? 'amenity-zone-runner-active' : '')}
-                    style={{
-                      color: unit.labelColor,
-                      fill: 'none',
-                      stroke: 'currentColor',
-                      strokeWidth: 4,
-                      strokeLinecap: 'round',
-                      strokeLinejoin: 'round',
-                      strokeDasharray: '6 94',
-                      vectorEffect: 'non-scaling-stroke',
-                      animationDuration: `${5 + (i % 3)}s`,
-                      animationDelay: `${-(i * 0.7)}s`,
-                      opacity: activeCode && activeCode !== unit.code ? 0.6 : 1,
-                    }}
-                  />
-                ))}
-              </svg> : null}
-              {planVisible ? tower.units.map((unit) => {
-                const isActive = activeCode === unit.code
-                return (
-                  <button
-                    key={`label-${unit.code}`}
-                    type="button"
-                    tabIndex={-1}
-                    aria-hidden="true"
-                    onMouseEnter={() => hoverUnit(unit.code)}
-                    onClick={selectUnit(unit)}
-                    style={{
-                      left: `${(unit.labelX / FLOOR_VIEWBOX_W) * 100}%`,
-                      top: `${(unit.labelY / FLOOR_VIEWBOX_H) * 100}%`,
-                      background: unit.labelColor,
-                    }}
-                    className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-1.5 py-0.5 before:absolute before:-inset-x-1.5 before:-inset-y-2.5 before:content-[''] font-display text-[length:calc(10px*var(--type-scale))] font-bold leading-none text-white shadow-sm transition-transform sm:text-xs ${isActive ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'}`}
-                  >
-                    {unit.code}
-                  </button>
-                )
-              }) : null}
-            </div>
-          </div>
-
-          {activeUnit ? (
-            <aside
-              key={activeUnit.code}
-              onClick={(event) => event.stopPropagation()}
-              className={`floorplan-drawer absolute inset-x-0 bottom-0 z-30 overflow-y-auto rounded-t-[1.5rem] bg-white/95 shadow-card backdrop-blur-xl sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-80 sm:rounded-l-[1.5rem] sm:rounded-tr-none ${fullscreen ? 'max-h-[48%]' : 'max-h-[94%]'}`}
-            >
-              <div className="relative">
-                {activeLayout ? (
-                  <MediaFrame
-                    src={activeLayout.image}
-                    alt={`Mặt bằng tham khảo loại ${activeType.name} ${activeType.subtitle} tại ${tower.label}`}
-                    ratio="16 / 9"
-                    className="h-28 w-full sm:h-44"
-                    imgClassName="h-full w-full object-contain"
-                  />
-                ) : null}
-                <button type="button" onClick={closePanel} aria-label="Đóng thông tin căn hộ" className="absolute right-2 top-2 grid h-11 w-11 place-items-center rounded-full bg-q-navy/80 text-xl text-white hover:bg-q-navy">
-                  ×
-                </button>
-              </div>
-              <div className="flex flex-col gap-3 p-4 sm:p-5">
-                <p className="m-0 text-xs font-semibold uppercase tracking-wide" style={{ color: activeUnit.labelColor }}>{tower.label} · {tower.floorRange}</p>
-                <h3 className="m-0 font-display text-xl font-bold text-q-navy">Căn {activeUnit.code} · {activeType.name} {activeType.subtitle}</h3>
-                <dl className="grid grid-cols-2 gap-3 rounded-xl bg-q-sand/70 p-3 text-sm">
-                  <div><dt className="text-q-muted">Diện tích sử dụng</dt><dd className="m-0 font-bold text-q-navy">{activeUnit.usableArea} m²</dd></div>
-                  <div><dt className="text-q-muted">Diện tích tim tường</dt><dd className="m-0 font-bold text-q-navy">{activeUnit.grossArea} m²</dd></div>
-                </dl>
-                <p className="m-0 text-xs text-q-muted">Ảnh layout minh họa theo loại căn; diện tích lấy theo mã căn trên sơ đồ.</p>
-                <button type="button" onClick={() => popup.open('mat-bang')} data-cta-name="floorplan_quote" className="btn-base btn-primary w-full">
-                  Nhận báo giá căn {activeUnit.code}
-                </button>
-              </div>
-            </aside>
-          ) : null}
-
-          {/* Điện thoại: nút nằm ở hành lang giữa hai dãy căn để không che mã căn ở góc trên */}
-          <div className="absolute right-3 top-3 z-40 flex items-center gap-2 max-lg:top-1/2 max-lg:-translate-y-1/2">
-            {fullscreen ? (
-              <div className="flex items-center overflow-hidden rounded-full bg-q-navy/80 backdrop-blur">
-                <button type="button" onClick={() => setZoom((current) => Math.max(1, current - 1))} disabled={zoom === 1}
-                  aria-label="Thu nhỏ mức phóng" className="grid size-11 place-items-center text-xl text-white disabled:opacity-40">−</button>
-                <span aria-live="polite" className="min-w-10 text-center font-display text-sm font-semibold text-white">{zoom}x</span>
-                <button type="button" onClick={() => setZoom((current) => Math.min(4, current + 1))} disabled={zoom === 4}
-                  aria-label="Phóng to thêm" className="grid size-11 place-items-center text-xl text-white disabled:opacity-40">+</button>
-              </div>
-            ) : null}
-            <button type="button" onClick={() => setFullscreen((current) => !current)}
-              aria-label={fullscreen ? 'Thu nhỏ sơ đồ mặt bằng' : 'Phóng to sơ đồ mặt bằng'}
-              className="inline-flex min-h-11 items-center rounded-full bg-q-navy/80 px-4 font-display text-sm font-semibold text-white backdrop-blur hover:bg-q-navy">
-              {fullscreen ? 'Thu nhỏ' : 'Phóng to'}
-            </button>
-          </div>
-        </div>
+        {/* Toàn màn hình: đưa ra <body> bằng portal — section dùng content-visibility / transform / zoom làm position:fixed bị neo vào section (iOS: màn hình trống, khoá cuộn) */}
+        {fullscreen && typeof document !== 'undefined' ? createPortal(planBlock, document.body) : planBlock}
 
         <p className="hint-hover mt-2 text-center text-xs text-q-muted">Rê chuột hoặc chọn mã căn để xem layout và diện tích.</p>
         {showTopicLink ? (

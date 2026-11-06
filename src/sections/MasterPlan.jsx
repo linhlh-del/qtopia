@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom'
 import Img from '../components/ui/Img'
 import { useEffect, useState } from 'react'
 import Container from '../components/ui/Container'
@@ -111,6 +112,104 @@ export default function MasterPlan() {
   const panelProps = { expanded, setExpanded, selected, setSelected, setSelectedZone }
   const highlightedZone = hoveredZone || selectedZone
 
+  const mapBlock = (
+      <div className={fullscreen ? 'amenity-layout-full fixed inset-0 z-[100] flex flex-col justify-center gap-3 overflow-auto bg-q-navy p-3' : 'amenity-layout relative mt-5 w-full rounded-[2rem] bg-white p-2 shadow-card sm:p-3 lg:flex'}
+        style={fullscreen ? { alignItems: 'safe center' } : undefined}>
+        {/* Máy tính: 2 cột liền nhau — ảnh bên trái (rộng tối đa theo chiều cao màn hình), cột danh sách
+            bên phải lấp hết phần còn lại, ăn sát mép trên/dưới/phải của ảnh nên không còn khoảng trắng. */}
+        <div ref={mapRef} className={'amenity-map relative mx-auto w-full shrink-0 overflow-hidden ' + (fullscreen
+          ? 'amenity-map-full aspect-[1672/941] rounded-xl'
+          : 'aspect-[1120/941] max-w-[calc((100svh-var(--header-h)-16rem)*1.19)] rounded-[1.6rem] sm:max-w-[calc((100svh-var(--header-h)-13rem)*1.19)] lg:mx-0 lg:aspect-[1672/941] lg:w-[min(calc(100%-19rem),calc((100svh-var(--header-h)-9rem)*1.777))] lg:max-w-none lg:rounded-r-none')}
+          style={fullscreen ? { width: `${zoom * 100}%`, maxWidth: zoom > 1 ? 'none' : '178svh' } : undefined}>
+          <Img
+            src={masterPlan.image}
+            alt={mapVisible ? '' : 'Mặt bằng tiện ích QTOPIA với ba khu Oasis Resort, Ocean Galaxy và Quậy Station'}
+            sizes={fullscreen ? '100vw' : '(min-width: 1280px) 60vw, (min-width: 768px) 100vw, 135vw'}
+            className={'absolute inset-y-0 left-0 h-full max-w-none ' + (fullscreen ? 'w-full' : 'w-[149.2857%] lg:w-full')}
+          />
+          {mapVisible ? <svg className={'absolute inset-y-0 left-0 h-full ' + (fullscreen ? 'w-full' : 'w-[149.2857%] lg:w-full')} viewBox="0 0 1672 941" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mặt bằng tiện ích QTOPIA với ba khu Oasis Resort, Ocean Galaxy và Quậy Station">
+            {zones.map((zone) => (
+              <g key={zone.id} className="amenity-zone" style={{ color: zone.color, opacity: expanded && expanded !== zone.id ? 0.55 : 1 }}>
+                <path d={zone.path} fill="currentColor" fillOpacity={expanded === zone.id ? 0.07 : 0.035} stroke="currentColor" strokeOpacity="0.95" strokeWidth="4.2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+                <path d={zone.path} fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 98" pathLength="100" vectorEffect="non-scaling-stroke" className={'amenity-zone-runner ' + (highlightedZone === zone.id ? 'amenity-zone-runner-active' : '')} style={{ color: highlightedZone === zone.id ? zone.color : runnerColors[zone.id] }} />
+                <path d={zone.path} fill="transparent" stroke="transparent" strokeWidth="18" onMouseEnter={() => { setHoveredZone(zone.id); showZone(zone.id) }} onMouseLeave={() => setHoveredZone(null)} onClick={() => { showZone(zone.id); setSelectedZone(zone.id) }} className="cursor-pointer" />
+              </g>
+            ))}
+          </svg> : null}
+          {mapVisible ? zones.flatMap((zone) => amenitiesByZone[zone.id].flatMap((amenity) => {
+            const positions = amenityLabelPositions[amenity.n] || []
+            const isSelected = selected === amenity.n
+            return positions.map((position, index) => (
+              <button key={`${amenity.n}-${index}`} type="button" onClick={() => { showZone(zone.id); setSelected(amenity.n); setSelectedZone(zone.id) }}
+                aria-label={`${amenity.n}. ${amenity.name}`} aria-pressed={isSelected}
+                className={'amenity-number absolute z-10 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-display text-[length:calc(0.7rem*var(--type-scale))] font-bold text-white ' + (isSelected ? 'amenity-number-selected ' : '') + (expanded === zone.id || isSelected ? 'amenity-number-focus' : '')}
+                style={{ top: position.top, '--amenity-left-full': position.left, '--amenity-left-cropped': `${(parseFloat(position.left) * 1672 / 1120).toFixed(2)}%`, '--amenity-marker-color': runnerColors[zone.id] }}>
+                <span>{amenity.n}</span>
+              </button>
+            ))
+          })) : null}
+          {mapVisible && fullscreen ? (
+            <AmenityPanel {...panelProps} className="absolute bottom-3 right-3 top-16 z-20 hidden w-[34%] min-w-[17rem] rounded-2xl border border-white/60 bg-white/92 shadow-card backdrop-blur-xl lg:flex" />
+          ) : null}
+          {mapVisible && selected ? <AmenityDetail n={selected} onClose={() => setSelected(null)} /> : null}
+
+          <div className={(fullscreen ? 'fixed right-3 top-3' : 'absolute right-2.5 top-2.5 sm:right-3 sm:top-3') + ' z-40 flex items-center gap-2'}>
+          {fullscreen ? (
+            <div className="flex items-center overflow-hidden rounded-full bg-q-navy/80 backdrop-blur">
+              <button type="button" onClick={() => setZoom((current) => Math.max(1, current - 1))} disabled={zoom === 1}
+                aria-label="Thu nhỏ mức phóng" className="grid size-11 place-items-center text-xl text-white disabled:opacity-40">−</button>
+              <span aria-live="polite" className="min-w-10 text-center font-display text-sm font-semibold text-white">{zoom}x</span>
+              <button type="button" onClick={() => setZoom((current) => Math.min(4, current + 1))} disabled={zoom === 4}
+                aria-label="Phóng to thêm" className="grid size-11 place-items-center text-xl text-white disabled:opacity-40">+</button>
+            </div>
+          ) : null}
+          <button type="button" onClick={() => setFullscreen((current) => !current)}
+            className="inline-flex min-h-11 items-center rounded-full bg-q-navy/80 px-4 font-display text-sm font-semibold text-white backdrop-blur hover:bg-q-navy">
+            {fullscreen ? 'Thu nhỏ' : 'Phóng to'}
+          </button>
+          </div>
+        </div>
+
+        {fullscreen ? null : (
+          <div className="amenity-legend-row relative hidden min-w-[19rem] flex-1 lg:block">
+            <AmenityPanel {...panelProps} className="absolute inset-0 rounded-r-[1.6rem] bg-q-cream" />
+          </div>
+        )}
+
+        <div className={(fullscreen ? 'w-full shrink-0' : 'amenity-mobile-legend mt-3') + ' lg:hidden'}>
+          <div className="flex gap-2">
+            {zones.map((zone) => {
+              const active = expanded === zone.id
+              return (
+                <button key={zone.id} type="button" aria-pressed={active}
+                  onClick={() => { const next = active ? null : zone.id; setExpanded(next); setSelectedZone(next); setSelected(null) }}
+                  className={'flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full border px-2 text-center font-display text-[length:calc(0.7rem*var(--type-scale))] font-bold leading-tight transition-colors sm:text-sm ' + (active ? 'border-transparent text-white' : 'border-q-navy/15 bg-white text-q-navy')}
+                  style={active ? { background: runnerColors[zone.id] } : undefined}>
+                  <span className="size-2.5 shrink-0 rounded-full" style={{ background: active ? '#fff' : zone.color }} />
+                  {zone.name}
+                </button>
+              )
+            })}
+          </div>
+          {expanded && !fullscreen ? (
+            <ul className="m-0 mt-2 grid list-none grid-cols-2 gap-1 p-0 sm:grid-cols-3">
+              {amenitiesByZone[expanded].map((amenity) => (
+                <li key={amenity.n}>
+                  <button type="button" onClick={() => setSelected(amenity.n)} aria-pressed={selected === amenity.n}
+                    className={'flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-xl px-2 py-1 text-left text-xs leading-snug ' + (selected === amenity.n ? 'bg-q-navy text-white' : 'bg-q-sand/60 text-q-navy')}>
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full font-display text-[0.7rem] font-bold text-white" style={{ background: runnerColors[expanded] }}>{amenity.n}</span>
+                    <span className="min-w-0">{amenity.name}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          {selected ? <AmenityDetail inline n={selected} onClose={() => setSelected(null)} /> : null}
+          <p className={'mb-0 mt-2 text-center text-xs ' + (selected ? 'max-sm:hidden ' : '') + (fullscreen ? 'text-white/70' : 'text-q-muted')}>Chọn một khu để xem danh sách tiện ích, hoặc chạm vào điểm trên mặt bằng.</p>
+        </div>
+      </div>
+  )
+
   return (
     <section id="tien-ich" data-snap-section className="section-screen bg-q-cream">
       <Container>
@@ -118,101 +217,8 @@ export default function MasterPlan() {
           <SectionHeading label="Ba khu trải nghiệm tại QTOPIA" lead="Quậy Station hướng biển, Ocean Galaxy sôi động, Oasis Resort để thư giãn và vận động." />
         </div>
 
-        <div className={fullscreen ? 'amenity-layout-full fixed inset-0 z-[100] flex flex-col justify-center gap-3 overflow-auto bg-q-navy p-3' : 'amenity-layout relative mt-5 w-full rounded-[2rem] bg-white p-2 shadow-card sm:p-3 lg:flex'}
-          style={fullscreen ? { alignItems: 'safe center' } : undefined}>
-          {/* Máy tính: 2 cột liền nhau — ảnh bên trái (rộng tối đa theo chiều cao màn hình), cột danh sách
-              bên phải lấp hết phần còn lại, ăn sát mép trên/dưới/phải của ảnh nên không còn khoảng trắng. */}
-          <div ref={mapRef} className={'amenity-map relative mx-auto w-full shrink-0 overflow-hidden ' + (fullscreen
-            ? 'amenity-map-full aspect-[1672/941] rounded-xl'
-            : 'aspect-[1120/941] max-w-[calc((100svh-var(--header-h)-16rem)*1.19)] rounded-[1.6rem] sm:max-w-[calc((100svh-var(--header-h)-13rem)*1.19)] lg:mx-0 lg:aspect-[1672/941] lg:w-[min(calc(100%-19rem),calc((100svh-var(--header-h)-9rem)*1.777))] lg:max-w-none lg:rounded-r-none')}
-            style={fullscreen ? { width: `${zoom * 100}%`, maxWidth: zoom > 1 ? 'none' : '178svh' } : undefined}>
-            <Img
-              src={masterPlan.image}
-              alt={mapVisible ? '' : 'Mặt bằng tiện ích QTOPIA với ba khu Oasis Resort, Ocean Galaxy và Quậy Station'}
-              sizes={fullscreen ? '100vw' : '(min-width: 1280px) 60vw, (min-width: 768px) 100vw, 135vw'}
-              className={'absolute inset-y-0 left-0 h-full max-w-none ' + (fullscreen ? 'w-full' : 'w-[149.2857%] lg:w-full')}
-            />
-            {mapVisible ? <svg className={'absolute inset-y-0 left-0 h-full ' + (fullscreen ? 'w-full' : 'w-[149.2857%] lg:w-full')} viewBox="0 0 1672 941" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mặt bằng tiện ích QTOPIA với ba khu Oasis Resort, Ocean Galaxy và Quậy Station">
-              {zones.map((zone) => (
-                <g key={zone.id} className="amenity-zone" style={{ color: zone.color, opacity: expanded && expanded !== zone.id ? 0.55 : 1 }}>
-                  <path d={zone.path} fill="currentColor" fillOpacity={expanded === zone.id ? 0.07 : 0.035} stroke="currentColor" strokeOpacity="0.95" strokeWidth="4.2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-                  <path d={zone.path} fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 98" pathLength="100" vectorEffect="non-scaling-stroke" className={'amenity-zone-runner ' + (highlightedZone === zone.id ? 'amenity-zone-runner-active' : '')} style={{ color: highlightedZone === zone.id ? zone.color : runnerColors[zone.id] }} />
-                  <path d={zone.path} fill="transparent" stroke="transparent" strokeWidth="18" onMouseEnter={() => { setHoveredZone(zone.id); showZone(zone.id) }} onMouseLeave={() => setHoveredZone(null)} onClick={() => { showZone(zone.id); setSelectedZone(zone.id) }} className="cursor-pointer" />
-                </g>
-              ))}
-            </svg> : null}
-            {mapVisible ? zones.flatMap((zone) => amenitiesByZone[zone.id].flatMap((amenity) => {
-              const positions = amenityLabelPositions[amenity.n] || []
-              const isSelected = selected === amenity.n
-              return positions.map((position, index) => (
-                <button key={`${amenity.n}-${index}`} type="button" onClick={() => { showZone(zone.id); setSelected(amenity.n); setSelectedZone(zone.id) }}
-                  aria-label={`${amenity.n}. ${amenity.name}`} aria-pressed={isSelected}
-                  className={'amenity-number absolute z-10 grid size-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full font-display text-[length:calc(0.7rem*var(--type-scale))] font-bold text-white ' + (isSelected ? 'amenity-number-selected ' : '') + (expanded === zone.id || isSelected ? 'amenity-number-focus' : '')}
-                  style={{ top: position.top, '--amenity-left-full': position.left, '--amenity-left-cropped': `${(parseFloat(position.left) * 1672 / 1120).toFixed(2)}%`, '--amenity-marker-color': runnerColors[zone.id] }}>
-                  <span>{amenity.n}</span>
-                </button>
-              ))
-            })) : null}
-            {mapVisible && fullscreen ? (
-              <AmenityPanel {...panelProps} className="absolute bottom-3 right-3 top-16 z-20 hidden w-[34%] min-w-[17rem] rounded-2xl border border-white/60 bg-white/92 shadow-card backdrop-blur-xl lg:flex" />
-            ) : null}
-            {mapVisible && selected ? <AmenityDetail n={selected} onClose={() => setSelected(null)} /> : null}
-
-            <div className={(fullscreen ? 'fixed right-3 top-3' : 'absolute right-2.5 top-2.5 sm:right-3 sm:top-3') + ' z-40 flex items-center gap-2'}>
-            {fullscreen ? (
-              <div className="flex items-center overflow-hidden rounded-full bg-q-navy/80 backdrop-blur">
-                <button type="button" onClick={() => setZoom((current) => Math.max(1, current - 1))} disabled={zoom === 1}
-                  aria-label="Thu nhỏ mức phóng" className="grid size-11 place-items-center text-xl text-white disabled:opacity-40">−</button>
-                <span aria-live="polite" className="min-w-10 text-center font-display text-sm font-semibold text-white">{zoom}x</span>
-                <button type="button" onClick={() => setZoom((current) => Math.min(4, current + 1))} disabled={zoom === 4}
-                  aria-label="Phóng to thêm" className="grid size-11 place-items-center text-xl text-white disabled:opacity-40">+</button>
-              </div>
-            ) : null}
-            <button type="button" onClick={() => setFullscreen((current) => !current)}
-              className="inline-flex min-h-11 items-center rounded-full bg-q-navy/80 px-4 font-display text-sm font-semibold text-white backdrop-blur hover:bg-q-navy">
-              {fullscreen ? 'Thu nhỏ' : 'Phóng to'}
-            </button>
-            </div>
-          </div>
-
-          {fullscreen ? null : (
-            <div className="amenity-legend-row relative hidden min-w-[19rem] flex-1 lg:block">
-              <AmenityPanel {...panelProps} className="absolute inset-0 rounded-r-[1.6rem] bg-q-cream" />
-            </div>
-          )}
-
-          <div className={(fullscreen ? 'w-full shrink-0' : 'amenity-mobile-legend mt-3') + ' lg:hidden'}>
-            <div className="flex gap-2">
-              {zones.map((zone) => {
-                const active = expanded === zone.id
-                return (
-                  <button key={zone.id} type="button" aria-pressed={active}
-                    onClick={() => { const next = active ? null : zone.id; setExpanded(next); setSelectedZone(next); setSelected(null) }}
-                    className={'flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full border px-2 text-center font-display text-[length:calc(0.7rem*var(--type-scale))] font-bold leading-tight transition-colors sm:text-sm ' + (active ? 'border-transparent text-white' : 'border-q-navy/15 bg-white text-q-navy')}
-                    style={active ? { background: runnerColors[zone.id] } : undefined}>
-                    <span className="size-2.5 shrink-0 rounded-full" style={{ background: active ? '#fff' : zone.color }} />
-                    {zone.name}
-                  </button>
-                )
-              })}
-            </div>
-            {expanded && !fullscreen ? (
-              <ul className="m-0 mt-2 grid list-none grid-cols-2 gap-1 p-0 sm:grid-cols-3">
-                {amenitiesByZone[expanded].map((amenity) => (
-                  <li key={amenity.n}>
-                    <button type="button" onClick={() => setSelected(amenity.n)} aria-pressed={selected === amenity.n}
-                      className={'flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-xl px-2 py-1 text-left text-xs leading-snug ' + (selected === amenity.n ? 'bg-q-navy text-white' : 'bg-q-sand/60 text-q-navy')}>
-                      <span className="grid size-6 shrink-0 place-items-center rounded-full font-display text-[0.7rem] font-bold text-white" style={{ background: runnerColors[expanded] }}>{amenity.n}</span>
-                      <span className="min-w-0">{amenity.name}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            {selected ? <AmenityDetail inline n={selected} onClose={() => setSelected(null)} /> : null}
-            <p className={'mb-0 mt-2 text-center text-xs ' + (selected ? 'max-sm:hidden ' : '') + (fullscreen ? 'text-white/70' : 'text-q-muted')}>Chọn một khu để xem danh sách tiện ích, hoặc chạm vào điểm trên mặt bằng.</p>
-          </div>
-        </div>
+        {/* Toàn màn hình: đưa ra <body> bằng portal — section dùng content-visibility / transform / zoom làm position:fixed bị neo vào section (iOS: màn hình trống, khoá cuộn) */}
+        {fullscreen && typeof document !== 'undefined' ? createPortal(mapBlock, document.body) : mapBlock}
       </Container>
     </section>
   )
