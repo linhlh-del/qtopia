@@ -113,7 +113,7 @@ Không. Tiện ích mặt đất và khối căn hộ có tiến độ riêng; c
   // news 3
   {
     id: "tram-quay-qtopia-phuoc-hai-khai-truong-7-11",
-    date: "2026-11-06",
+    date: "2026-11-09",
     category: "Sự kiện",
     title:
       "Trạm Quậy QTopia Phước Hải dự kiến khai trương ngày 7 tháng 11 có gì đáng chú ý",
@@ -161,7 +161,7 @@ Quyền tham gia từng hoạt động phụ thuộc quy định của chương 
   // news 4
   {
     id: "vi-tri-qtopia-phuoc-hai",
-    date: "2026-11-06",
+    date: "2026-11-09",
     category: "Vị trí",
     title:
       "Vị trí QTopia Phước Hải trên đường Võ Thị Sáu và kết nối du lịch ven biển",
