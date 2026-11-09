@@ -7,7 +7,7 @@ import NotFound from './NotFound'
 
 function ArticleBody({ body }) {
   const blocks = parseNewsBody(body)
-  if (!blocks.length) return <p className="m-0">Nội dung chi tiết của bài viết sẽ được cập nhật sau.</p>
+  if (!blocks.length) return <p className="m-0 text-justify">Nội dung chi tiết của bài viết sẽ được cập nhật sau.</p>
   return blocks.map((b, i) => {
     const key = `${i}-${b.text.slice(0, 24)}`
     if (b.type === 'h2') {
@@ -25,7 +25,7 @@ function ArticleBody({ body }) {
       )
     }
     return (
-      <p key={key} className="m-0 whitespace-pre-line">
+      <p key={key} className="m-0 whitespace-pre-line text-justify">
         {b.text}
       </p>
     )
@@ -97,10 +97,10 @@ export default function NewsDetail() {
               className="mt-8 overflow-hidden rounded-xl border border-q-navy/10 shadow-soft sm:mt-10"
             />
 
-            <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-12">
+            <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-12">
               <div className="min-w-0">
                 <div className="space-y-5 text-base leading-[1.85] text-q-ink">
-                  {article.body ? <ArticleBody body={article.body} /> : <p className="m-0">{article.excerpt}</p>}
+                  {article.body ? <ArticleBody body={article.body} /> : <p className="m-0 text-justify">{article.excerpt}</p>}
                 </div>
 
                 {article.cta ? (
