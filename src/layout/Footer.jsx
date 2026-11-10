@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import Img from '../components/ui/Img'
 import { legalDisclaimer, siteMeta } from '../data/project'
 import { isFilled } from '../lib/filled'
-import { mainNav, pages, topicPaths } from '../seo/site-meta'
+import { footerTopicPaths, mainNav, pages } from '../seo/site-meta'
 
 const linkCls = 'inline-flex min-h-11 items-center font-display text-sm font-medium text-white/85 no-underline transition-colors hover:text-q-lime'
 
@@ -33,9 +33,9 @@ export default function Footer() {
             <Link to="/tin-tuc" title={pages['/tin-tuc'].menu} className={linkCls}>
               Tin tức & sự kiện
             </Link>
-            {topicPaths.map((p) => (
+            {footerTopicPaths.map((p) => (
               <Link key={p} to={p} title={pages[p].menu} className={linkCls}>
-                {pages[p].breadcrumb} căn hộ QTOPIA
+                {pages[p].breadcrumb} QTOPIA
               </Link>
             ))}
           </nav>

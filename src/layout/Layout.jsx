@@ -58,7 +58,7 @@ function useSamePageHashLinks() {
     const onClick = (e) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
       const a = e.target.closest?.('a[href]')
-      if (!a || (a.target && a.target !== '_self')) return
+      if (!a || a.hasAttribute('data-zoom') || (a.target && a.target !== '_self')) return
       const url = new URL(a.getAttribute('href'), window.location.href)
       if (url.origin !== window.location.origin) return
       if (url.pathname !== window.location.pathname) {

@@ -33,6 +33,7 @@ Các số này **không đại diện cho Vercel**: server cục bộ không né
 | [x] | Identical links: các nút "Đọc thêm" cùng tên nhưng dẫn tới bài khác nhau. | Thêm tên bài vào tên link bằng `sr-only`. |
 | [x] | Best Practices: thiếu CSP, COOP, XFO. | Thêm header trong `vercel.json` và `deploy/nginx-qtopia.conf`; `serve-dist` cũng gửi các header này để test cục bộ. |
 | [ ] | Render-blocking CSS 17 KiB (ước tính 80 ms). | Để nguyên: inline cả file CSS vào mỗi trang làm mất cache giữa các trang, mà lợi ích chỉ khoảng 80 ms. |
+| [ ] | **Quyết định 10/11/2026: giữ gtag GA4 trực tiếp trong `<head>` của `index.html`** (ưu tiên Google nhận diện tag và đếm đủ `page_view` đầu, kể cả người rời trang < 10 s). Hệ quả đo được: TBT mobile ~1.200–1.700 ms, Performance ~70–75 (`/mat-bang`, `/vi-tri`), so với ~95–98 khi GA nạp muộn. `loadGtm()` trong `src/lib/analytics.js` tự bỏ qua khi thấy gtag trong head. | Không sửa. Muốn lấy lại điểm: xoá khối gtag trong `index.html`, cơ chế nạp muộn sẵn có sẽ tự hoạt động. |
 | [ ] | Đo lại sau deploy. | Cần chạy PageSpeed 3 lần mỗi chế độ trên domain chính thức sau khi chuyển sang VPS (nginx gzip + cache). |
 
 ## Checklist P0 — làm trước

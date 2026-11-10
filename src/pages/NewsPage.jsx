@@ -64,7 +64,7 @@ export default function NewsPage() {
             Tin mới nhất
           </p>
           <div className="grid overflow-hidden rounded-xl border border-q-navy/10 bg-white lg:grid-cols-[minmax(0,3fr)_minmax(15rem,1fr)]">
-            <article className="grid min-w-0 md:grid-cols-2">
+            <article className="grid min-w-0 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
               <div className="flex flex-col p-5 sm:p-8">
                 <h2 className="font-display text-xl font-bold leading-snug text-q-navy sm:text-2xl">
                   <Link to={getNewsHref(featured.id)} className="text-inherit no-underline hover:text-q-blue">
@@ -79,8 +79,8 @@ export default function NewsPage() {
                   </Link>
                 </div>
               </div>
-              <Link to={getNewsHref(featured.id)} aria-label={featured.title} className="group block overflow-hidden">
-                <NewsImage item={featured} className="h-full min-h-56 transition-transform duration-500 group-hover:scale-[1.03] md:min-h-full" />
+              <Link to={getNewsHref(featured.id)} aria-label={featured.title} className="group block min-w-0 overflow-hidden">
+                <NewsImage item={featured} className="h-full w-full min-h-56 transition-transform duration-500 group-hover:scale-[1.03] md:min-h-full" />
               </Link>
             </article>
 

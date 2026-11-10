@@ -373,12 +373,15 @@ function LocationMap() {
               aria-label={place.name}
               aria-expanded={active === place.id}
               onClick={() => setActive(active === place.id ? null : place.id)}
-              className={`relative z-0 grid size-8 shrink-0 cursor-pointer place-items-center bg-transparent p-0 text-[#e63946] drop-shadow-md transition-all duration-300 hover:scale-110 ${
+              // Vùng chạm 44×44 (checklist 3.2 / Lighthouse target-size); -m-1.5 giữ khung bố cục 32px để mũi ghim không lệch
+              className={`relative z-0 -m-1.5 grid size-11 shrink-0 cursor-pointer place-items-center bg-transparent p-0 text-[#e63946] drop-shadow-md transition-all duration-300 hover:scale-110 ${
                 active === place.id ? "scale-110 text-q-lime" : ""
               }`}
             >
-              <MapPinIcon />
-              <span className="qtopia-pulse pointer-events-none absolute inset-1 rounded-full border-2 border-[#e63946]" />
+              <span className="grid size-8 place-items-center">
+                <MapPinIcon />
+              </span>
+              <span className="qtopia-pulse pointer-events-none absolute inset-2.5 rounded-full border-2 border-[#e63946]" />
             </button>
 
             {/* LOCATION LABEL — ẩn mặc định, chỉ hiện khi bấm vào nút check-in */}

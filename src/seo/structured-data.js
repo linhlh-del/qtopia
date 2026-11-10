@@ -3,6 +3,9 @@
    Hotline / địa chỉ chưa điền thật (isFilled=false) thì không đưa vào schema. */
 import { siteMeta, faq, masterPlan } from '../data/project'
 import { isFilled } from '../lib/filled'
+import { PROJECT_GEO, mapLinkUrl } from '../data/geo'
+import { contentSource } from './content-registry'
+import { videosFor, ytThumb, ytWatch } from '../data/videos'
 import { SITE, SITE_URL, absAsset, absUrl, pageMeta, pages, sitelinkPaths } from './site-meta'
 
 const ID = {
@@ -45,8 +48,16 @@ function project(path) {
     ),
   }
   if (isFilled(siteMeta.address)) {
-    node.address = { '@type': 'PostalAddress', streetAddress: siteMeta.address, addressCountry: 'VN' }
+    node.address = {
+      '@type': 'PostalAddress',
+      streetAddress: siteMeta.address,
+      addressLocality: 'Phước Hải',
+      addressRegion: 'TP. Hồ Chí Minh',
+      addressCountry: 'VN',
+    }
   }
+  node.geo = { '@type': 'GeoCoordinates', latitude: PROJECT_GEO.lat, longitude: PROJECT_GEO.lng }
+  node.hasMap = mapLinkUrl
   return path === '/' ? node : { ...node, description: p.description }
 }
 
@@ -76,12 +87,15 @@ export function structuredData(path) {
       about: { '@id': ID.project },
       primaryImageOfPage: meta.ogImage ? { '@type': 'ImageObject', url: absAsset(meta.ogImage) } : undefined,
       ...(path === '/' ? { datePublished: SITE.published } : {}),
+      // Trang có nội dung chi tiết (RichContent) → ngày cập nhật nội dung
+      ...(contentSource().hasContent(path) ? { dateModified: contentSource().updatedIso } : {}),
     },
   ]
 
   if (path !== '/' && pages[path]) {
     const crumbs = [{ name: pages['/'].breadcrumb, item: absUrl('/') }]
     if (meta.article) crumbs.push({ name: pages['/tin-tuc'].breadcrumb, item: absUrl('/tin-tuc') })
+    if (meta.parent && pages[meta.parent]) crumbs.push({ name: pages[meta.parent].breadcrumb, item: absUrl(meta.parent) })
     crumbs.push({ name: meta.article ? meta.article.headline : meta.breadcrumb, item: url })
     graph.push({
       '@type': 'BreadcrumbList',
@@ -123,6 +137,33 @@ export function structuredData(path) {
     graph.push({
       '@type': 'FAQPage',
       mainEntity: faq.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    })
+  }
+
+  // Video YouTube hiển thị trên trang (facade) → VideoObject
+  for (const v of path === '/' ? [] : videosFor(path)) {
+    graph.push({
+      '@type': 'VideoObject',
+      name: v.title,
+      description: v.description || v.title,
+      thumbnailUrl: ytThumb(v.id),
+      uploadDate: v.uploadDate,
+      contentUrl: ytWatch(v.id),
+      embedUrl: `https://www.youtube-nocookie.com/embed/${v.id}`,
+    })
+  }
+
+  // FAQ riêng của trang chủ đề / trang /faq (khớp nội dung hiển thị trong RichContent)
+  const topicFaqs = path === '/' ? [] : contentSource().pageFaqs(path)
+  if (topicFaqs.length) {
+    graph.push({
+      '@type': 'FAQPage',
+      '@id': `${url}#faq`,
+      mainEntity: topicFaqs.map((f) => ({
         '@type': 'Question',
         name: f.q,
         acceptedAnswer: { '@type': 'Answer', text: f.a },

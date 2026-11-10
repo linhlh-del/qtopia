@@ -68,7 +68,7 @@ export default function Hero() {
             <h1 className="m-0 font-display text-[clamp(1.35rem,3.1vw,2.1rem)] font-extrabold leading-[1.15] tracking-tight text-white">
               {titleLines.map((line, i) => (
                 <Fragment key={i}>
-                  {i > 0 && <br />}
+                  {i > 0 && <>{' '}<br /></>}
                   <span className={titleLines.length > 1 ? 'whitespace-nowrap' : undefined}>{line}</span>
                 </Fragment>
               ))}

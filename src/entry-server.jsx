@@ -3,6 +3,8 @@ import { prerenderToNodeStream } from 'react-dom/static'
 import { StaticRouter } from 'react-router-dom'
 import App from './App.jsx'
 import { preloadAll } from './components/DeferredSection'
+// Nạp sẵn nội dung chữ để JSON-LD (FAQPage, dateModified) có đủ dữ liệu khi prerender <head>
+import './data/seo-content'
 
 // prerender (react-dom/static) chờ mọi Suspense/lazy xong rồi mới xuất HTML hoàn chỉnh: không có script
 // inline $RC/$RT để ghép nội dung → HTML sạch hơn và tương thích CSP chặn inline script.

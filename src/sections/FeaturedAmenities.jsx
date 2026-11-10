@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { Link } from 'react-router-dom'
 import Container from '../components/ui/Container'
 import Img from '../components/ui/Img'
 import SectionHeading from '../components/ui/SectionHeading'
+import Icon from '../components/ui/Icons'
 import { featuredAmenityGroups } from '../data/project'
 import { useReveal } from '../hooks/useReveal'
 
-export default function FeaturedAmenities() {
+export default function FeaturedAmenities({ showTopicLink = true }) {
   const [groupId, setGroupId] = useState(featuredAmenityGroups[0].id)
   const [lightbox, setLightbox] = useState(null)
   const ref = useReveal()
@@ -101,6 +103,14 @@ export default function FeaturedAmenities() {
           </button>
         </div>
         <p className="mt-2 text-xs text-q-muted lg:hidden">Bấm mũi tên hoặc vuốt ngang để xem thêm ảnh</p>
+        {showTopicLink ? (
+          <div className="mt-4 flex justify-start">
+            <Link to="/tien-ich" title="Chi tiết 29 tiện ích nội khu QTOPIA Phước Hải" data-cta-name="amenities_detail" data-cta-location="tien-ich-noi-bat" className="btn-base btn-dark cta-fx no-underline">
+              Xem tiện ích chi tiết
+              <Icon name="arrow" size={18} />
+            </Link>
+          </div>
+        ) : null}
       </Container>
 
       {/* Lightbox đưa ra <body> bằng portal: section dùng content-visibility / transform / zoom làm

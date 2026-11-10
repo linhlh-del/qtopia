@@ -196,7 +196,7 @@ export default function News() {
               onClick={() => goToPage(page)}
               aria-label={`Đi tới trang ${page + 1}`}
               aria-current={page === activePage ? 'page' : undefined}
-              className="group grid h-11 w-7 cursor-pointer place-items-center border-0 bg-transparent p-0"
+              className="group grid size-11 cursor-pointer place-items-center border-0 bg-transparent p-0"
             >
               <span
                 aria-hidden="true"

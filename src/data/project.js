@@ -56,7 +56,7 @@ export const heroContent = {
     {
       src: "/images/renders/view-from-sea.webp",
       alt: "Phối cảnh dự án căn hộ QTOPIA nhìn từ biển",
-      h1: "QTOPIA — THÀNH PHỐ CUỐI TUẦN\nCỦA SIÊU ĐÔ THỊ TP.HCM",
+      h1: "QTOPIA PHƯỚC HẢI —\nTHÀNH PHỐ CUỐI TUẦN\nCỦA SIÊU ĐÔ THỊ TP.HCM",
       slogan: "Sở hữu rừng nguyên sinh, lưng tựa núi, mặt hướng biển",
     },
     {
@@ -462,8 +462,7 @@ export const nearbyContent = {
           note: "Trung tâm sinh hoạt ngay cạnh dự án",
         },
         { name: "Hồ Tràm", minutes: "19", note: "Dải biển nghỉ dưỡng lân cận" },
-        { name: "Vũng Tàu", note: "Thành phố biển trên trục kết nối ven biển" },
-        { name: "Bà Rịa", note: "Đô thị hành chính – dịch vụ của khu vực" },
+        { name: "Bà Rịa – Vũng Tàu", minutes: "30", note: "Thành phố biển và đô thị dịch vụ của khu vực" },
         { name: "Cần Giờ", note: "Vùng sinh thái ven biển phía Tây" },
       ],
     },
