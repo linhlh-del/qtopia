@@ -10,7 +10,7 @@ Biên tập viên ──► qtopia-cms (Vercel, SPA)                 Khách truy
               cms_content.published                              ▲
                      │ Edge Function cms-admin "publish"         │ symlink đổi nguyên tử
                      ▼                                           │
-     POST https://qtopia.rever.io.vn/cms-deploy  ──nginx──► deploy hook (127.0.0.1:8790, systemd)
+     POST https://canho-qtopia.vn/cms-deploy  ──nginx──► deploy hook (127.0.0.1:8790, systemd)
                                                     └─ npm run build:release (thư mục /var/www/qtopia/src)
                                                          1. fetch-cms: lấy bản đã đăng + tải ảnh về /assets/cms/
                                                          2. vite build + SSR + prerender → releases/<id>
@@ -41,7 +41,7 @@ cd /var/www/qtopia/src && sudo -u www-data npm ci
 Tạo `/var/www/qtopia/src/.env.production`. File này không commit vào git; quyền nên là `chmod 640`, owner `www-data`.
 
 ```ini
-VITE_SITE_URL=https://qtopia.rever.io.vn
+VITE_SITE_URL=https://canho-qtopia.vn
 VITE_LEAD_ENDPOINT=<URL nhận lead, vd Cloudflare Worker ghi vào cms_leads>
 CMS_SUPABASE_URL=https://<project>.supabase.co
 CMS_SUPABASE_ANON_KEY=<anon key>
@@ -56,18 +56,18 @@ cd /var/www/qtopia/src && sudo -u www-data npm run build:release
 ls -l /var/www/qtopia/current   # → releases/<id>
 ```
 
-## 2. Domain qtopia.rever.io.vn (Cloudflare) + nginx
+## 2. Domain canho-qtopia.vn (Cloudflare) + nginx
 
-**Cloudflare** (zone `rever.io.vn`):
+**Cloudflare** (zone `canho-qtopia.vn`):
 
-1. DNS → Add record. Type `A`, Name `qtopia`, IPv4 = IP của VPS, Proxy status **Proxied** (đám mây cam).
+1. DNS → Add record. Type `A`, Name `@`, IPv4 = IP của VPS, Proxy status **Proxied** (đám mây cam).
 2. SSL/TLS → Overview: chọn **Full (strict)**.
-3. SSL/TLS → Origin Server → **Create Certificate**. Hostname `qtopia.rever.io.vn`, hạn 15 năm. Lưu 2 khối PEM lên VPS:
+3. SSL/TLS → Origin Server → **Create Certificate**. Hostname `canho-qtopia.vn` và `*.canho-qtopia.vn`, hạn 15 năm. Lưu 2 khối PEM lên VPS:
    ```bash
    sudo mkdir -p /etc/ssl/cloudflare
-   sudo nano /etc/ssl/cloudflare/qtopia.rever.io.vn.pem   # dán "Origin Certificate"
-   sudo nano /etc/ssl/cloudflare/qtopia.rever.io.vn.key   # dán "Private Key"
-   sudo chmod 600 /etc/ssl/cloudflare/qtopia.rever.io.vn.key
+   sudo nano /etc/ssl/cloudflare/canho-qtopia.vn.pem   # dán "Origin Certificate"
+   sudo nano /etc/ssl/cloudflare/canho-qtopia.vn.key   # dán "Private Key"
+   sudo chmod 600 /etc/ssl/cloudflare/canho-qtopia.vn.key
    ```
 4. SSL/TLS → Edge Certificates: bật **Always Use HTTPS**. Speed → Optimization: Brotli bật mặc định.
 5. **Caching → Cache Rules:** không cache HTML ở edge. Để mặc định Cloudflare chỉ cache file tĩnh (`/assets`, `/images`) là đủ, khách thấy nội dung CMS mới ngay. Nếu sau này bật cache HTML thì phải purge sau mỗi lần đăng.
@@ -89,7 +89,21 @@ sudo nginx -t && sudo systemctl reload nginx
 
 Firewall: chỉ mở 22, 80, 443 (`sudo ufw allow OpenSSH && sudo ufw allow 'Nginx Full' && sudo ufw enable`).
 
-Khi có domain chính thức, đổi ở 4 chỗ rồi chạy `npm run build:release`:
+### Nhiều domain trên cùng một máy
+
+Một bản build, một thư mục `/var/www/qtopia`, một file nginx phục vụ tất cả domain:
+
+| Domain | Xử lý |
+|---|---|
+| `canho-qtopia.vn` | **Domain chính** — canonical, sitemap, Search Console |
+| `www.canho-qtopia.vn`, `qtopialiving.vn`, `qtopiaresidence.vn`, `qtopiaresortcity.vn`, `qtopiaseaside.vn`, `qtopialiving.com` (+ `www.`) | 301 về `https://canho-qtopia.vn` + giữ đường dẫn |
+| `qtopia.rever.io.vn` (domain cũ) | 301 về domain chính, giữ nguyên để không mất thứ hạng đã có |
+
+Với mỗi domain phụ: thêm zone vào Cloudflare, trỏ nameserver ở nhà đăng ký về Cloudflare, tạo DNS `@` và `www` (CNAME → tunnel, Proxied), thêm 2 hostname vào `/etc/cloudflared/config.yml`. Không cần chứng chỉ riêng: tunnel gửi `originServerName canho-qtopia.vn`.
+
+Không cho các domain phụ hiển thị cùng nội dung: Google coi là trùng lặp và chia tín hiệu xếp hạng. Khi một domain có layout riêng, bỏ nó khỏi block 301 và tạo site/thư mục build riêng.
+
+Đổi domain chính về sau: sửa 4 chỗ rồi chạy `npm run build:release`:
 
 - `VITE_SITE_URL` trong `.env.production`
 - `server_name` và chứng chỉ trong file nginx
@@ -124,14 +138,14 @@ Trong unit systemd, `ReadWritePaths` phải gồm `/var/www/qtopia` (cả `src`,
 
 Secrets của Supabase Edge Function `cms-admin` (`supabase secrets set ...`):
 
-- `DEPLOY_HOOK_QTOPIA=https://qtopia.rever.io.vn/cms-deploy`
+- `DEPLOY_HOOK_QTOPIA=https://canho-qtopia.vn/cms-deploy`
 - `DEPLOY_HOOK_TOKEN_QTOPIA=<cùng token ở trên>`
 - `CMS_ORIGINS` thêm domain CMS trên Vercel
 
 ## 4. CMS trên Vercel (`qtopia-cms/`)
 
 1. Import thư mục `qtopia-cms` thành một project Vercel (Framework: Vite).
-2. Đặt các biến môi trường `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_SITE_URL=https://qtopia.rever.io.vn`.
+2. Đặt các biến môi trường `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_SITE_URL=https://canho-qtopia.vn`.
 3. Supabase → Authentication → URL Configuration: thêm domain CMS vào Redirect URLs (đăng nhập Google).
 4. Chạy migration `qtopia` trong `cms-supabase` (`supabase db push`). Bước này tạo project và cấp quyền owner cho tài khoản quản trị.
 
@@ -144,7 +158,7 @@ Biên tập viên mở CMS, sửa nội dung rồi bấm **Đăng**. Khoảng 1�
 | Phát hành thủ công (code mới + nội dung) | `cd /var/www/qtopia/src && sudo -u www-data git pull && sudo -u www-data npm ci && sudo -u www-data npm run build:release` |
 | Rollback | `cd /var/www/qtopia && ls releases && sudo -u www-data ln -sfn releases/<id> current.tmp && sudo -u www-data mv -T current.tmp current` |
 | Xem log hook | `journalctl -u qtopia-deploy-hook -f` |
-| Bản đang chạy | `curl -s https://qtopia.rever.io.vn/cms-status.json` |
+| Bản đang chạy | `curl -s https://canho-qtopia.vn/cms-status.json` |
 | SSL | Chứng chỉ Origin của Cloudflare hạn 15 năm, chứng chỉ edge do Cloudflare tự gia hạn |
 
 Một bản build hỏng không bao giờ được đưa lên: nếu `fetch-cms`, build hoặc `seo-check` lỗi, `current` vẫn trỏ vào bản cũ và lỗi hiện trong log hook.
