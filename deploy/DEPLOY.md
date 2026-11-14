@@ -89,19 +89,31 @@ sudo nginx -t && sudo systemctl reload nginx
 
 Firewall: chỉ mở 22, 80, 443 (`sudo ufw allow OpenSSH && sudo ufw allow 'Nginx Full' && sudo ufw enable`).
 
-### Nhiều domain trên cùng một máy
+### Nhiều domain trên cùng một máy — mỗi domain một thư mục build riêng
 
-Một bản build, một thư mục `/var/www/qtopia`, một file nginx phục vụ tất cả domain:
+Cùng một mã nguồn `/var/www/qtopia/src`, nhưng **mỗi domain có cấu hình và bản build riêng**:
 
-| Domain | Xử lý |
+| Thành phần | Vị trí |
 |---|---|
-| `canho-qtopia.vn` | **Domain chính** — canonical, sitemap, Search Console |
-| `www.canho-qtopia.vn`, `qtopialiving.vn`, `qtopiaresidence.vn`, `qtopiaresortcity.vn`, `qtopiaseaside.vn`, `qtopialiving.com` (+ `www.`) | 301 về `https://canho-qtopia.vn` + giữ đường dẫn |
-| `qtopia.rever.io.vn` (domain cũ) | 301 về domain chính, giữ nguyên để không mất thứ hạng đã có |
+| Cấu hình domain (VITE_SITE_URL, sau này: GTM, layout riêng…) | `sites/<domain>/site.env` trong repo |
+| Bản build của domain | `/var/www/qtopia/sites/<domain>/releases/<id>` |
+| Bản đang chạy (nginx root) | `/var/www/qtopia/sites/<domain>/current` |
 
-Với mỗi domain phụ: thêm zone vào Cloudflare, trỏ nameserver ở nhà đăng ký về Cloudflare, tạo DNS `@` và `www` (CNAME → tunnel, Proxied), thêm 2 hostname vào `/etc/cloudflared/config.yml`. Không cần chứng chỉ riêng: tunnel gửi `originServerName canho-qtopia.vn`.
+Domain hiện có: `canho-qtopia.vn`, `qtopialiving.vn`, `qtopialiving.com`, `qtopiaresidence.vn`, `qtopiaresortcity.vn`, `qtopiaseaside.vn`. Mỗi domain tự có canonical, sitemap, robots, JSON-LD của chính nó. `www.<domain>` → 301 về `<domain>`; domain cũ `qtopia.rever.io.vn` → 301 về `canho-qtopia.vn`.
 
-Không cho các domain phụ hiển thị cùng nội dung: Google coi là trùng lặp và chia tín hiệu xếp hạng. Khi một domain có layout riêng, bỏ nó khỏi block 301 và tạo site/thư mục build riêng.
+Lệnh:
+
+```bash
+npm run build:release                       # build + phát hành TẤT CẢ domain (webhook CMS gọi lệnh này)
+npm run build:release -- qtopiaseaside.vn   # chỉ một domain
+npm run build:sites                         # máy dev: build thử mọi domain vào dist-sites/<domain>
+```
+
+Nội dung CMS lấy một lần rồi dùng cho mọi domain. Domain nào build lỗi thì domain đó giữ bản đang chạy, các domain khác vẫn phát hành.
+
+Thêm domain mới: tạo `sites/<domain>/site.env` (`VITE_SITE_URL=https://<domain>`), thêm tên vào `server_name` trong `deploy/nginx-qtopia.conf` (khối 80, khối www, khối chính), thêm route trên tunnel `qtopia-vps` (HTTPS `localhost:443`, Origin Server Name `canho-qtopia.vn`), rồi build lại.
+
+> Lưu ý SEO: khi các domain còn cùng nội dung, Google có thể coi là trùng lặp và chỉ chọn một domain để xếp hạng. Nên làm nội dung/layout khác nhau cho từng domain càng sớm càng tốt.
 
 Đổi domain chính về sau: sửa 4 chỗ rồi chạy `npm run build:release`:
 
