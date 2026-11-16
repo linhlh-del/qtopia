@@ -4,7 +4,7 @@ import { getFirstTouch } from './utm'
 import { cmsLeadEndpoint } from '../cms/content'
 import { cmsTrack } from '../cms/tracker'
 
-export async function submitLead({ name, phone, formLocation }) {
+export async function submitLead({ name, phone, need = '', formLocation }) {
   const endpoint = import.meta.env.VITE_LEAD_ENDPOINT || cmsLeadEndpoint
 
   if (!endpoint) {
@@ -16,6 +16,7 @@ export async function submitLead({ name, phone, formLocation }) {
   const payload = {
     name: name.trim(),
     phone: phone.replace(/[\s.-]/g, ''),
+    apartment_types: need, // ô "Nhu cầu" của popup (loại căn hộ quan tâm)
     form_type: formLocation,
     page_url: window.location.href,
     source_url: ft.landing_path ? window.location.origin + ft.landing_path : '',

@@ -9,9 +9,14 @@ export const useContactPopup = () => useContext(Ctx)
 
 const SEEN_KEY = 'qtopia_popup_seen'
 
+// Section "Tổng quan dự án" (Facts): popup tự mở khi khách đã lướt qua section này
+const OVERVIEW_ID = 'so-lieu'
+// trang không có section tổng quan: tự mở khi đã cuộn quá nửa trang
+const FALLBACK_DEPTH = 0.5
+
 // Popup đăng ký tư vấn (dùng <dialog> gốc: Esc đóng, giữ focus trong hộp thoại).
-// Tự mở 1 lần/phiên sau autoOpenMs nếu khách chưa thấy popup; có nút đóng, không bật lặp lại.
-export function ContactPopupProvider({ autoOpenMs = 30000, children }) {
+// Tự mở 1 lần/phiên, KHÔNG mở khi vừa vào trang: chỉ khi khách đã lướt qua section tổng quan; có nút đóng, không bật lặp lại.
+export function ContactPopupProvider({ autoOpen = true, children }) {
   const ref = useRef(null)
   const [source, setSource] = useState('popup')
   const [session, setSession] = useState(0) // đổi mỗi lần mở → form được làm mới
@@ -29,21 +34,32 @@ export function ContactPopupProvider({ autoOpenMs = 30000, children }) {
     }
   }, [])
 
+  // Mở khi đáy section tổng quan lên tới 30% trên của màn hình (section kế tiếp đã chiếm phần lớn màn hình).
+  // Không mở trên trang cảm ơn, không cắt ngang khi khách đang gõ vào form khác (thử lại ở lần cuộn sau).
   useEffect(() => {
-    let seen = false
-    try {
-      seen = sessionStorage.getItem(SEEN_KEY) === '1'
-    } catch {
-      /* bỏ qua */
+    const seen = () => {
+      try {
+        return sessionStorage.getItem(SEEN_KEY) === '1'
+      } catch {
+        return true
+      }
     }
-    if (seen) return undefined
-    const t = window.setTimeout(() => {
-      // không bật popup khi khách đang điền form khác
-      if (document.activeElement?.closest?.('form')) return
+    if (!autoOpen || seen()) return undefined
+    const passed = () => {
+      const el = document.getElementById(OVERVIEW_ID)
+      if (el) return el.getBoundingClientRect().bottom <= window.innerHeight * 0.3
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      return max > 0 && window.scrollY / max >= FALLBACK_DEPTH
+    }
+    const onScroll = () => {
+      if (seen()) return window.removeEventListener('scroll', onScroll)
+      if (window.location.pathname.includes('/cam-on') || document.activeElement?.closest?.('form') || !passed()) return
+      window.removeEventListener('scroll', onScroll)
       open('popup_auto')
-    }, autoOpenMs)
-    return () => window.clearTimeout(t)
-  }, [autoOpenMs, open])
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [autoOpen, open])
 
   const value = useMemo(() => ({ open }), [open])
 
@@ -54,7 +70,7 @@ export function ContactPopupProvider({ autoOpenMs = 30000, children }) {
         ref={ref}
         aria-labelledby="popup-title"
         onClick={(e) => e.target === e.currentTarget && e.currentTarget.close()}
-        className="m-auto w-[min(94vw,46rem)] overflow-hidden rounded-[1.75rem] border-0 bg-white p-0 shadow-card backdrop:bg-q-navy/70 backdrop:backdrop-blur-sm"
+        className="m-auto w-[min(94vw,46rem)] overflow-y-auto overflow-x-hidden rounded-[1.75rem] border-0 bg-white p-0 shadow-card backdrop:bg-q-navy/70 backdrop:backdrop-blur-sm"
       >
         {/* Một bên ảnh dự án, một bên biểu mẫu (ảnh ẩn trên điện thoại để form luôn vừa màn hình) */}
         <div className="relative grid sm:grid-cols-2">
@@ -86,7 +102,7 @@ export function ContactPopupProvider({ autoOpenMs = 30000, children }) {
               Nhận thông tin QTOPIA
             </h2>
             <p className="mb-4 mt-1.5 text-sm text-q-muted">Để lại thông tin, chuyên viên sẽ liên hệ sớm nhất.</p>
-            <LeadFormFields key={session} formLocation={source} />
+            <LeadFormFields key={session} formLocation={source} showNeed />
           </div>
         </div>
       </dialog>

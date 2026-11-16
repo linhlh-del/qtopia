@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { leadFormContent } from '../data/project'
+import { leadFormContent, unitTypeInfo } from '../data/project'
 import { submitLead } from '../lib/lead'
 import { track } from '../lib/analytics'
 
@@ -14,10 +14,13 @@ function validate(values) {
   return errors
 }
 
-// Form 3 trường (họ tên, SĐT, nút gửi) — dùng chung cho section đăng ký và popup tư vấn.
-export default function LeadFormFields({ formLocation, onSuccess, submitLabel = 'Nhận thông tin', tone = 'light' }) {
+// Loại căn hộ của dự án cho ô "Nhu cầu" (tên thương mại + loại hình, theo unitTypeInfo)
+const NEED_OPTIONS = Object.values(unitTypeInfo).map((u) => `${u.name} ${u.subtitle}`)
+
+// Form họ tên, SĐT (+ "Nhu cầu" khi showNeed), nút gửi — dùng chung cho section đăng ký và popup tư vấn.
+export default function LeadFormFields({ formLocation, onSuccess, submitLabel = 'Nhận thông tin', tone = 'light', showNeed = false }) {
   const uid = useId()
-  const [values, setValues] = useState({ name: '', phone: '' })
+  const [values, setValues] = useState({ name: '', phone: '', need: '' })
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | sending | success | error
   const [message, setMessage] = useState('')
@@ -48,7 +51,7 @@ export default function LeadFormFields({ formLocation, onSuccess, submitLabel = 
     try {
       await submitLead({ ...values, formLocation })
       setStatus('success')
-      setValues({ name: '', phone: '' })
+      setValues({ name: '', phone: '', need: '' })
       track('generate_lead', { form_location: formLocation }) // không gửi tên / SĐT vào analytics
       onSuccess?.()
       // Chuyển sang trang cảm ơn; đóng popup nếu form nằm trong <dialog>.
@@ -108,6 +111,28 @@ export default function LeadFormFields({ formLocation, onSuccess, submitLabel = 
           </p>
         ) : null}
       </div>
+
+      {showNeed ? (
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor={`${uid}-need`} className={labelCls}>
+            Nhu cầu
+          </label>
+          {/* loại căn hộ quan tâm (không bắt buộc) → cột apartment_types trên Sheet */}
+          <select
+            id={`${uid}-need`}
+            value={values.need}
+            onChange={(e) => setValues((v) => ({ ...v, need: e.target.value }))}
+            className={`${input} cursor-pointer`}
+          >
+            <option value="">Chọn loại căn hộ quan tâm</option>
+            {NEED_OPTIONS.map((o) => (
+              <option key={o} value={o}>
+                {o}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
 
       <button type="submit" disabled={status === 'sending'} className="btn-base btn-primary w-full disabled:opacity-60">
         {status === 'sending' ? 'Đang gửi…' : submitLabel}
