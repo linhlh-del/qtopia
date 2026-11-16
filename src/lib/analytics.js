@@ -4,9 +4,10 @@
    Sự kiện: page_view (đổi route) · generate_lead · click_call · click_zalo · click_cta · scroll_depth · section_view · view_floorplan */
 
 const GTM_ID = import.meta.env?.VITE_GTM_ID || ''
-export const GA4_ID = 'G-Y9NFTDSE57'
-// gtag.js đã được nhúng trực tiếp trong <head> (index.html) → không nạp lại lần 2.
-const gtagInHead = () => typeof document !== 'undefined' && Boolean(document.querySelector(`script[src*="gtag/js?id=${GA4_ID}"]`))
+// Mã GA4 riêng từng domain: VITE_GA4_ID trong sites/<domain>/site.env (trống = không gửi GA4).
+export const GA4_ID = import.meta.env?.VITE_GA4_ID || ''
+// gtag.js đã được nhúng trực tiếp trong <head> lúc build (vite.config.js) → không nạp lại lần 2.
+const gtagInHead = () => typeof document !== 'undefined' && Boolean(GA4_ID) && Boolean(document.querySelector(`script[src*="gtag/js?id=${GA4_ID}"]`))
 
 export function track(event, params = {}) {
   if (typeof window === 'undefined') return
@@ -20,6 +21,7 @@ export function loadGtm() {
   if (typeof window === 'undefined' || window.__qtopiaAnalytics) return
   window.__qtopiaAnalytics = true
   if (!GTM_ID && gtagInHead()) return // gtag trong <head> đã tự cấu hình GA4 và gửi page_view đầu tiên
+  if (!GTM_ID && !GA4_ID) return // domain chưa có mã GA4 → không nạp gì (sự kiện vẫn nằm trong dataLayer)
   window.dataLayer = window.dataLayer || []
   if (!GTM_ID) {
     window.gtag = function () { window.dataLayer.push(arguments) }

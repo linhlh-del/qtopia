@@ -34,6 +34,12 @@ export function readSiteEnv(root, site) {
   }
   if (!env.VITE_SITE_URL) throw new Error(`${file}: thiếu VITE_SITE_URL`)
   env.VITE_SITE_URL = env.VITE_SITE_URL.replace(/\/+$/, '')
+  // GA4 riêng từng domain: không có dòng VITE_GA4_ID → để trống, KHÔNG kế thừa mã của .env.production/domain khác
+  env.VITE_GA4_ID = (env.VITE_GA4_ID || '').trim()
+  if (env.VITE_GA4_ID && !/^G-[A-Z0-9]{4,12}$/.test(env.VITE_GA4_ID)) throw new Error(`${file}: VITE_GA4_ID sai định dạng (G-XXXXXXXXXX): ${env.VITE_GA4_ID}`)
+  // GTM riêng từng domain: tương tự, không kế thừa container của domain khác
+  env.VITE_GTM_ID = (env.VITE_GTM_ID || '').trim()
+  if (env.VITE_GTM_ID && !/^GTM-[A-Z0-9]{4,10}$/.test(env.VITE_GTM_ID)) throw new Error(`${file}: VITE_GTM_ID sai định dạng (GTM-XXXXXXX): ${env.VITE_GTM_ID}`)
   return env
 }
 
