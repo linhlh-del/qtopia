@@ -6,16 +6,32 @@ import { fileURLToPath } from 'node:url'
 
 const root = dirname(fileURLToPath(import.meta.url))
 
-/* Google tag (gtag.js) theo mã GA4 của domain đang build — đặt đầu <head> như snippet chuẩn của Google */
-function ga4Plugin(id) {
+/* Thẻ đo lường chèn thẳng vào HTML lúc build → có trong index.html của MỌI trang prerender.
+   - Có GTM: snippet GTM chuẩn của Google (đầu <head>) + <noscript> ngay sau <body>. GA4 cấu hình TRONG GTM.
+   - Không GTM mà có GA4: gtag.js. */
+function trackingPlugin({ gtmId, ga4Id }) {
   return {
-    name: 'qtopia-ga4',
+    name: 'qtopia-tracking',
     transformIndexHtml(html) {
-      if (!id) return html
-      const tag = `<script async src="https://www.googletagmanager.com/gtag/js?id=${id}"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${id}');</script>`
-      return html.replace(/(<meta name="viewport"[^>]*>)/, `$1
-    ${tag}`)
+      let head = ''
+      let body = ''
+      if (gtmId) {
+        head = `<!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');</script>
+    <!-- End Google Tag Manager -->`
+        body = `<!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${gtmId}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->`
+      } else if (ga4Id) {
+        head = `<script async src="https://www.googletagmanager.com/gtag/js?id=${ga4Id}"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${ga4Id}');</script>`
+      }
+      let out = html
+      if (head) out = out.replace(/(<meta name="viewport"[^>]*>)/, `$1
+    ${head}`)
+      if (body) out = out.replace(/(<body[^>]*>)/, `$1
+    ${body}`)
+      return out
     },
   }
 }
@@ -31,7 +47,7 @@ export default defineConfig(({ mode }) => {
   const supabaseUrl = (env.CMS_SUPABASE_URL || env.VITE_SUPABASE_URL || '').replace(/\/+$/, '')
   return {
     // Có GTM thì GA4 cấu hình trong GTM → không chèn gtag.js trực tiếp (tránh đếm trùng)
-    plugins: [react(), tailwindcss(), ga4Plugin(gtmId ? '' : ga4Id)],
+    plugins: [react(), tailwindcss(), trackingPlugin({ gtmId, ga4Id })],
     define: {
       'import.meta.env.VITE_GA4_ID': JSON.stringify(gtmId ? '' : ga4Id),
       'import.meta.env.VITE_GTM_ID': JSON.stringify(gtmId),

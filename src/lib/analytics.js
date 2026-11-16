@@ -22,6 +22,8 @@ export function loadGtm() {
   window.__qtopiaAnalytics = true
   if (!GTM_ID && gtagInHead()) return // gtag trong <head> đã tự cấu hình GA4 và gửi page_view đầu tiên
   if (!GTM_ID && !GA4_ID) return // domain chưa có mã GA4 → không nạp gì (sự kiện vẫn nằm trong dataLayer)
+  // snippet GTM đã nằm sẵn trong <head> (chèn lúc build) → không nạp lần 2
+  if (GTM_ID && [...document.scripts].some((x) => x.textContent.includes(`'${GTM_ID}'`))) return
   window.dataLayer = window.dataLayer || []
   if (!GTM_ID) {
     window.gtag = function () { window.dataLayer.push(arguments) }
