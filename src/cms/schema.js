@@ -8,6 +8,13 @@
    - bỏ qua khoá kỹ thuật (id, màu, toạ độ, độ rộng, đường dẫn nội bộ…) để biên tập viên không làm vỡ giao diện
    ============================================================ */
 import { cmsDefaults } from './content'
+import { listSchema } from './lists-core'
+import { CMS_LISTS } from './lists'
+
+const getPath = (obj, keys) => keys.reduce((o, k) => (o == null ? undefined : o[k]), obj)
+/* danh sách CMS có dữ liệu thật (bỏ nhóm chưa tồn tại) — các mảng này sửa bằng trình sửa danh sách, không làm phẳng
+   (tính khi build schema: lúc import module này các file dữ liệu có thể chưa registerCms) */
+let LIST_KEYS = new Set()
 
 /* Thứ tự + nhãn tiếng Việt của từng nhóm nội dung trên CMS */
 const GROUPS = [
@@ -43,6 +50,7 @@ const LABELS = {
 }
 
 function walk(value, path, out) {
+  if (LIST_KEYS.has(path.join('.'))) return
   if (typeof value === 'string') {
     const leaf = path[path.length - 1]
     if (SKIP_KEY.test(String(leaf))) return
@@ -63,16 +71,26 @@ function walk(value, path, out) {
   else if (value && typeof value === 'object') for (const [k, v] of Object.entries(value)) walk(v, [...path, k], out)
 }
 
-export function buildCmsSchema({ pageDefaults, routes, leadEndpoint = '', siteUrl = '' }) {
+export function buildCmsSchema({ pageDefaults, routes, leadEndpoint = '', siteUrl = '', domains = [] }) {
+  LIST_KEYS = new Set(CMS_LISTS.filter((l) => Array.isArray(getPath(cmsDefaults, l.key.split('.')))).map((l) => l.key))
   const sections = GROUPS.filter(([name]) => cmsDefaults[name]).map(([name, label]) => {
     const out = { fields: [], images: [] }
     walk(cmsDefaults[name], [name], out)
-    return { id: name, label, locked: true, inLayout: false, ...out }
+    const lists = CMS_LISTS.filter((l) => l.section === name && LIST_KEYS.has(l.key)).map((l) => {
+      const keys = l.key.split('.')
+      /* nhãn nhóm lấy từ dữ liệu (vd. "Nhịp vui đêm — ảnh") */
+      const group = keys.length > 2 ? getPath(cmsDefaults, keys.slice(0, -1)) : null
+      const named = group?.label || group?.title
+      return listSchema({ ...l, label: named ? `${named} — ${l.itemLabel.toLowerCase()}` : l.label }, { vi: getPath(cmsDefaults, keys) })
+    })
+    return { id: name, label, locked: true, inLayout: false, ...out, lists }
   })
   return {
     version: 1,
     project: 'qtopia',
     siteUrl,
+    /* domain của dự án (sites/<domain>) — CMS dùng cho "Thẻ head & tracking" theo domain */
+    domains,
     langs: ['vi'],
     sections,
     seo: routes.map((path) => ({

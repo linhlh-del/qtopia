@@ -14,6 +14,9 @@
    nên mọi component đang import từ src/data/* tự nhận nội dung CMS mà không phải đổi import.
    Bản sao giá trị mặc định (trước khi đè) được giữ lại để sinh cms-schema.json.
    ============================================================ */
+import { applyList, inLists } from './lists-core'
+import { CMS_LISTS } from './lists'
+
 const files = import.meta.glob('../generated/cms-content.json', { eager: true, import: 'default' })
 export const cms = Object.values(files)[0] || {}
 
@@ -35,13 +38,33 @@ function setPath(rootObj, keys, value) {
   return true
 }
 
+const lists = cms.lists || {}
+
+/* danh sách thêm/bớt được thuộc object `name`: thay mảng TẠI CHỖ (component đang giữ tham chiếu tới object) */
+function applyLists(name, obj) {
+  for (const spec of CMS_LISTS) {
+    const items = lists[spec.key]
+    if (!Array.isArray(items)) continue
+    const [head, ...rest] = spec.key.split('.')
+    if (head !== name) continue
+    const parent = rest.slice(0, -1).reduce((o, k) => (o == null ? undefined : o[k]), obj)
+    if (!rest.length) {
+      if (Array.isArray(obj)) obj.splice(0, obj.length, ...applyList(obj, items, spec, text))
+      continue
+    }
+    const last = rest[rest.length - 1]
+    if (parent && Array.isArray(parent[last])) parent[last] = applyList(parent[last], items, spec, text)
+  }
+}
+
 /** Đăng ký một object dữ liệu và áp nội dung CMS lên nó (sửa tại chỗ). Trả về chính object. */
 export function registerCms(name, obj) {
   cmsDefaults[name] = clone(obj)
+  applyLists(name, obj)
   const apply = (bucket, pick) => {
     for (const [key, raw] of Object.entries(bucket || {})) {
       const [head, ...rest] = key.split('.')
-      if (head !== name || !rest.length) continue
+      if (head !== name || !rest.length || inLists(key, lists)) continue
       const value = pick(raw)
       if (value === undefined || value === '') continue
       setPath(obj, rest, value)

@@ -10,6 +10,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { loadEnv } from 'vite'
+import { cmsDomains } from './cms-head.mjs'
 
 process.env.NODE_ENV = 'production'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -64,6 +65,6 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="htt
 write('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`)
 
 /* ---------- cms-schema.json: CMS đọc để biết trường nào sửa được (CORS * cấu hình ở nginx/vercel) ---------- */
-write('cms-schema.json', JSON.stringify(buildCmsSchema({ pageDefaults, routes, siteUrl: SITE_URL, leadEndpoint: env.VITE_LEAD_ENDPOINT || '' }), null, 2) + '\n')
+write('cms-schema.json', JSON.stringify(buildCmsSchema({ pageDefaults, routes, siteUrl: SITE_URL, leadEndpoint: env.VITE_LEAD_ENDPOINT || '', domains: cmsDomains(root) }), null, 2) + '\n')
 
 console.log(`Xong: ${routes.length} trang + 404 · domain ${SITE_URL}`)
