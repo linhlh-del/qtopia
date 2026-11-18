@@ -215,7 +215,7 @@ Không thể kết luận như vậy từ vị trí toàn khu. Cần xem hướn
     title: "Tiện ích QTopia Phước Hải có gì trong mô hình giải trí ngày và đêm",
     seoTitle: "Tiện ích QTopia Phước Hải: giải trí ngày và đêm",
     excerpt: "Khám phá tiện ích QTopia Phước Hải: Ocean Galaxy, Oasis Resort, Mega Kids Wonderland, spa, hồ bơi và tổ hợp giải trí ngày đêm.",
-    metaDescription: "Khám phá tiện ích QTopia Phước Hải: Ocean Galaxy, Oasis Resort, Mega Kids Wonderland, spa, hồ bơi và tổ hợp giải trí ngày đêm.",
+    metaDescription: "Khám phá tiện ích QTopia Phước Hải qua phối cảnh Ocean Galaxy, Oasis Resort và Mega Facilities. Tìm hiểu các khu giải trí, hồ bơi và dịch vụ nghỉ dưỡng dự kiến.",
     image: "/images/position-map.webp",
     imageAlt: "Bản đồ vị trí QTopia Phước Hải",
     body: `Tiện ích QTopia Phước Hải là nội dung giúp phân biệt mô hình dự án với một tòa căn hộ du lịch thông thường. Thay vì chỉ bố trí hồ bơi và phòng gym, QTopia giới thiệu concept Resort City kết hợp Entertainment Complex, nơi khách có thể nghỉ ngơi, ăn uống và tham gia nhiều hoạt động trong cùng chuyến đi. Phần lớn hình ảnh được công bố là phối cảnh hoặc ý tưởng quy hoạch, vì vậy cần kiểm tra danh mục bàn giao cuối cùng trước khi mua.
@@ -256,7 +256,7 @@ Không nên mặc định. Phụ lục hợp đồng, nội quy vận hành và 
     title: "Căn hộ mẫu QTopia Studio có gì đáng chú ý sau sự kiện ra mắt tháng 10",
     seoTitle: "Căn hộ mẫu QTopia Studio: không gian và nội thất",
     excerpt: "Khám phá căn hộ mẫu QTopia Studio ra mắt ngày 24/10/2026: bố trí nội thất, bồn tắm, công năng và những điểm cần đối chiếu khi mua.",
-    metaDescription: "Khám phá căn hộ mẫu QTopia Studio ra mắt ngày 24/10/2026: bố trí nội thất, bồn tắm, công năng và những điểm cần đối chiếu khi mua.",
+    metaDescription: "Khám phá căn hộ mẫu QTopia Studio tại Sales Gallery Bình Trưng, từ bố trí không gian đến cách đọc sa bàn và những chi tiết nội thất cần kiểm tra trước khi mua.",
     image: "/images/QTOPIA-can-ho-mau-qtopia-studio.png",
     imageAlt: "Không gian căn hộ mẫu Studio QTopia",
     body: `Căn hộ mẫu QTopia Studio được giới thiệu tại Sales Gallery phường Bình Trưng, TP.HCM trong sự kiện ngày 24/10/2026. Theo bản tin VnExpress, hoạt động ra mắt thu hút gần 1.000 khách hàng và người quan tâm, đồng thời trưng bày sa bàn để khách hình dung cấu trúc khu nghỉ dưỡng. Với người mua, đây là cơ hội kiểm tra cảm nhận không gian tốt hơn nhiều so với chỉ nhìn ảnh phối cảnh.
