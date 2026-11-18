@@ -208,6 +208,86 @@ Không thể kết luận như vậy từ vị trí toàn khu. Cần xem hướn
     sourceUrl:
       "https://vnexpress.net/qtopia-don-nhu-cau-nghi-duong-va-giai-tri-cuoi-tuan-tai-phia-nam-5138875.html",
   },
+  {
+    id: "tien-ich-qtopia-phuoc-hai",
+    date: "2026-11-18",
+    category: "Tiện ích",
+    title: "Tiện ích QTopia Phước Hải có gì trong mô hình giải trí ngày và đêm",
+    seoTitle: "Tiện ích QTopia Phước Hải: giải trí ngày và đêm",
+    excerpt: "Khám phá tiện ích QTopia Phước Hải: Ocean Galaxy, Oasis Resort, Mega Kids Wonderland, spa, hồ bơi và tổ hợp giải trí ngày đêm.",
+    metaDescription: "Khám phá tiện ích QTopia Phước Hải: Ocean Galaxy, Oasis Resort, Mega Kids Wonderland, spa, hồ bơi và tổ hợp giải trí ngày đêm.",
+    image: "/images/position-map.webp",
+    imageAlt: "Bản đồ vị trí QTopia Phước Hải",
+    body: `Tiện ích QTopia Phước Hải là nội dung giúp phân biệt mô hình dự án với một tòa căn hộ du lịch thông thường. Thay vì chỉ bố trí hồ bơi và phòng gym, QTopia giới thiệu concept Resort City kết hợp Entertainment Complex, nơi khách có thể nghỉ ngơi, ăn uống và tham gia nhiều hoạt động trong cùng chuyến đi. Phần lớn hình ảnh được công bố là phối cảnh hoặc ý tưởng quy hoạch, vì vậy cần kiểm tra danh mục bàn giao cuối cùng trước khi mua.
+
+## Ocean Galaxy và nhóm giải trí về đêm
+
+Ocean Galaxy được giới thiệu như một điểm nhấn của trải nghiệm ngày – đêm, gắn với không gian sự kiện, âm nhạc và hoạt động bên hồ bơi. Bên cạnh đó là các ý tưởng beach club, pool party và tuyến ẩm thực. Với nhóm bạn, đây có thể là lý do lựa chọn kỳ nghỉ nhiều hoạt động; với gia đình có trẻ nhỏ, lịch và vùng hoạt động phù hợp cần được cân nhắc riêng.
+
+## Oasis Resort và hệ tiện ích nghỉ dưỡng
+
+Không phải khách nào đến biển cũng tìm kiếm không khí sôi động. QTopia còn truyền thông Oasis Resort và nhóm tiện ích spa, wellness, jacuzzi, hồ bơi thư giãn. Sự kết hợp giữa hai sắc thái năng động và tĩnh tại phù hợp mục tiêu phục vụ nhiều nhóm khách: cặp đôi, gia đình, người trung niên và nhóm bạn.
+
+## Mega Facilities có vai trò gì
+
+Theo phương án giới thiệu, các tầng tiện ích chuyên biệt gồm Mega Kids Wonderland, Mega Entertainment & Gaming Center, Mega Spa & Wellness, Fitness & Recovery và nhiều khu chức năng khác. Lợi ích của cách bố trí này là tổ chức trải nghiệm theo nhu cầu rõ ràng thay vì chỉ tập trung ở một khu sân vườn. Dù vậy, quyền sử dụng, giờ mở cửa, phí và giai đoạn hoàn thiện của từng tiện ích là vấn đề cần được xác minh.
+
+## Tiện ích có giúp hoạt động cho thuê tốt hơn không
+
+Một hệ sinh thái dịch vụ đa dạng có thể tạo thêm lý do để du khách đến, ở lại hoặc quay lại. Đó là cơ sở hợp lý để nghiên cứu tiềm năng lưu trú, nhưng chưa phải bằng chứng về doanh thu. Nhà đầu tư cần xem mức độ hoàn thiện, đơn vị vận hành, chất lượng dịch vụ và phí duy trì trước khi đưa giả định công suất phòng vào mô hình tài chính.
+
+## Câu hỏi thường gặp
+
+### Ocean Galaxy đã hoạt động chưa
+
+Các tài liệu báo chí tháng 10/2026 trình bày Ocean Galaxy dưới dạng định hướng và phối cảnh. Cần xác nhận tiến độ mở cửa theo thông báo mới.
+
+### Khách sở hữu căn hộ có dùng mọi tiện ích miễn phí không
+
+Không nên mặc định. Phụ lục hợp đồng, nội quy vận hành và biểu phí mới xác định quyền lợi cụ thể.`,
+    cta: "Nhận sơ đồ tiện ích QTopia, danh mục dự kiến theo từng khu và thông tin cập nhật về tiến độ vận hành.",
+    sourceTitle: "Thành phố cuối tuần Qtopia đủ gần để đi mỗi tuần đủ vui để quay lại nhiều lần (30/10/2026)",
+    sourceUrl: "https://cafef.vn/thanh-pho-cuoi-tuan-qtopia-du-gan-de-di-moi-tuan-du-vui-de-quay-lai-nhieu-lan-188261030155445041.chn",
+  },
+  {
+    id: "can-ho-mau-qtopia-studio",
+    date: "2026-11-18",
+    category: "Căn hộ mẫu",
+    title: "Căn hộ mẫu QTopia Studio có gì đáng chú ý sau sự kiện ra mắt tháng 10",
+    seoTitle: "Căn hộ mẫu QTopia Studio: không gian và nội thất",
+    excerpt: "Khám phá căn hộ mẫu QTopia Studio ra mắt ngày 24/10/2026: bố trí nội thất, bồn tắm, công năng và những điểm cần đối chiếu khi mua.",
+    metaDescription: "Khám phá căn hộ mẫu QTopia Studio ra mắt ngày 24/10/2026: bố trí nội thất, bồn tắm, công năng và những điểm cần đối chiếu khi mua.",
+    image: "/images/QTOPIA-can-ho-mau-qtopia-studio.png",
+    imageAlt: "Không gian căn hộ mẫu Studio QTopia",
+    body: `Căn hộ mẫu QTopia Studio được giới thiệu tại Sales Gallery phường Bình Trưng, TP.HCM trong sự kiện ngày 24/10/2026. Theo bản tin VnExpress, hoạt động ra mắt thu hút gần 1.000 khách hàng và người quan tâm, đồng thời trưng bày sa bàn để khách hình dung cấu trúc khu nghỉ dưỡng. Với người mua, đây là cơ hội kiểm tra cảm nhận không gian tốt hơn nhiều so với chỉ nhìn ảnh phối cảnh.
+
+## Điểm đáng chú ý ở cách tổ chức không gian Studio
+
+Mẫu Studio hướng đến nhu cầu lưu trú ngắn ngày, chú trọng không gian nghỉ, ánh sáng và trải nghiệm thư giãn. Bài báo nhắc đến bồn tắm bố trí ngay trong không gian căn hộ để tăng tính nghỉ dưỡng. Đây là chi tiết tạo nhận diện, nhưng người mua cần xác minh liệu bồn tắm thuộc gói bàn giao của đúng mã căn hay chỉ xuất hiện trong phương án căn hộ mẫu.
+
+Không nên đánh giá căn Studio chỉ bằng số mét vuông. Hãy xem khoảng cách thực tế giữa giường ngủ và khu sinh hoạt, khả năng lưu trữ hành lý, vị trí thiết bị vệ sinh, ánh sáng và cách vệ sinh bảo trì. Với nhu cầu cho thuê, độ bền vật liệu và thời gian dọn phòng cũng ảnh hưởng chi phí vận hành.
+
+## Sa bàn giúp kiểm tra điều gì
+
+Sa bàn cho thấy tương quan giữa các tòa tháp, khu tiện ích, lối vào, cảnh quan và mặt biển. Khi tham quan, hãy đối chiếu với mặt bằng có mã số, vì sa bàn thường trình bày ở tỷ lệ tổng thể và có thể khác thiết kế triển khai cuối cùng. Những căn cùng diện tích nhưng khác hướng hoặc tầng có thể cho trải nghiệm không giống nhau.
+
+## Phương án bàn giao nội thất cần hỏi rõ
+
+QTopia được giới thiệu có phương án bàn giao linh hoạt giữa tiêu chuẩn cơ bản và gói nội thất nâng cấp. Để lập ngân sách chính xác, hãy yêu cầu bảng vật liệu, danh mục thiết bị, số lượng đồ rời, chi phí phát sinh và điều kiện bảo hành. Một mức giá quảng bá ban đầu sẽ không phản ánh đầy đủ vốn đầu tư nếu người mua cần bổ sung nội thất phục vụ kinh doanh lưu trú.
+
+## Câu hỏi thường gặp
+
+### Có thể đặt lịch xem căn hộ mẫu QTopia ở đâu
+
+Sa bàn và căn hộ mẫu được giới thiệu tại Sales Gallery ở phường Bình Trưng, TP.HCM; cần hẹn lịch với đơn vị tiếp nhận khách.
+
+### Thiết kế căn hộ mẫu có giống toàn bộ căn Studio không
+
+Không thể mặc định. Layout, hướng, vật liệu và gói bàn giao cần kiểm tra theo mã căn và phụ lục bán hàng.`,
+    cta: "Đăng ký lịch xem căn hộ mẫu và nhận bảng so sánh phương án bàn giao cơ bản với gói nội thất nâng cấp.",
+    sourceTitle: "Ra mắt sa bàn và căn hộ mẫu dự án nghỉ dưỡng Qtopia (26/10/2026)",
+    sourceUrl: "https://vnexpress.net/ra-mat-sa-ban-va-can-ho-mau-du-an-nghi-duong-qtopia-5134806.html",
+  },
 ];
 
 registerCms("newsItems", newsItems);
