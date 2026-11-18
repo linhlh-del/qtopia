@@ -290,7 +290,11 @@ Không thể mặc định. Layout, hướng, vật liệu và gói bàn giao c�
   },
 ];
 
+// Keep the approved map cover when a release loads older CMS image overrides.
+const amenitiesArticle = newsItems.find((item) => item.id === "tien-ich-qtopia-phuoc-hai");
+const amenitiesCover = amenitiesArticle.image;
 registerCms("newsItems", newsItems);
+amenitiesArticle.image = amenitiesCover;
 
 export const getNewsHref = (id) => `/tin-tuc/${id}`;
 
