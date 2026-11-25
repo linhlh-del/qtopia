@@ -288,6 +288,94 @@ Không thể mặc định. Layout, hướng, vật liệu và gói bàn giao c�
     sourceTitle: "Ra mắt sa bàn và căn hộ mẫu dự án nghỉ dưỡng Qtopia (26/10/2026)",
     sourceUrl: "https://vnexpress.net/ra-mat-sa-ban-va-can-ho-mau-du-an-nghi-duong-qtopia-5134806.html",
   },
+  // news 7
+  {
+    id: "second-home-qtopia-phuoc-hai",
+    date: "2026-11-25",
+    category: "Second Home",
+    title: "Second Home QTopia Phước Hải có phù hợp cho kỳ nghỉ cuối tuần của gia đình",
+    seoTitle: "Second Home QTopia Phước Hải cho kỳ nghỉ gia đình",
+    excerpt:
+      "Tìm hiểu Second Home QTopia Phước Hải: vị trí, tiện ích cho gia đình, lựa chọn căn hộ và những lưu ý về pháp lý căn hộ du lịch.",
+    metaDescription:
+      "Tìm hiểu Second Home QTopia Phước Hải: vị trí, tiện ích cho gia đình, lựa chọn căn hộ và những lưu ý về pháp lý căn hộ du lịch cho kỳ nghỉ cuối tuần cả nhà.",
+    image: "/images/position-map.webp",
+    imageAlt: "Bản đồ vị trí QTopia Phước Hải cho kỳ nghỉ cuối tuần của gia đình",
+    body: `Second Home QTopia Phước Hải là cách nhiều người mô tả mục đích mua căn hộ du lịch để sử dụng cho các kỳ nghỉ ngắn ngày của bản thân hoặc gia đình. Đây là khái niệm theo nhu cầu sử dụng, không phải một loại pháp lý nhà ở. Vì vậy, khi đánh giá dự án, người mua cần cân bằng trải nghiệm nghỉ dưỡng với điều kiện lưu trú, thời hạn sử dụng và chi phí sở hữu lâu dài.
+
+## Vì sao khoảng cách di chuyển quan trọng với Second Home
+
+Đối với kỳ nghỉ hai ngày một đêm, thời gian ngồi xe ảnh hưởng lớn đến cảm nhận của cả gia đình. QTopia nằm trên đường Võ Thị Sáu ở Phước Hải, kết nối trục du lịch ven biển. Tài liệu bán hàng giới thiệu thời gian tham khảo từ TP.HCM khoảng 75 phút theo tuyến cao tốc, nhưng gia đình nên tự kiểm tra hành trình thực tế từ nhà, nhất là vào tối thứ sáu hoặc chiều chủ nhật.
+
+## Tiện ích phù hợp cho nhiều độ tuổi
+
+Một gia đình ba thế hệ có thể muốn các hoạt động khác nhau: trẻ nhỏ cần vui chơi, người lớn muốn nghỉ ngơi hoặc thể thao, ông bà ưu tiên thư giãn. QTopia giới thiệu hệ sinh thái gồm Mega Kids Wonderland, hồ bơi, Spa & Wellness, các khu ăn uống và hoạt động giải trí. Danh mục này là định hướng concept; hãy hỏi rõ tiện ích nào có trong giai đoạn bàn giao đầu tiên và có phụ thu hay không.
+
+## Chọn căn hộ phù hợp nhu cầu sử dụng thực tế
+
+Với cặp đôi, Studio hoặc 1PN có thể đủ tiện nghi. Gia đình có con nhỏ cần chú trọng không gian ngủ và sinh hoạt; nhóm nhiều người có thể cân nhắc 2PN hoặc 3PN. Ngoài giá bán, hãy xem số phòng vệ sinh, bố trí bếp, không gian cất đồ và tình trạng an toàn ban công. Một căn có view đẹp chưa chắc tối ưu cho sinh hoạt nhiều ngày.
+
+## Tổng chi phí sở hữu cần dự toán
+
+Nếu chỉ sử dụng vài chục ngày mỗi năm, chủ sở hữu vẫn có thể phải trả phí quản lý, bảo trì, sửa chữa nội thất và chi phí đi lại. Hãy ước tính tổng chi phí trong năm rồi đối chiếu với nhu cầu thực tế. Nếu dự kiến cho thuê vào những ngày không sử dụng, cần xác minh quyền khai thác, quy trình quản lý khách và khoản phí chia sẻ doanh thu.
+
+## Câu hỏi thường gặp
+
+### Mua Second Home QTopia có nghĩa được đăng ký thường trú không
+
+Không. Mục đích mua để nghỉ dưỡng không làm thay đổi loại hình pháp lý căn hộ du lịch hoặc quy định về cư trú.
+
+### Có thể kết hợp sử dụng và cho thuê không
+
+Đó là nhu cầu phổ biến được dự án hướng đến, nhưng việc thực hiện phụ thuộc quy định hợp đồng và phương án vận hành cụ thể.`,
+    cta: "Nhận tư vấn lựa chọn căn hộ QTopia cho gia đình và bảng so sánh chi phí sử dụng Second Home.",
+    sourceTitle: "Thành phố cuối tuần Qtopia đủ gần để đi mỗi tuần đủ vui để quay lại nhiều lần (30/10/2026)",
+    sourceUrl: "https://cafef.vn/thanh-pho-cuoi-tuan-qtopia-du-gan-de-di-moi-tuan-du-vui-de-quay-lai-nhieu-lan-188261030155445041.chn",
+  },
+  // news 8
+  {
+    id: "dau-tu-can-ho-qtopia-cho-thue-du-lich",
+    date: "2026-11-25",
+    category: "Đầu tư",
+    title: "Đầu tư căn hộ QTopia cho thuê du lịch cần tính những chi phí nào",
+    seoTitle: "Đầu tư căn hộ QTopia cho thuê: chi phí cần tính",
+    excerpt:
+      "Phân tích đầu tư căn hộ QTopia cho thuê du lịch: nguồn khách, giá phòng, công suất, phí quản lý, vốn hoàn thiện và rủi ro vận hành.",
+    metaDescription:
+      "Phân tích đầu tư căn hộ QTopia cho thuê du lịch: nguồn khách, giá phòng, công suất, phí quản lý, vốn hoàn thiện và rủi ro vận hành theo ba kịch bản dòng tiền.",
+    image: "/images/og-qtopia-tien-ich.webp",
+    imageAlt: "Phối cảnh hồ bơi Ocean Galaxy và tổ hợp giải trí QTopia phục vụ khách du lịch Phước Hải",
+    body: `Đầu tư căn hộ QTopia cho thuê du lịch là một hướng tiếp cận được nhiều khách hàng quan tâm khi tìm hiểu tổ hợp nghỉ dưỡng – giải trí ven biển Phước Hải. Điểm hấp dẫn trong câu chuyện sản phẩm là một điểm đến có nhiều hoạt động hơn việc lưu trú đơn thuần. Tuy nhiên, kết luận đầu tư phải dựa trên dòng tiền sau chi phí, khả năng vận hành và hồ sơ pháp lý, không thể chỉ dựa vào số lượt du khách đi biển cuối tuần.
+
+## Nguồn khách cho thuê có thể đến từ đâu
+
+QTopia định hướng phục vụ cặp đôi, gia đình, nhóm bạn, khách sự kiện và du lịch kết hợp hội nghị. Kết nối từ TP.HCM, Đồng Nai cùng các tỉnh phía Nam là nền tảng cho nhu cầu đi ngắn ngày. Dù vậy, phải tách thị trường khách nghỉ cuối tuần với khách thuê vào ngày thường; công suất trung bình năm không thể suy ra chỉ từ một vài dịp lễ hoặc sự kiện đông người.
+
+## Tính doanh thu cho thuê bằng kịch bản thay vì cam kết
+
+Một mô hình cơ bản lấy doanh thu phòng bằng giá thuê bình quân mỗi đêm nhân số đêm có khách. Sau đó trừ phí nền tảng đặt phòng, quản lý, vệ sinh, điện nước, bảo trì, nội thất và chi phí tài chính. Nên lập ít nhất ba kịch bản thận trọng, cơ sở và tích cực cho tỷ lệ lấp đầy và giá phòng. Khi chưa có dữ liệu vận hành thực tế của QTopia, mọi tỷ lệ doanh thu hoặc lợi nhuận chỉ là giả định.
+
+## Giá mua chưa phải toàn bộ vốn đầu tư
+
+Giá bán tham khảo trên thị trường được giới thiệu từ khoảng 1,19 tỷ đồng cho một số căn khởi điểm. Để khai thác du lịch, người mua có thể cần thêm gói nội thất, trang thiết bị, vốn dự phòng vận hành và phí giao dịch. Các gói thanh toán hoặc ưu đãi vay phải kiểm tra điều kiện, thời hạn và chính sách còn hiệu lực. Việc sử dụng vốn vay có thể làm biến động mạnh dòng tiền ròng.
+
+## Quyền khai thác và đơn vị vận hành cần đọc kỹ
+
+Trước khi mua, cần xác định chủ sở hữu có quyền tự cho thuê hay phải sử dụng đơn vị được chỉ định; phí môi giới đặt phòng, tỷ lệ chia doanh thu, tiêu chuẩn trang bị và trách nhiệm bảo trì được ghi thế nào. Những nội dung này phải dựa trên hợp đồng, nội quy và phụ lục hiện hành, không chỉ là lời tư vấn.
+
+## Câu hỏi thường gặp
+
+### Có thể cam kết lợi nhuận căn hộ QTopia không
+
+Không nên đưa ra con số cam kết khi chưa có hợp đồng hợp lệ và dữ liệu vận hành đủ tin cậy. Giá thuê và công suất sẽ biến động theo mùa, cạnh tranh và quản lý.
+
+### Loại căn nào có hiệu quả cho thuê cao nhất
+
+Cần so sánh giá vốn, nhu cầu khách theo số người, doanh thu phòng và chi phí cụ thể. Không có loại căn thắng tuyệt đối trong mọi kịch bản.`,
+    cta: "Đăng ký nhận bảng tính dòng tiền cho thuê mẫu để tự kiểm tra ba kịch bản đầu tư QTopia.",
+    sourceTitle: "Qtopia hướng đến mô hình thành phố cuối tuần (VnExpress, 22/10/2026)",
+    sourceUrl: "https://vnexpress.net/qtopia-huong-den-mo-hinh-thanh-pho-cuoi-tuan-5135670.html",
+  },
 ];
 
 // Keep the approved map cover when a release loads older CMS image overrides.
